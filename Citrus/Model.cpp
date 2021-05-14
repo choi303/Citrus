@@ -11,6 +11,17 @@ bool Model::Init(const std::string& filePath, ID3D11Device* pDevice, ID3D11Devic
     return true;
 }
 
+bool Model::InitWithMtl(const std::string& filePath, ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+    this->pDevice = pDevice;
+    this->pContext = pContext;
+
+    if (!LoadMeshWithMtl(filePath))
+        Error::Log("Failed to load mesh in model.cpp");
+
+    return true;
+}
+
 void Model::Render(Camera3D cam)
 {
     //bind the constant buffer to pipline stage 
@@ -71,12 +82,12 @@ XMFLOAT3 Model::GetScale()
 
 aiString Model::GetTexturePath()
 {
-    return Mesh::GetTexturePath();
+    return textureName;
 }
 
 Texture Model::GetTex()
 {
-    return Mesh::GetTex();
+    return text;
 }
 
 bool Model::LoadMesh(const std::string& filePath)
@@ -96,16 +107,62 @@ bool Model::LoadMesh(const std::string& filePath)
     return true;
 }
 
-void Model::LoadNodes(aiNode* pNode, const aiScene* pScene)
+bool Model::LoadMeshWithMtl(const std::string& filePath)
 {
-    for (UINT i = 0; i < pNode->mNumMeshes; i++)
+    Assimp::Importer importer;
+
+    const aiScene* pScene = importer.ReadFile(filePath, //read file from file
+        aiProcess_Triangulate |
+        aiProcess_ConvertToLeftHanded |
+        aiProcess_JoinIdenticalVertices);   //adding sime flags for optimize
+
+    if (pScene == nullptr)
+        return false;
+
+    LoadNodes(pScene->mRootNode, pScene, pScene->mMaterials); //load mesh
+
+    return true;
+}
+
+void Model::LoadNodes(aiNode* pNode, const aiScene* pScene, const aiMaterial* const* pMaterials)
+{
+    for (size_t i = 0; i < pNode->mNumMeshes; i++)
     {
         //process every mesh in the vector array
         aiMesh* mesh = pScene->mMeshes[pNode->mMeshes[i]];
-        meshes.push_back(Mesh::ProcessMeshData(mesh, pScene, pContext, pDevice, pScene->mMaterials));
+        if (mesh->mMaterialIndex >= 0) //if model has a material file load model's materials
+        {
+            using namespace std::string_literals;
+            const aiMaterial& mtl = *pMaterials[mesh->mMaterialIndex];
+            //get only diffuse texture's names of model
+            mtl.GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &textureName);
+            std::string a = textureName.C_Str();
+            a += "\n";
+            OutputDebugStringA(a.c_str());
+            //init that textures
+            text.Init(pDevice, WICTexture::FromFile("Models\\nano_textured\\"s + textureName.C_Str()));
+            text.Bind(pContext);
+        }
+
+        meshes.push_back(Mesh::ProcessMeshData(mesh, pScene, pContext, pDevice));
     }
 
-    for (UINT i = 0; i < pNode->mNumChildren; i++)
+    for (size_t i = 0; i < pNode->mNumChildren; i++)
+    {
+        LoadNodes(pNode->mChildren[i], pScene, pScene->mMaterials);
+    }
+}
+
+void Model::LoadNodes(aiNode* pNode, const aiScene* pScene)
+{
+    for (size_t i = 0; i < pNode->mNumMeshes; i++)
+    {
+        //process every mesh in the vector array
+        aiMesh* mesh = pScene->mMeshes[pNode->mMeshes[i]];
+        meshes.push_back(Mesh::ProcessMeshData(mesh, pScene, pContext, pDevice));
+    }
+
+    for (size_t i = 0; i < pNode->mNumChildren; i++)
     {
         LoadNodes(pNode->mChildren[i], pScene);
     }

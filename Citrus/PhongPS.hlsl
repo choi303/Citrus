@@ -18,7 +18,9 @@ SamplerState objsampler : register(s0);
 float4 main(PS_IN input) : SV_Target
 {
     //ambient color
-    float3 ambient = { 0.15f, 0.15f, 0.15f };
+    float ambientIntensity = 0.7f;
+    float3 ambientColor = { 0.15f, 0.15f, 0.15f };
+    float3 ambientLight = ambientIntensity * ambientColor;
     
     //simple vector algebra
     float3 vectorToLight = lightpos - input.worldPos;   //draw vector between light position and camera position (worldpos)
@@ -35,11 +37,16 @@ float4 main(PS_IN input) : SV_Target
     float3 reflectedLight = input.normal * dot(vectorToLight, input.normal);    //calculate specular reflection
     float3 r = reflectedLight * 2.0f - vectorToLight;   //caclculate reflection
     
-    float specularIntesity = 0.6f;  //specular amount
-    float specularPower = 32.0f;    //specular power (opacity)
+    float specularIntesity = 3.6f;  //specular amount
+    float specularPower = 64.0f;    //specular power (opacity)
     //specular reflection creation
-    float3 specular = att * (diffuseColor * diffuseIntesity) * specularIntesity * pow(max(0.0f, dot(normalize(-r), normalize(input.worldPos))), specularPower);
+    float3 specular = att * (diffuseColor * diffuseIntesity) * specularIntesity * pow(max(0.0f, dot(normalize(r), normalize(input.worldPos))), specularPower);
     
     //final light (d + a + s) * texture or color
-    return float4(saturate(diffuse + ambient + specular), 1.0f) * albedo.Sample(objsampler, input.tc);
+    float4 finalLight = float4(saturate(diffuse + ambientLight + specular), 1.0f) * albedo.Sample(objsampler, input.tc);
+    
+    if(lightIntensity > 0.0f)
+    return finalLight;
+    else
+        return float4(0, 0, 0, 0);
 }

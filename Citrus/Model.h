@@ -20,6 +20,7 @@ class Model
 public:
 	Model() = default;
 	bool Init(const std::string& filePath, ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	bool InitWithMtl(const std::string& filePath, ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	void Render(Camera3D cam);
 	XMFLOAT3 SetPos(float x, float y, float z);
 	XMFLOAT3 SetRot(float x, float y, float z);
@@ -33,6 +34,8 @@ public:
 private:
 	std::vector<Mesh> meshes;
 	bool LoadMesh(const std::string& filePath);
+	bool LoadMeshWithMtl(const std::string& filePath);
+	void LoadNodes(aiNode* pNode, const aiScene* pScene, const aiMaterial* const* pMaterials);
 	void LoadNodes(aiNode* pNode, const aiScene* pScene);
 	ID3D11Device* pDevice = nullptr;
 	ID3D11DeviceContext* pContext = nullptr;
@@ -41,4 +44,6 @@ private:
 	XMFLOAT3 pos = XMFLOAT3{ 0,0,0 };
 	XMFLOAT3 rot = XMFLOAT3{ 0,0,0 };
 	XMFLOAT3 scale = XMFLOAT3{ 1,1,1 };
+	aiString textureName;
+	Texture text;
 };

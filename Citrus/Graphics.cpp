@@ -148,7 +148,7 @@ bool Graphics::InitDxBase(HWND hwnd, const int width, const int height)
 
 	wic = std::make_unique<WICTexture>(width, height);
 
-	model.Init("models\\nano_textured\\nanosuit.obj", pDevice.Get(), pContext.Get());
+	model.InitWithMtl("models\\nano_textured\\nanosuit.obj", pDevice.Get(), pContext.Get());
 	
 	pointlight.Init(pDevice.Get(), pContext.Get());
 	//set primitive topology
@@ -214,11 +214,11 @@ bool Graphics::SceneGraph()
 
 	pointlight.Draw(pDevice.Get(), pContext.Get(), cam3D);
 
-	pContext->PSSetSamplers(0u, 1u, st.GetAddressOf());
 	pil->Bind(pContext.Get());
 	pvs.Bind(pContext.Get());
 	pps.Bind(pContext.Get());
 	model.GetTex().Bind(pContext.Get());
+	pContext->PSSetSamplers(0u, 1u, st.GetAddressOf());
 	ui->ClassicUI(&model, "Model", Spos, Srot, Sscale);
 	pointlight.BindCB(pContext.Get());
 	model.Render(cam3D);

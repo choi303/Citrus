@@ -1,8 +1,5 @@
 #include "Mesh.h"
 
-aiString textureFileName;
- Texture tex;
-
 Mesh::Mesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std::vector<Vertex>& vertices, std::vector<signed int>& indices)
 {
     vb = std::make_unique<VertexBuffer<Vertex>>();
@@ -21,24 +18,11 @@ void Mesh::DrawMesh(ID3D11DeviceContext* pContext) const
     pContext->DrawIndexed(ib->BufferSize(), 0u, 0u);
 }
 
-Mesh Mesh::ProcessMeshData(aiMesh* pMesh, const aiScene* pScene, ID3D11DeviceContext* pContext, ID3D11Device* pDevice,
-    const aiMaterial* const* pMaterials)
+Mesh Mesh::ProcessMeshData(aiMesh* pMesh, const aiScene* pScene, ID3D11DeviceContext* pContext, ID3D11Device* pDevice)
 {
     // Data to fill
     std::vector<Vertex> vertices;
     std::vector<signed int> indices;
-
-    if (pMesh->mMaterialIndex >= 0)
-    {
-        using namespace std::string_literals;
-        const aiMaterial& mtl = *pMaterials[pMesh->mMaterialIndex];
-        mtl.GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &textureFileName);
-        std::string a = textureFileName.C_Str();
-        a += "\n";
-        OutputDebugStringA(a.c_str());
-        tex.Init(pDevice, WICTexture::FromFile("Models\\nano_textured\\"s + textureFileName.C_Str()));
-        tex.Bind(pContext);
-    }
 
     //Get vertices
     for (unsigned int i = 0; i < pMesh->mNumVertices; i++)
@@ -74,14 +58,4 @@ Mesh Mesh::ProcessMeshData(aiMesh* pMesh, const aiScene* pScene, ID3D11DeviceCon
     }
 
     return Mesh(pDevice, pContext, vertices, indices);  //bind data to index and vertex buffers
-}
-
-aiString Mesh::GetTexturePath()
-{
-    return textureFileName;
-}
-
-Texture Mesh::GetTex()
-{
-    return tex;
 }

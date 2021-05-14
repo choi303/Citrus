@@ -24,12 +24,13 @@ bool PointLight::Init(ID3D11Device* device, ID3D11DeviceContext* context)
 	il = std::make_unique<InputLayout>(device, ied, &vs);
 
 	tex.Init(device, WICTexture::FromFile("images\\seamless_grass.jpg"));
+	tex.Bind(context);
 
 	cblight = std::make_unique<CBuffer<Light>>();
 	cblight->Init(device, context);
 
-	if (!lightmodel.Init("models\\light.fbx", device, context))
-	{ Error::Log("Failed to load model"); return false;}
+	lightmodel.Init("models\\light.fbx", device, context);
+
 	lightmodel.SetPos(0.0f, -2.0f, 0.0f);
 
     return true;
