@@ -25,7 +25,7 @@ private:
 	VertexShader vs;
 	PixelShader ps;
 	std::unique_ptr<InputLayout> il;
-	Texture tex;
+	std::unique_ptr<Texture> tex;
 	std::unique_ptr<UI> ui;
 	std::unique_ptr<CBuffer<Light>> cblight;
 };

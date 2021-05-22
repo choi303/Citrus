@@ -1,9 +1,9 @@
 #include "PointLight.h"
 
-static float Spos[3] = { 0,0.0f,-20.0 };
+static float Spos[3] = { 0,100.0f,-20.0 };
 static float Srot[3] = { 0,0,0 };
 static float Sscale[3] = { 0.1f, 0.1f, 0.1f };
-static float intensity = 50.0f;
+static float intensity = 250.0f;
 
 bool PointLight::Init(ID3D11Device* device, ID3D11DeviceContext* context)
 {
@@ -23,15 +23,12 @@ bool PointLight::Init(ID3D11Device* device, ID3D11DeviceContext* context)
 	//create i.l. and bind
 	il = std::make_unique<InputLayout>(device, ied, &vs);
 
-	tex.Init(device, WICTexture::FromFile("images\\seamless_grass.jpg"));
-	tex.Bind(context);
+	tex = std::make_unique<Texture>(device, context, "images\\seamless_grass.jpg");
 
 	cblight = std::make_unique<CBuffer<Light>>();
 	cblight->Init(device, context);
 
-	lightmodel.Init("models\\light.fbx", device, context);
-
-	lightmodel.SetPos(0.0f, -2.0f, 0.0f);
+	lightmodel.InitNoMtl("models\\light.fbx", device, context);
 
     return true;
 }
@@ -41,7 +38,7 @@ void PointLight::Draw(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, Came
 	il->Bind(pContext);
 	vs.Bind(pContext);
 	ps.Bind(pContext);
-	tex.Bind(pContext);
+	tex->Bind(pContext);
 	cblight->data.lightpos = lightmodel.GetPos();
 	cblight->data.lightIntensity = intensity;
 	cblight->MapData();

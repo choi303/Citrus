@@ -11,12 +11,12 @@ bool Model::Init(const std::string& filePath, ID3D11Device* pDevice, ID3D11Devic
     return true;
 }
 
-bool Model::InitWithMtl(const std::string& filePath, ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+bool Model::InitNoMtl(const std::string& filePath, ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
     this->pDevice = pDevice;
     this->pContext = pContext;
 
-    if (!LoadMeshWithMtl(filePath))
+    if (!LoadMeshNoMtl(filePath))
         Error::Log("Failed to load mesh in model.cpp");
 
     return true;
@@ -80,14 +80,13 @@ XMFLOAT3 Model::GetScale()
     return scale;
 }
 
-aiString Model::GetTexturePath()
+void Model::Bind(ID3D11DeviceContext* pContext)
 {
-    return textureName;
-}
-
-Texture Model::GetTex()
-{
-    return text;
+    for (int i = 0; i < textures.size(); i++)
+    {
+        pContext->PSSetShaderResources(0u, 1u, textures[i].m_view.GetAddressOf());
+        break;
+    }
 }
 
 bool Model::LoadMesh(const std::string& filePath)
@@ -97,29 +96,35 @@ bool Model::LoadMesh(const std::string& filePath)
     const aiScene* pScene = importer.ReadFile(filePath, //read file from file
         aiProcess_Triangulate |
         aiProcess_ConvertToLeftHanded |
-    aiProcess_JoinIdenticalVertices);   //adding sime flags for optimize
+        aiProcess_JoinIdenticalVertices |
+        aiProcess_FixInfacingNormals |
+        aiProcess_PreTransformVertices
+        );   //adding sime flags for optimize
 
     if (pScene == nullptr)
         return false;
 
-    LoadNodes(pScene->mRootNode, pScene); //load mesh
+    LoadNodes(pScene->mRootNode, pScene, pScene->mMaterials); //load mesh
 
     return true;
 }
 
-bool Model::LoadMeshWithMtl(const std::string& filePath)
+bool Model::LoadMeshNoMtl(const std::string& filePath)
 {
     Assimp::Importer importer;
 
     const aiScene* pScene = importer.ReadFile(filePath, //read file from file
         aiProcess_Triangulate |
         aiProcess_ConvertToLeftHanded |
-        aiProcess_JoinIdenticalVertices);   //adding sime flags for optimize
+        aiProcess_JoinIdenticalVertices |
+        aiProcess_FixInfacingNormals |
+        aiProcess_PreTransformVertices
+    );   //adding sime flags for optimize
 
     if (pScene == nullptr)
         return false;
 
-    LoadNodes(pScene->mRootNode, pScene, pScene->mMaterials); //load mesh
+    LoadNodesNoMtl(pScene->mRootNode, pScene); //load mesh
 
     return true;
 }
@@ -130,21 +135,21 @@ void Model::LoadNodes(aiNode* pNode, const aiScene* pScene, const aiMaterial* co
     {
         //process every mesh in the vector array
         aiMesh* mesh = pScene->mMeshes[pNode->mMeshes[i]];
+        const aiMaterial& mtl = *pMaterials[mesh->mMaterialIndex];
+        unsigned int textureCount = mtl.GetTextureCount(aiTextureType_DIFFUSE);
+        using namespace std::string_literals;
+
         if (mesh->mMaterialIndex >= 0) //if model has a material file load model's materials
         {
-            using namespace std::string_literals;
-            const aiMaterial& mtl = *pMaterials[mesh->mMaterialIndex];
             //get only diffuse texture's names of model
             mtl.GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &textureName);
             std::string a = textureName.C_Str();
             a += "\n";
             OutputDebugStringA(a.c_str());
             //init that textures
-            text.Init(pDevice, WICTexture::FromFile("Models\\nano_textured\\"s + textureName.C_Str()));
-            text.Bind(pContext);
+            textures.push_back(Texture(pDevice, pContext, "Models\\sponza\\"s + textureName.C_Str()));
         }
-
-        meshes.push_back(Mesh::ProcessMeshData(mesh, pScene, pContext, pDevice));
+        meshes.push_back(ProcessMeshData(mesh, pScene, pContext, pDevice));
     }
 
     for (size_t i = 0; i < pNode->mNumChildren; i++)
@@ -153,17 +158,101 @@ void Model::LoadNodes(aiNode* pNode, const aiScene* pScene, const aiMaterial* co
     }
 }
 
-void Model::LoadNodes(aiNode* pNode, const aiScene* pScene)
+void Model::LoadNodesNoMtl(aiNode* pNode, const aiScene* pScene)
 {
     for (size_t i = 0; i < pNode->mNumMeshes; i++)
     {
         //process every mesh in the vector array
         aiMesh* mesh = pScene->mMeshes[pNode->mMeshes[i]];
-        meshes.push_back(Mesh::ProcessMeshData(mesh, pScene, pContext, pDevice));
+        meshes.push_back(ProcessMeshDataNoMtl(mesh, pScene, pContext, pDevice));
     }
 
     for (size_t i = 0; i < pNode->mNumChildren; i++)
     {
-        LoadNodes(pNode->mChildren[i], pScene);
+        LoadNodesNoMtl(pNode->mChildren[i], pScene);
     }
+}
+
+Mesh Model::ProcessMeshData(aiMesh* pMesh, const aiScene* pScene, ID3D11DeviceContext* pContext, ID3D11Device* pDevice)
+{
+    // Data to fill
+    std::vector<Vertex> vertices;
+    std::vector<signed int> indices;
+
+    //Get vertices
+    for (unsigned int i = 0; i < pMesh->mNumVertices; i++)
+    {
+        Vertex vertex;
+
+        vertex.pos.x = pMesh->mVertices[i].x;
+        vertex.pos.y = pMesh->mVertices[i].y;
+        vertex.pos.z = pMesh->mVertices[i].z;
+
+        //also get normals from model for light calculates and another lots of things
+        vertex.n.x = pMesh->mNormals[i].x;
+        vertex.n.y = pMesh->mNormals[i].y;
+        vertex.n.z = pMesh->mNormals[i].z;
+
+        //determine textur coordinates
+        if (pMesh->mTextureCoords[0])
+        {
+            vertex.tex.x = (float)pMesh->mTextureCoords[0][i].x;
+            vertex.tex.y = (float)pMesh->mTextureCoords[0][i].y;
+        }
+
+        vertices.push_back(vertex); //add the vertices data to vertices vector
+    }
+
+    //Get indices
+    for (unsigned int i = 0; i < pMesh->mNumFaces; i++)
+    {
+        aiFace face = pMesh->mFaces[i]; //get face count from mesh
+
+        for (unsigned int j = 0; j < face.mNumIndices; j++)
+            indices.push_back(face.mIndices[j]);    //add the indices data to indices vector
+    }
+
+    return Mesh(pDevice, pContext, vertices, indices, textures);  //bind data to index and vertex buffers
+}
+
+Mesh Model::ProcessMeshDataNoMtl(aiMesh* pMesh, const aiScene* pScene, ID3D11DeviceContext* pContext, ID3D11Device* pDevice)
+{
+    // Data to fill
+    std::vector<Vertex> vertices;
+    std::vector<signed int> indices;
+
+    //Get vertices
+    for (unsigned int i = 0; i < pMesh->mNumVertices; i++)
+    {
+        Vertex vertex;
+
+        vertex.pos.x = pMesh->mVertices[i].x;
+        vertex.pos.y = pMesh->mVertices[i].y;
+        vertex.pos.z = pMesh->mVertices[i].z;
+
+        //also get normals from model for light calculates and another lots of things
+        vertex.n.x = pMesh->mNormals[i].x;
+        vertex.n.y = pMesh->mNormals[i].y;
+        vertex.n.z = pMesh->mNormals[i].z;
+
+        //determine textur coordinates
+        if (pMesh->mTextureCoords[0])
+        {
+            vertex.tex.x = (float)pMesh->mTextureCoords[0][i].x;
+            vertex.tex.y = (float)pMesh->mTextureCoords[0][i].y;
+        }
+
+        vertices.push_back(vertex); //add the vertices data to vertices vector
+    }
+
+    //Get indices
+    for (unsigned int i = 0; i < pMesh->mNumFaces; i++)
+    {
+        aiFace face = pMesh->mFaces[i]; //get face count from mesh
+
+        for (unsigned int j = 0; j < face.mNumIndices; j++)
+            indices.push_back(face.mIndices[j]);    //add the indices data to indices vector
+    }
+
+    return Mesh(pDevice, pContext, vertices, indices);  //bind data to index and vertex buffers
 }

@@ -8,7 +8,6 @@ static bool wireFrame;
 static float Spos[3] = { 0,0,0 };
 static float Srot[3] = { 0,0,0 };
 static float Sscale[3] = { 1,1,1 };
-using namespace std::literals;
 
 bool Graphics::InitializeGraphics(HWND hwnd, const int width, const int height)
 {
@@ -146,11 +145,12 @@ bool Graphics::InitDxBase(HWND hwnd, const int width, const int height)
 	hr = pDevice->CreateSamplerState(&sampler_desc, &st);
 	if (FAILED(hr)) { Error::Log(hr, "Failed to create sampler state"); }
 
-	wic = std::make_unique<WICTexture>(width, height);
-
-	model.InitWithMtl("models\\nano_textured\\nanosuit.obj", pDevice.Get(), pContext.Get());
+	//model initialize
+	model.Init("models\\sponza\\sponza.obj", pDevice.Get(), pContext.Get());
 	
+	//point light initialize
 	pointlight.Init(pDevice.Get(), pContext.Get());
+
 	//set primitive topology
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -167,8 +167,10 @@ bool Graphics::InitDxBase(HWND hwnd, const int width, const int height)
 
 bool Graphics::InitShaders()
 {
+	//pvs.Init(L"PhongVS.cso", pDevice.Get());
 	pvs.Init(L"PhongVS.cso", pDevice.Get());
 
+	//pps.Init(L"PhongPS.cso", pDevice.Get());
 	pps.Init(L"PhongPS.cso", pDevice.Get());
 
 	//gets data from vertex shader with input layout
@@ -212,16 +214,15 @@ bool Graphics::SceneGraph()
 	else
 		pContext->RSSetState(pRasterizerWireframe.Get());
 
-	pointlight.Draw(pDevice.Get(), pContext.Get(), cam3D);
-
 	pil->Bind(pContext.Get());
 	pvs.Bind(pContext.Get());
 	pps.Bind(pContext.Get());
-	model.GetTex().Bind(pContext.Get());
 	pContext->PSSetSamplers(0u, 1u, st.GetAddressOf());
-	ui->ClassicUI(&model, "Model", Spos, Srot, Sscale);
+	ui->ClassicUI(&model, "Model", Spos, Srot, Sscale, &wireFrame);
 	pointlight.BindCB(pContext.Get());
 	model.Render(cam3D);
+
+	pointlight.Draw(pDevice.Get(), pContext.Get(), cam3D);
 
 	//fps counter
 	static int fpsCounter = 0;
@@ -234,9 +235,6 @@ bool Graphics::SceneGraph()
 		timer.Restart();
 	}
 	OutputDebugStringA(fps.c_str());
-
-	aiString a = model.GetTexturePath();
-	int qq = 0;
 
 	return true;
 }

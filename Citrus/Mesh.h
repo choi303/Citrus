@@ -18,10 +18,12 @@ class Mesh
 {
 public:
 	Mesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std::vector<Vertex>& vertices, std::vector<signed int>& indices);
+	Mesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std::vector<Vertex>& vertices, std::vector<signed int>& indices,
+		std::vector<Texture>& textures);
 	void DrawMesh(ID3D11DeviceContext* pContext) const;
-	static Mesh ProcessMeshData(aiMesh* pMesh, const aiScene* pScene, ID3D11DeviceContext* pContext, ID3D11Device* pDevice);
 private:
 	std::unique_ptr<VertexBuffer<Vertex>> vb;
 	std::unique_ptr<IndexBuffer> ib;
+	std::vector<Texture> textures;
 };
 
