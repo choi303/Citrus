@@ -9,7 +9,10 @@ void App::Init(std::string wndName, std::string className, HINSTANCE hInstance, 
 		Error::Log("Something happon when initialize the window (overload)");
 	}
 
-	wnd.InitializeGraphics(width, height);
+	if (!gfx.InitializeGraphics(wnd.GetHWND(), width, height))
+	{
+		Error::Log("Failed to initialize graphics");
+	}
 }
 
 void App::Update() noexcept
@@ -45,7 +48,7 @@ void App::Update() noexcept
 		{
 			if (me.GetType() == MouseEvent::EventType::RAW_MOVE)
 			{
-				wnd.gfx->cam3D.AdjustRotation((float)me.GetPosY() * 0.009f, (float)me.GetPosX() * 0.009f, 0);
+				gfx.cam3D.AdjustRotation((float)me.GetPosY() * 0.009f, (float)me.GetPosX() * 0.009f, 0);
 			}
 		}
 	}
@@ -60,27 +63,27 @@ void App::Update() noexcept
 	}
 	if (keyboard.KeyIsPressed('W'))
 	{
-		wnd.gfx->cam3D.AdjustPosition(wnd.gfx->cam3D.GetForwardVector() * cameraSpeed * deltaTime);
+		gfx.cam3D.AdjustPosition(gfx.cam3D.GetForwardVector() * cameraSpeed * deltaTime);
 	}
 	if (keyboard.KeyIsPressed('S'))
 	{
-		wnd.gfx->cam3D.AdjustPosition(wnd.gfx->cam3D.GetBackwardVector() * cameraSpeed * deltaTime);
+		gfx.cam3D.AdjustPosition(gfx.cam3D.GetBackwardVector() * cameraSpeed * deltaTime);
 	}
 	if (keyboard.KeyIsPressed('A'))
 	{
-		wnd.gfx->cam3D.AdjustPosition(wnd.gfx->cam3D.GetLeftVector() * cameraSpeed * deltaTime);
+		gfx.cam3D.AdjustPosition(gfx.cam3D.GetLeftVector() * cameraSpeed * deltaTime);
 	}
 	if (keyboard.KeyIsPressed('D'))
 	{
-		wnd.gfx->cam3D.AdjustPosition(wnd.gfx->cam3D.GetRightVector() * cameraSpeed * deltaTime);
+		gfx.cam3D.AdjustPosition(gfx.cam3D.GetRightVector() * cameraSpeed * deltaTime);
 	}
 	if (keyboard.KeyIsPressed('Q'))
 	{
-		wnd.gfx->cam3D.AdjustPosition(0.0f, cameraSpeed * deltaTime, 0.0f);
+		gfx.cam3D.AdjustPosition(0.0f, cameraSpeed * deltaTime, 0.0f);
 	}
 	if (keyboard.KeyIsPressed('E'))
 	{
-		wnd.gfx->cam3D.AdjustPosition(0.0f, -cameraSpeed * deltaTime, 0.0f);
+		gfx.cam3D.AdjustPosition(0.0f, -cameraSpeed * deltaTime, 0.0f);
 	}
 }
 
@@ -88,12 +91,12 @@ void App::RenderFrame()
 {
 	//Render Frame/sec (75)
 	//Draw test triangle all shaded
-	wnd.gfx->BeginFrame();
-	if (!wnd.gfx->SceneGraph())
+	gfx.BeginFrame();
+	if (!gfx.SceneGraph())
 	{
 		Error::Log("Something happon to run the test triangle");
 	}
-	wnd.gfx->EndFrame();
+	gfx.EndFrame();
 }
 
 bool App::ProcessMessages(HINSTANCE hInstance) noexcept

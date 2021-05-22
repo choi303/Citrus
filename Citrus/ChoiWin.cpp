@@ -118,7 +118,6 @@ bool ChoiWin::InitializeWindow(std::string wndName, std::string className, HINST
             Error::Log("Failed to create window ex");
             return false;
         }
-        gfx = std::make_unique<Graphics>();
         ShowWindow(hwnd, SW_SHOW);    //show the  window
         UpdateWindow(hwnd);
     }
@@ -128,14 +127,6 @@ bool ChoiWin::InitializeWindow(std::string wndName, std::string className, HINST
     }
 
     return true;    //if there is no errors just return true
-}
-
-bool ChoiWin::InitializeGraphics(const int width, const int height)
-{
-    if(!gfx->InitializeGraphics(hwnd, width, height))
-    {Error::Log("Failed to initialize graphics"); return false; }
-
-    return true;
 }
 
 HWND ChoiWin::GetHWND() const noexcept

@@ -3,6 +3,7 @@
 #include "KeyboardClass.h"
 #include "MouseClass.h"
 #include "Timer.h"
+#include "Graphics.h"
 
 class WndProc
 {
@@ -13,5 +14,6 @@ protected:
 	ChoiWin wnd;
 	KeyboardClass keyboard;
 	MouseClass mouse;
+	Graphics gfx;
 	Timer timer;
 };

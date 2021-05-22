@@ -1,16 +1,16 @@
 #pragma once
 #include "GfxBase.h"
 #include "PointLight.h"
-#include "Texture.h"
 
 class Graphics
 {
 public:
-	Graphics() = default;
+	Graphics() {}
 	bool InitializeGraphics(HWND hwnd, const int width, const int height);
 	bool InitDxBase(HWND hwnd, const int width, const int height);
 	bool InitShaders();
-	~Graphics() = default;
+	Graphics(Graphics&) = delete;
+	~Graphics() {}
 public:
 	void BeginFrame() noexcept;
 	void EndFrame() noexcept;
@@ -33,8 +33,6 @@ private:
 	PixelShader pps;
 	Model model;
 	PointLight pointlight;
-	std::unique_ptr <WICTexture> wic;
-	Texture tex;
 	std::unique_ptr<UI> ui;
 	std::unique_ptr<InputLayout> pil;
 	//----
