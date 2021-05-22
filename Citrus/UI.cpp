@@ -1,7 +1,7 @@
 #include "UI.h"
 
 //Classic UI
-void UI::ClassicUI(Model* model, std::string uiTitle, float pos[3], float rot[3], float scale[3])
+void UI::ClassicUI(Model* model, std::string uiTitle, float pos[3], float rot[3], float scale[3], bool* wireframe)
 {
     model->SetPos(pos[0], pos[1], pos[2]);
     model->SetRot(rot[0], rot[1], rot[2]);
@@ -10,6 +10,7 @@ void UI::ClassicUI(Model* model, std::string uiTitle, float pos[3], float rot[3]
     ImGui::DragFloat3("Pos", pos, 0.1f, (float)-999999999, (float)999999999);
     ImGui::DragFloat3("Rot", rot, 0.1f, (float)-999999999, (float)999999999);
     ImGui::DragFloat3("Scale", scale, 0.1f, (float)-999999999, (float)999999999);
+    ImGui::Checkbox("Wireframe", wireframe);
     ImGui::End();
 }
 
