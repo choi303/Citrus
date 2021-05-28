@@ -6,6 +6,7 @@
 #include <assimp\scene.h>
 #include <assimp\postprocess.h>
 #include "imgui\imgui.h"
+#include "Shaders.h"
 
 using namespace DirectX;
 
@@ -29,7 +30,6 @@ public:
 	XMFLOAT3 GetPos();
 	XMFLOAT3 GetRot();
 	XMFLOAT3 GetScale();
-	void Bind(ID3D11DeviceContext* pContext);
 	~Model() = default;
 private:
 	std::vector<Mesh> meshes;
@@ -48,5 +48,7 @@ private:
 	XMFLOAT3 scale = XMFLOAT3{ 1,1,1 };
 	std::unique_ptr<Texture> text;
 	std::vector<Texture> textures;
+	PixelShader specshader;
 	aiString textureName;
+	std::string path;
 };

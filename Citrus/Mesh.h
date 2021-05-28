@@ -24,6 +24,6 @@ public:
 private:
 	std::unique_ptr<VertexBuffer<Vertex>> vb;
 	std::unique_ptr<IndexBuffer> ib;
-	std::vector<Texture> textures;
+	mutable std::vector<Texture> textures;
 };
 

@@ -9,6 +9,8 @@ struct Light
 {
 	XMFLOAT3 lightpos;
 	float lightIntensity;
+	XMFLOAT3 pad;
+	float ambientIntensity;
 };
 
 class PointLight
@@ -18,7 +20,6 @@ public:
 	bool Init(ID3D11Device* device, ID3D11DeviceContext* context);
 	void Draw(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, Camera3D cam);
 	void BindCB(ID3D11DeviceContext* pContext);
-	XMFLOAT3 GetPos();
 	~PointLight() = default;
 private:
 	Model lightmodel;

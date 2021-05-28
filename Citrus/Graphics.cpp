@@ -1,22 +1,21 @@
 #include "Graphics.h"
 #include "imgui\imgui_impl_dx11.h"
 #include "imgui\imgui_impl_win32.h"
-#include "imgui\imgui.h"
 #include <d3dcompiler.h>
-
-static bool wireFrame;
-static float Spos[3] = { 0,0,0 };
-static float Srot[3] = { 0,0,0 };
-static float Sscale[3] = { 1,1,1 };
 
 bool Graphics::InitializeGraphics(HWND hwnd, const int width, const int height)
 {
 	timer.Start();
-	
-	if (!InitDxBase(hwnd, width, height)) 
-	{ Error::Log("Failed to init dx11 basement func."); return false; }
 
-	if (!InitShaders()) { Error::Log("Failed to init dx11 basement func."); return false;}
+	if (!InitDxBase(hwnd, width, height))
+	{
+		Error::Log("Failed to init dx11 basement func."); return false;
+	}
+
+	if (!InitScene())
+	{
+		Error::Log("Failed to initialize scene."); return false;
+	}
 
 	return true;
 }
@@ -105,20 +104,6 @@ bool Graphics::InitDxBase(HWND hwnd, const int width, const int height)
 
 	pContext->OMSetRenderTargets(1u, pRtv.GetAddressOf(), pDSV.Get());
 
-	//create rasterizer 
-	CD3D11_RASTERIZER_DESC pRasterizerDesc(D3D11_DEFAULT);
-	pRasterizerDesc.FillMode = D3D11_FILL_SOLID;
-	pRasterizerDesc.CullMode = D3D11_CULL_BACK;
-	hr = pDevice->CreateRasterizerState(&pRasterizerDesc, &pRasterizer);
-	if (FAILED(hr)) { Error::Log(hr, "Failed to create rasterizer state"); return false; }
-
-	//create rasterizer 
-	CD3D11_RASTERIZER_DESC pRasterizerDescWireframe(D3D11_DEFAULT);
-	pRasterizerDescWireframe.FillMode = D3D11_FILL_WIREFRAME;
-	pRasterizerDescWireframe.CullMode = D3D11_CULL_BACK;
-	hr = pDevice->CreateRasterizerState(&pRasterizerDescWireframe, &pRasterizerWireframe);
-	if (FAILED(hr)) { Error::Log(hr, "Failed to create rasterizer state"); return false; }
-
 	//create viewport
 	D3D11_VIEWPORT vp;
 	vp.Width = (FLOAT)width;
@@ -132,24 +117,6 @@ bool Graphics::InitDxBase(HWND hwnd, const int width, const int height)
 	cam3D.SetPosition(0.0f, 0.0f, -2.0f);
 	//camera 3d
 	cam3D.SetProjectionValues(70.0f, static_cast<float>(width) / static_cast<float>(height), 0.1f, 3000.0f);
-
-	//create sampler state
-	CD3D11_SAMPLER_DESC sampler_desc(D3D11_DEFAULT);
-	sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	sampler_desc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-	sampler_desc.MinLOD = 0;
-	sampler_desc.MaxLOD = D3D11_FLOAT32_MAX;
-	hr = pDevice->CreateSamplerState(&sampler_desc, &st);
-	if (FAILED(hr)) { Error::Log(hr, "Failed to create sampler state"); }
-
-	//model initialize
-	model.Init("models\\sponza\\sponza.obj", pDevice.Get(), pContext.Get());
-	
-	//point light initialize
-	pointlight.Init(pDevice.Get(), pContext.Get());
 
 	//set primitive topology
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -165,23 +132,9 @@ bool Graphics::InitDxBase(HWND hwnd, const int width, const int height)
 	return true;
 }
 
-bool Graphics::InitShaders()
+bool Graphics::InitScene()
 {
-	//pvs.Init(L"PhongVS.cso", pDevice.Get());
-	pvs.Init(L"PhongVS.cso", pDevice.Get());
-
-	//pps.Init(L"PhongPS.cso", pDevice.Get());
-	pps.Init(L"PhongPS.cso", pDevice.Get());
-
-	//gets data from vertex shader with input layout
-	const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
-	{
-		{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"Texcoord", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"Normal", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-	};
-	//create i.l. and bind
-	pil = std::make_unique<InputLayout>(pDevice.Get(), ied, &pvs);
+	object.Init(pDevice.Get(), pContext.Get(), "Models\\nano_textured\\nanosuit.obj");
 
 	return true;
 }
@@ -208,22 +161,15 @@ void Graphics::EndFrame() noexcept
 
 bool Graphics::SceneGraph()
 {
-	//bind rasterizer
-	if (!wireFrame)
-		pContext->RSSetState(pRasterizer.Get());
-	else
-		pContext->RSSetState(pRasterizerWireframe.Get());
+	object.Draw(cam3D);
 
-	pil->Bind(pContext.Get());
-	pvs.Bind(pContext.Get());
-	pps.Bind(pContext.Get());
-	pContext->PSSetSamplers(0u, 1u, st.GetAddressOf());
-	ui->ClassicUI(&model, "Model", Spos, Srot, Sscale, &wireFrame);
-	pointlight.BindCB(pContext.Get());
-	model.Render(cam3D);
+	FPSCounter();
 
-	pointlight.Draw(pDevice.Get(), pContext.Get(), cam3D);
+	return true;
+}
 
+void Graphics::FPSCounter()
+{
 	//fps counter
 	static int fpsCounter = 0;
 	fpsCounter += 1;
@@ -235,6 +181,4 @@ bool Graphics::SceneGraph()
 		timer.Restart();
 	}
 	OutputDebugStringA(fps.c_str());
-
-	return true;
 }

@@ -15,7 +15,8 @@ void UI::ClassicUI(Model* model, std::string uiTitle, float pos[3], float rot[3]
 }
 
 //Custom UI for point light
-void UI::PointLight(Model* model, std::string uiTitle, float pos[3], float rot[3], float scale[3], float* Intensity)
+void UI::PointLight(Model* model, std::string uiTitle, float pos[3], float rot[3], float scale[3], float* Intensity,
+    float* ambientIntensity)
 {
     model->SetPos(pos[0], pos[1], pos[2]);
     model->SetRot(rot[0], rot[1], rot[2]);
@@ -24,7 +25,8 @@ void UI::PointLight(Model* model, std::string uiTitle, float pos[3], float rot[3
     ImGui::DragFloat3("Pos", pos, 0.1f, (float)-999999999, (float)999999999);
     ImGui::DragFloat3("Rot", rot, 0.1f, (float)-999999999, (float)999999999);
     ImGui::DragFloat3("Scale", scale, 0.1f, (float)-999999999, (float)999999999);
-    ImGui::DragFloat("Light\nIntensity", Intensity, 0.01f, 0.0f, 1000.0f);
+    ImGui::DragFloat("Light\nIntensity", Intensity, 0.01f, 0.0f, 10000.0f);
+    ImGui::DragFloat("Ambient\nIntensity", ambientIntensity, 0.01f, 0.0f, 10.0f);
     ImGui::End();
 }
 

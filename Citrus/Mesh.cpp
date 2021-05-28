@@ -25,10 +25,9 @@ Mesh::Mesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std::vector<Ver
 
 void Mesh::DrawMesh(ID3D11DeviceContext* pContext) const
 {
-   for (int i = 0; i < textures.size(); i++)
+   for (unsigned int i = 0; i < textures.size(); i++)
    {
-       pContext->PSSetShaderResources(0u, 1u, textures[i].m_view.GetAddressOf());
-      
+       textures[i].Bind(pContext);
    }
 
     vb->Bind(pContext);
