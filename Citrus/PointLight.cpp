@@ -59,7 +59,7 @@ void PointLight::Draw(Camera3D cam)
 	cblight->MapData();
 	//point light ui creation
 	ui->PointLight(&lightmodel, "Point Light", Spos, Srot, Sscale, &intensity, &ambientIntensity, &normalMappingEnabled,
-		&normalIntensity, &specularIntensity);
+		&specularIntensity);
 	//model render
 	lightmodel.Render(cam);
 }

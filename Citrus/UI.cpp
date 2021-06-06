@@ -16,7 +16,7 @@ void UI::ClassicUI(Model* model, std::string uiTitle, float pos[3], float rot[3]
 
 //Custom UI for point light
 void UI::PointLight(Model* model, std::string uiTitle, float pos[3], float rot[3], float scale[3], float* Intensity,
-    float* ambientIntensity, BOOL* normalMappingEnabled, float* normalIntensity, float* specularlIntensity) const
+    float* ambientIntensity, BOOL* normalMappingEnabled, float* specularlIntensity) const
 {
     model->SetPos(pos[0], pos[1], pos[2]);
     model->SetRot(rot[0], rot[1], rot[2]);
@@ -27,7 +27,6 @@ void UI::PointLight(Model* model, std::string uiTitle, float pos[3], float rot[3
     ImGui::DragFloat3("Scale", scale, 0.01f, -999999999.0f, 999999999.0f);
     ImGui::DragFloat("Light\nIntensity", Intensity, 0.01f, 0.0f, 10000.0f);
     ImGui::DragFloat("Ambient\nIntensity", ambientIntensity, 0.01f, 0.0f, 10.0f);
-    ImGui::DragFloat("Normal\nIntensity", normalIntensity, 0.01f, 0.0f, 10.0f);
     ImGui::DragFloat("Specular\nIntensity", specularlIntensity, 0.01f, 0.0f, 10.0f);
     ImGui::Checkbox("Normal Map", reinterpret_cast<bool*>(normalMappingEnabled));
     ImGui::End();
