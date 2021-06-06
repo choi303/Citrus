@@ -4,9 +4,9 @@ void App::Init(std::string wndName, std::string className, HINSTANCE hInstance, 
 {
 	timer.Start();
 	//Overloaded initialize window
-	if (!wnd.InitializeWindow(wndName.c_str(), className.c_str(), hInstance, width, height))
+	if (!wnd.InitializeWindow(wndName, className, hInstance, width, height))
 	{
-		Error::Log("Something happon when initialize the window (overload)");
+		Error::Log("Something happened when initialize the window (overload)");
 	}
 
 	if (!gfx.InitializeGraphics(wnd.GetHWND(), width, height))
@@ -17,7 +17,7 @@ void App::Init(std::string wndName, std::string className, HINSTANCE hInstance, 
 
 void App::Update() noexcept
 {
-	float deltaTime = (float)timer.GetMilisecondsElapsed();
+	const float deltaTime = static_cast<float>(timer.GetMilisecondsElapsed());
 	timer.Restart();
 	//Set any char to any event
 	while (!keyboard.CharBufferIsEmpty())
@@ -34,10 +34,6 @@ void App::Update() noexcept
 		if (keycode == VK_ESCAPE) {
 			exit(0);
 		}
-
-		if (keycode == 'I') {
-			MessageBoxA(NULL, "Janus 0.1 - Janus Renderer", "Janus Info", MB_OK | MB_ICONINFORMATION);
-		}
 	}
 	float cameraSpeed = 0.0005f;
 	//Set any mouse event to any event
@@ -48,7 +44,7 @@ void App::Update() noexcept
 		{
 			if (me.GetType() == MouseEvent::EventType::RAW_MOVE)
 			{
-				gfx.cam3D.AdjustRotation((float)me.GetPosY() * 0.009f, (float)me.GetPosX() * 0.009f, 0);
+				gfx.cam3D.AdjustRotation(static_cast<float>(me.GetPosY()) * 0.009f, static_cast<float>(me.GetPosX()) * 0.009f, 0);
 			}
 		}
 	}
@@ -89,17 +85,18 @@ void App::Update() noexcept
 
 void App::RenderFrame()
 {
-	//Render Frame/sec (75)
+	//Render Frame/sec (refresh rate)
 	//Draw test triangle all shaded
 	gfx.BeginFrame();
+	FPSCounter();
 	if (!gfx.SceneGraph())
 	{
-		Error::Log("Something happon to run the test triangle");
+		Error::Log("Something happened to run the test triangle");
 	}
 	gfx.EndFrame();
 }
 
-bool App::ProcessMessages(HINSTANCE hInstance) noexcept
+bool App::ProcessMessages(HINSTANCE hInstance) const noexcept
 {
 	MSG msg;
 	HWND hwnd = wnd.GetHWND();
@@ -115,11 +112,26 @@ bool App::ProcessMessages(HINSTANCE hInstance) noexcept
 	{
 		if (!IsWindow(hwnd))
 		{
-			hwnd = NULL; //Message processing loop takes care of destroying this window
+			hwnd = nullptr; //Message processing loop takes care of destroying this window
 			UnregisterClass("janus", hInstance);
 			return false;
 		}
 	}
 
 	return true;
+}
+
+void App::FPSCounter()
+{
+	//fps counter
+	static int fpsCounter = 0;
+	fpsCounter += 1;
+	static std::string fps;
+	if (gfx.timer.GetMilisecondsElapsed() > 1000.0f)
+	{
+		fps = "FPS: " + std::to_string(fpsCounter) + "\n";
+		fpsCounter = 0;
+		gfx.timer.Restart();
+	}
+	UI::DeveloperUI(fps.c_str(), &gfx.cam3D);
 }

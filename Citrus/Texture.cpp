@@ -18,19 +18,19 @@ Texture::Texture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const std
 		const DirectX::Image* pImage = pScratch.GetImage(0, 0, 0);
 		assert(pImage);
 
-		CD3D11_TEXTURE2D_DESC textureDesc(pImage->format, (UINT)pImage->width, (UINT)pImage->height);
+		CD3D11_TEXTURE2D_DESC textureDesc(pImage->format, static_cast<UINT>(pImage->width), static_cast<UINT>(pImage->height));
 		textureDesc.MipLevels = 1;
 		ID3D11Texture2D* p2DTexture = nullptr;
 		D3D11_SUBRESOURCE_DATA subResourceData = {};
 		subResourceData.pSysMem = pImage->pixels;
-		subResourceData.SysMemPitch = (UINT)pImage->rowPitch;
+		subResourceData.SysMemPitch = static_cast<UINT>(pImage->rowPitch);
 		hr = pDevice->CreateTexture2D(&textureDesc, &subResourceData, &p2DTexture);
 		if (FAILED(hr)) { Error::Log(hr, "Failed to create texture2d"); }
 
 		m_resource = static_cast<ID3D11Texture2D*>(p2DTexture);
 		CD3D11_SHADER_RESOURCE_VIEW_DESC srvDesc(D3D11_SRV_DIMENSION_TEXTURE2D, textureDesc.Format);
 		hr = pDevice->CreateShaderResourceView(m_resource.Get(), &srvDesc, &m_view);
-		if (FAILED(hr)) { Error::Log(hr, "Failed to create shader reource view"); }
+		if (FAILED(hr)) { Error::Log(hr, "Failed to create shader resource view"); }
 	}
 	else if (extension == "tga")
 	{
@@ -43,12 +43,14 @@ Texture::Texture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const std
 		const DirectX::Image* pImage = pScratch.GetImage(0, 0, 0);
 		assert(pImage);
 
-		CD3D11_TEXTURE2D_DESC textureDesc(pImage->format, (UINT)pImage->width, (UINT)pImage->height);
+		CD3D11_TEXTURE2D_DESC textureDesc(pImage->format, static_cast<UINT>(pImage->width), static_cast<UINT>(pImage->height));
 		textureDesc.MipLevels = 1;
+		textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+		textureDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 		ID3D11Texture2D* p2DTexture = nullptr;
 		D3D11_SUBRESOURCE_DATA subResourceData{};
 		subResourceData.pSysMem = pImage->pixels;
-		subResourceData.SysMemPitch = (UINT)pImage->rowPitch;
+		subResourceData.SysMemPitch = static_cast<UINT>(pImage->rowPitch);
 		hr = pDevice->CreateTexture2D(&textureDesc, &subResourceData, &p2DTexture);
 		if (FAILED(hr)) { Error::Log(hr, "Failed to create texture2d"); }
 
@@ -68,7 +70,7 @@ Texture::Texture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const std
 		const DirectX::Image* pImage = pScratch.GetImage(0, 0, 0);
 		assert(pImage);
 
-		CD3D11_TEXTURE2D_DESC textureDesc(pImage->format, (UINT)pImage->width, (UINT)pImage->height);
+		CD3D11_TEXTURE2D_DESC textureDesc(pImage->format, static_cast<UINT>(pImage->width), static_cast<UINT>(pImage->height));
 		textureDesc.MipLevels = 0;
 		textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
 		textureDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
@@ -88,7 +90,7 @@ Texture::Texture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const std
 	pContext->GenerateMips(m_view.Get());
 }
 
-ID3D11ShaderResourceView* Texture::GetShaderResourceView()
+ID3D11ShaderResourceView* Texture::GetShaderResourceView() const
 {
 	return m_view.Get();
 }

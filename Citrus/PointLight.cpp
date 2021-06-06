@@ -1,13 +1,17 @@
 #include "PointLight.h"
 
-static float Spos[3] = { 0,10.0f,-10.0 };
+static float Spos[3] = { 0,1.0f, -1.0 };
 static float Srot[3] = { 0,0,0 };
-static float Sscale[3] = { 0.1f, 0.1f, 0.1f };
+static float Sscale[3] = { -0.0f, -0.0f, -0.0f };
 static float intensity = 1.0f;
 static float ambientIntensity = 0.6f;
+static float specularIntensity = 1.0f;
+static BOOL normalMappingEnabled = TRUE;
 
 bool PointLight::Init(ID3D11Device* device, ID3D11DeviceContext* context)
 {
+	this->device = device;
+	this->context = context;
 	//vertex shader initialize
 	vs.Init(L"TextureVS.cso", device);
 	//pixel shader initialize
@@ -27,29 +31,45 @@ bool PointLight::Init(ID3D11Device* device, ID3D11DeviceContext* context)
 	//create and initialize constant buffer of ligth
 	cblight = std::make_unique<CBuffer<Light>>();
 	cblight->Init(device, context);
+	//create and initialize constant buffer of ligth specular
+	cblightspec = std::make_unique<CBuffer<LightSpec>>();
+	cblightspec->Init(device, context);
 	//model initialize
 	lightmodel.InitNoMtl("models\\light.fbx", device, context);
 
     return true;
 }
 
-void PointLight::Draw(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, Camera3D cam)
+void PointLight::Draw(Camera3D cam)
 {
-	il->Bind(pContext);	//input layout bind
-	vs.Bind(pContext);	//vertex shader bind
-	ps.Bind(pContext);	//pixel shader bind
-	tex->Bind(pContext); //textrue bind
+	il->Bind(context);	//input layout bind
+	vs.Bind(context);	//vertex shader bind
+	ps.Bind(context);	//pixel shader bind
+	tex->Bind(context); //textrue bind
 	cblight->data.lightpos = lightmodel.GetPos();		//constant buffer initialize
 	cblight->data.lightIntensity = intensity;			//constant buffer initialize
 	cblight->data.ambientIntensity = ambientIntensity;	//constant buffer initialize
+	cblight->data.normalMappingEnabled = normalMappingEnabled;	//constant buffer initialize
+	cblight->data.specularIntensity = specularIntensity;	//constant buffer initialize
 	cblight->MapData();	//apply data
+	cblightspec->data.lightpos = lightmodel.GetPos();
+	cblightspec->data.lightIntensity = intensity;
+	cblightspec->data.ambientIntensity = ambientIntensity;
+	cblightspec->data.specularIntensity = specularIntensity;
+	cblight->MapData();
 	//point light ui creation
-	ui->PointLight(&lightmodel, "Point Light", Spos, Srot, Sscale, &intensity, &ambientIntensity);
+	ui->PointLight(&lightmodel, "Point Light", Spos, Srot, Sscale, &intensity, &ambientIntensity, &normalMappingEnabled,
+		&normalIntensity, &specularIntensity);
 	//model render
 	lightmodel.Render(cam);
 }
 
-void PointLight::BindCB(ID3D11DeviceContext* pContext)
+void PointLight::BindCB() const
 {
-	cblight->PSBind(pContext, 0u, 1u);	//constant buffer bind
+	cblight->PSBind(context, 0u, 1u);	//constant buffer bind
+}
+
+void PointLight::BindCBSpec() const
+{
+	cblightspec->PSBind(context, 0u, 1u);
 }

@@ -9,7 +9,7 @@ int WINAPI WinMain(HINSTANCE hInstance,    //Main windows function
     {
         //Initialize Window//
         App app; //Create a window
-        app.Init("Citrus 0.1", "janus", hInstance, 1366, 900);
+        app.Init("Citrus 0.1", "janus", hInstance, 1600, 900);
         {
             while (app.ProcessMessages(hInstance))
             {

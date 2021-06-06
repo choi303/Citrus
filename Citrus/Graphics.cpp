@@ -1,7 +1,6 @@
 #include "Graphics.h"
 #include "imgui\imgui_impl_dx11.h"
 #include "imgui\imgui_impl_win32.h"
-#include <d3dcompiler.h>
 
 bool Graphics::InitializeGraphics(HWND hwnd, const int width, const int height)
 {
@@ -41,12 +40,16 @@ bool Graphics::InitDxBase(HWND hwnd, const int width, const int height)
 	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	sd.Flags = 0;
 
+	UINT debug_flag = 0;
+#ifndef _DEBUG
+	debug_flag = D3D11_CREATE_DEVICE_DEBUG;
+#endif
 	HRESULT hr;
 	hr = D3D11CreateDeviceAndSwapChain(
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
-		0,
+		debug_flag,
 		nullptr,
 		0,
 		D3D11_SDK_VERSION,
@@ -106,8 +109,8 @@ bool Graphics::InitDxBase(HWND hwnd, const int width, const int height)
 
 	//create viewport
 	D3D11_VIEWPORT vp;
-	vp.Width = (FLOAT)width;
-	vp.Height = (FLOAT)height;
+	vp.Width = static_cast<FLOAT>(width);
+	vp.Height = static_cast<FLOAT>(height);
 	vp.MinDepth = 0;
 	vp.MaxDepth = 1;
 	vp.TopLeftX = 0;
@@ -116,7 +119,7 @@ bool Graphics::InitDxBase(HWND hwnd, const int width, const int height)
 
 	cam3D.SetPosition(0.0f, 0.0f, -2.0f);
 	//camera 3d
-	cam3D.SetProjectionValues(70.0f, static_cast<float>(width) / static_cast<float>(height), 0.1f, 3000.0f);
+	cam3D.SetProjectionValues(70.0f, static_cast<float>(width) / static_cast<float>(height), 0.01f, 400.0f);
 
 	//set primitive topology
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -124,33 +127,106 @@ bool Graphics::InitDxBase(HWND hwnd, const int width, const int height)
 	//imgui init
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(pDevice.Get(), pContext.Get());
-	ImGui::StyleColorsClassic();
+	//style of imgui windows
+	constexpr auto ColorFromBytes = [](const uint8_t r, const uint8_t g, const uint8_t b)
+	{
+		return ImVec4(static_cast<float>(r) / 255.0f, static_cast<float>(g) / 255.0f, static_cast<float>(b) / 255.0f, 1.0f);
+	};
 
+	auto& style = ImGui::GetStyle();
+	ImVec4* colors = style.Colors;
+
+	const ImVec4 bgColor = ColorFromBytes(37, 37, 38);
+	const ImVec4 lightBgColor = ColorFromBytes(82, 82, 85);
+	const ImVec4 veryLightBgColor = ColorFromBytes(90, 90, 95);
+
+	const ImVec4 panelColor = ColorFromBytes(51, 51, 55);
+	const ImVec4 panelHoverColor = ColorFromBytes(29, 151, 236);
+	const ImVec4 panelActiveColor = ColorFromBytes(0, 119, 200);
+
+	const ImVec4 textColor = ColorFromBytes(255, 255, 255);
+	const ImVec4 textDisabledColor = ColorFromBytes(151, 151, 151);
+	const ImVec4 borderColor = ColorFromBytes(78, 78, 78);
+
+	colors[ImGuiCol_Text] = textColor;
+	colors[ImGuiCol_TextDisabled] = textDisabledColor;
+	colors[ImGuiCol_TextSelectedBg] = panelActiveColor;
+	colors[ImGuiCol_WindowBg] = bgColor;
+	colors[ImGuiCol_ChildBg] = bgColor;
+	colors[ImGuiCol_PopupBg] = bgColor;
+	colors[ImGuiCol_Border] = borderColor;
+	colors[ImGuiCol_BorderShadow] = borderColor;
+	colors[ImGuiCol_FrameBg] = panelColor;
+	colors[ImGuiCol_FrameBgHovered] = panelHoverColor;
+	colors[ImGuiCol_FrameBgActive] = panelActiveColor;
+	colors[ImGuiCol_TitleBg] = bgColor;
+	colors[ImGuiCol_TitleBgActive] = bgColor;
+	colors[ImGuiCol_TitleBgCollapsed] = bgColor;
+	colors[ImGuiCol_MenuBarBg] = panelColor;
+	colors[ImGuiCol_ScrollbarBg] = panelColor;
+	colors[ImGuiCol_ScrollbarGrab] = lightBgColor;
+	colors[ImGuiCol_ScrollbarGrabHovered] = veryLightBgColor;
+	colors[ImGuiCol_ScrollbarGrabActive] = veryLightBgColor;
+	colors[ImGuiCol_CheckMark] = panelActiveColor;
+	colors[ImGuiCol_SliderGrab] = panelHoverColor;
+	colors[ImGuiCol_SliderGrabActive] = panelActiveColor;
+	colors[ImGuiCol_Button] = panelColor;
+	colors[ImGuiCol_ButtonHovered] = panelHoverColor;
+	colors[ImGuiCol_ButtonActive] = panelHoverColor;
+	colors[ImGuiCol_Header] = panelColor;
+	colors[ImGuiCol_HeaderHovered] = panelHoverColor;
+	colors[ImGuiCol_HeaderActive] = panelActiveColor;
+	colors[ImGuiCol_Separator] = borderColor;
+	colors[ImGuiCol_SeparatorHovered] = borderColor;
+	colors[ImGuiCol_SeparatorActive] = borderColor;
+	colors[ImGuiCol_ResizeGrip] = bgColor;
+	colors[ImGuiCol_ResizeGripHovered] = panelColor;
+	colors[ImGuiCol_ResizeGripActive] = lightBgColor;
+	colors[ImGuiCol_PlotLines] = panelActiveColor;
+	colors[ImGuiCol_PlotLinesHovered] = panelHoverColor;
+	colors[ImGuiCol_PlotHistogram] = panelActiveColor;
+	colors[ImGuiCol_PlotHistogramHovered] = panelHoverColor;
+	colors[ImGuiCol_DragDropTarget] = bgColor;
+	colors[ImGuiCol_NavHighlight] = bgColor;
+	colors[ImGuiCol_Tab] = bgColor;
+	colors[ImGuiCol_TabActive] = panelActiveColor;
+	colors[ImGuiCol_TabUnfocused] = bgColor;
+	colors[ImGuiCol_TabUnfocusedActive] = panelActiveColor;
+	colors[ImGuiCol_TabHovered] = panelHoverColor;
+
+	style.WindowRounding = 0.0f;
+	style.ChildRounding = 0.0f;
+	style.FrameRounding = 0.0f;
+	style.GrabRounding = 0.0f;
+	style.PopupRounding = 0.0f;
+	style.ScrollbarRounding = 0.0f;
+	style.TabRounding = 0.0f;
+	//-------------------------------
 	return true;
 }
 
 bool Graphics::InitScene()
 {
-	object.Init(pDevice.Get(), pContext.Get(), "Models\\nano_textured\\nanosuit.obj");
+	pointlight.Init(pDevice.Get(), pContext.Get());
+	object.Init(pDevice.Get(), pContext.Get(), "Models\\sponza\\sponza.obj");
 
 	return true;
 }
 
-void Graphics::BeginFrame() noexcept
+void Graphics::BeginFrame() const noexcept
 {
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 	//check out app.cpp render frame func for desc
-	float bgColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	float bgColor[] = { 0.0f, 0.0f, 0.2f, 1.0f };
 	pContext->ClearRenderTargetView(pRtv.Get(), bgColor);
 	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
 }
 
-void Graphics::EndFrame() noexcept
+void Graphics::EndFrame() const noexcept
 {
 	//imgui window init
 	ImGui::Render();
@@ -161,24 +237,13 @@ void Graphics::EndFrame() noexcept
 
 bool Graphics::SceneGraph()
 {
+	pointlight.Draw(cam3D);
+	if (object.HasNormal())
+		pointlight.BindCB();
+	else
+		pointlight.BindCBSpec();
+	
 	object.Draw(cam3D);
 
-	FPSCounter();
-
 	return true;
-}
-
-void Graphics::FPSCounter()
-{
-	//fps counter
-	static int fpsCounter = 0;
-	fpsCounter += 1;
-	std::string fps;
-	if (timer.GetMilisecondsElapsed() > 1000.0f)
-	{
-		fps = "FPS: " + std::to_string(fpsCounter) + "\n";
-		fpsCounter = 0;
-		timer.Restart();
-	}
-	OutputDebugStringA(fps.c_str());
 }

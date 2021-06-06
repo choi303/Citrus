@@ -13,6 +13,8 @@ public:
 public:
 	void Update() noexcept; // this function work every second
 	void RenderFrame();
-	bool ProcessMessages(HINSTANCE hInstance) noexcept;
+	bool ProcessMessages(HINSTANCE hInstance) const noexcept;
+private:
+	void FPSCounter();
 };
 

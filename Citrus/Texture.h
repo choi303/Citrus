@@ -8,7 +8,7 @@ namespace wrl = Microsoft::WRL;
 class Texture
 {
 public:
-	ID3D11ShaderResourceView* GetShaderResourceView();
+	ID3D11ShaderResourceView* GetShaderResourceView() const;
 	ID3D11ShaderResourceView** GetShaderResourceViewAddress();
 	void Bind(ID3D11DeviceContext* pContext);
 	Texture() = default;

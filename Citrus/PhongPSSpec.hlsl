@@ -2,8 +2,9 @@ cbuffer Light : register(b0)
 {
     float3 lightpos;
     float lightIntensity;
-    float3 pad;
     float ambientIntensity;
+    float specularIntensity;
+    float pad[2];
 };
 
 struct PS_IN
@@ -41,11 +42,11 @@ float4 main(PS_IN input) : SV_Target
     float3 r = reflectedLight * 2.0f - vectorToLight; //caclculate reflection
     
     //specular texture
-    float4 specularSample = spec.Sample(objsampler, input.tc);  //specular texture sample
-    float3 specularReflectionColor = specularSample.rgb;        //
-    float specularPower = pow(2.0f, specularSample.a * 13.0f);
+    float4 specularSample = spec.Sample(objsampler, input.tc); //specular texture sample
+    float3 specularReflectionColor = specularSample.rgb; //sample colors
+    float specularPower = pow(2.0f, specularSample.a * 13.0f); //specular power based texture (a) channel
     //specular reflection creation
-    float3 specular = att * (diffuseColor * diffuseIntesity) * pow(max(0.0f, dot(normalize(r), normalize(input.worldPos))), specularPower);
+    float3 specular = att * (diffuseColor * diffuseIntesity) * specularIntensity * pow(max(0.0f, dot(normalize(-r), normalize(input.worldPos))), specularPower);
     
     //final light (d + a) * texture or color
     float4 finalLight = float4(saturate((diffuse + ambientLight) * diff.Sample(objsampler, input.tc).rgb + specular * specularReflectionColor), 1.0f);
