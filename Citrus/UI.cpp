@@ -33,7 +33,7 @@ void UI::PointLight(Model* model, std::string uiTitle, float pos[3], float rot[3
 }
 
 //Developer UI
-void UI::DeveloperUI(const std::string fps, Camera3D* cam3d)
+void UI::DeveloperUI(const std::string fps, Camera3D* cam3d, bool* depthBufferEnabled)
 {
     ImGui::Begin("Developer Menu", 0, ImGuiWindowFlags_NoMove);
     ImGui::Text("Citrus Graphics Renderer v0.1");
@@ -43,5 +43,6 @@ void UI::DeveloperUI(const std::string fps, Camera3D* cam3d)
         cam3d->SetPosition(0.0f, 0.0f, -2.0f);
         cam3d->SetRotation(0.0f, 0.0f, 0.0f);
     }
+    ImGui::Checkbox("Depth Buffer Shader", depthBufferEnabled);
     ImGui::End();
 }

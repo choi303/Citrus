@@ -1,5 +1,6 @@
 #pragma once
 #include "GfxBase.h"
+#include "DepthBuffer.h"
 
 struct matrices
 {
@@ -14,6 +15,7 @@ public:
 	GameObject(GameObject&) = default;
 	bool Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std::string filepath);
 	bool HasNormal() const;
+	bool* GetDepthBufferEnabled();
 	void Draw(Camera3D cam);
 	Model* GetMesh();
 	~GameObject() = default;
@@ -35,5 +37,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> pRasterizerWireframe = nullptr;
 	std::string directory;
 	bool is_rendered = false;
+	DepthBuffer pDepthBuffer;
 };
 

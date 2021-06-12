@@ -118,7 +118,7 @@ bool Graphics::InitDxBase(HWND hwnd, const int width, const int height)
 
 	cam3D.SetPosition(0.0f, 0.0f, -2.0f);
 	//camera 3d
-	cam3D.SetProjectionValues(70.0f, static_cast<float>(width) / static_cast<float>(height), 0.01f, 99999.0f);
+	cam3D.SetProjectionValues(70.0f, static_cast<float>(width) / static_cast<float>(height), 1.0f, 99999.0f);
 
 	//set primitive topology
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

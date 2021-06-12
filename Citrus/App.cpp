@@ -2,6 +2,8 @@
 
 void App::Init(std::string wndName, std::string className, HINSTANCE hInstance, const int width, const int height)
 {
+	this->width = width;
+	this->height = height;
 	timer.Start();
 	//Overloaded initialize window
 	if (!wnd.InitializeWindow(wndName, className, hInstance, width, height))
@@ -135,5 +137,5 @@ void App::FPSCounter()
 		fpsCounter = 0;
 		gfx.timer.Restart();
 	}
-	UI::DeveloperUI(fps.c_str(), &gfx.cam3D);
+	UI::DeveloperUI(fps.c_str(), &gfx.cam3D, gfx.pObject.GetDepthBufferEnabled());
 }

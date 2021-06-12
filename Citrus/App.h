@@ -16,5 +16,7 @@ public:
 	bool ProcessMessages(HINSTANCE hInstance) const noexcept;
 private:
 	void FPSCounter();
+	int width;
+	int height;
 };
 

@@ -1,6 +1,7 @@
 #include "GameObject.h"
 
 static bool wireFrame;
+static bool depthEnabled = true;
 static float pos[3] = { 0,0,0 };
 static float rot[3] = { 0,0,0 };
 static float scale[3] = { 0.1f,0.1f,0.1f };
@@ -69,12 +70,19 @@ bool GameObject::Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std:
 	matrices_buffer = std::make_unique<CBuffer<matrices>>();
 	matrices_buffer->Init(pDevice, pContext);
 
+	pDepthBuffer.Init(pDevice, pContext);
+
     return true;
 }
 
 bool GameObject::HasNormal() const
 {
 	return pModel.GetHasNormal();
+}
+
+bool* GameObject::GetDepthBufferEnabled()
+{
+	return &depthEnabled;
 }
 
 void GameObject::Draw(Camera3D cam)
@@ -106,6 +114,12 @@ void GameObject::Draw(Camera3D cam)
 	matrices_buffer->data.camera_pos = cam.GetPositionFloat3();
 	matrices_buffer->MapData();
 	matrices_buffer->VSBind(pContext, 1u, 1u);
+
+	if (depthEnabled)
+	{
+		pDepthBuffer.Draw();
+	}
+
 	pModel.Render(cam);
 	is_rendered = true;
 }
