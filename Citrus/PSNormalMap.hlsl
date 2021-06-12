@@ -33,11 +33,10 @@ float4 main(PS_IN input) : SV_Target
     float3 bump_map = normal.Sample(object_sampler, input.tc);
     bump_map = (bump_map * 2.0f) - 1.0f;
 
-    float3 bump_normal = (bump_map.x * input.tan) + (bump_map.y * input.binormal) + (bump_map.z * input.normal);
-    bump_normal = normalize(bump_normal);
+    const float3 bump_normal = (bump_map.x * input.tan) + (bump_map.y * input.binormal) + (bump_map.z * input.normal);
 	//if normal mapping enabled enable normal map of object
 	if(normalMapEnabled)
-        input.normal = bump_normal;
+        input.normal = normalize(bump_normal);
 
     //ambient color
     const float3 ambient_color = { 0.15f, 0.15f, 0.15f };
@@ -60,7 +59,7 @@ float4 main(PS_IN input) : SV_Target
     
     //specular texture
     const float4 specular_sample = spec.Sample(object_sampler, input.tc);
-    const float specularPower = pow(2.0f, specular_sample.a * 7.0f); //specular power based texture (a) channel
+    const float specularPower = pow(2.0f, specular_sample.a * 6.0f); //specular power based texture (a) channel
     //specular reflection creation
     const float3 specular = att * diffuse * specularIntensity * pow(max(0.0f, dot(normalize(r), normalize(input.viewDirection))), specularPower);
     

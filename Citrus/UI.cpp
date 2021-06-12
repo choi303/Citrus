@@ -32,6 +32,7 @@ void UI::PointLight(Model* model, std::string uiTitle, float pos[3], float rot[3
     ImGui::End();
 }
 
+//Developer UI
 void UI::DeveloperUI(const std::string fps, Camera3D* cam3d)
 {
     ImGui::Begin("Developer Menu", 0, ImGuiWindowFlags_NoMove);

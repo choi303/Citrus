@@ -15,6 +15,7 @@ public:
 	bool Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std::string filepath);
 	bool HasNormal() const;
 	void Draw(Camera3D cam);
+	Model* GetMesh();
 	~GameObject() = default;
 private:
 	Model pModel;

@@ -81,6 +81,8 @@ void App::Update() noexcept
 	{
 		gfx.cam3D.AdjustPosition(0.0f, -cameraSpeed * deltaTime, 0.0f);
 	}
+
+	gfx.pSkyBox.SetPos(gfx.cam3D.GetPositionFloat3(), deltaTime);
 }
 
 void App::RenderFrame()

@@ -69,18 +69,17 @@ bool Graphics::InitDxBase(HWND hwnd, const int width, const int height)
 	hr = pChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(backBuffer.GetAddressOf()));
 	if (FAILED(hr)) { Error::Log(hr, "Failed to create Back buffer."); return false; }
 	//create render target view
-	hr = pDevice->CreateRenderTargetView(backBuffer.Get(), NULL, &pRtv);
+	hr = pDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, &pRtv);
 	if (FAILED(hr)) { Error::Log(hr, "Failed to create RTV."); return false; }
 
 	//create depth stencil state
-	wrl::ComPtr<ID3D11DepthStencilState> pDepthState = {};
 	CD3D11_DEPTH_STENCIL_DESC dsDesc(D3D11_DEFAULT);
 	dsDesc.DepthEnable = TRUE;
 	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
 	hr = pDevice->CreateDepthStencilState(&dsDesc, &pDepthState);
 	if (FAILED(hr)) { Error::Log(hr, "Failed to create depths stencil state check out description."); return false; }
-
+	
 	pContext->OMSetDepthStencilState(pDepthState.Get(), 1u);
 
 	//create depth stencil texture
@@ -95,7 +94,7 @@ bool Graphics::InitDxBase(HWND hwnd, const int width, const int height)
 	stencilDesc.SampleDesc.Quality = 0u;
 	stencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	hr = pDevice->CreateTexture2D(&stencilDesc, nullptr, &pDepthStencil);
-	if (FAILED(hr)) { Error::Log(hr, "Failed to create exture 2d in graphics.cpp"); return false; }
+	if (FAILED(hr)) { Error::Log(hr, "Failed to create texture 2d in graphics.cpp"); return false; }
 
 	//create depth stencil view
 	CD3D11_DEPTH_STENCIL_VIEW_DESC DSVdesc = {};
@@ -119,7 +118,7 @@ bool Graphics::InitDxBase(HWND hwnd, const int width, const int height)
 
 	cam3D.SetPosition(0.0f, 0.0f, -2.0f);
 	//camera 3d
-	cam3D.SetProjectionValues(70.0f, static_cast<float>(width) / static_cast<float>(height), 0.01f, 400.0f);
+	cam3D.SetProjectionValues(70.0f, static_cast<float>(width) / static_cast<float>(height), 0.01f, 99999.0f);
 
 	//set primitive topology
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -204,14 +203,16 @@ bool Graphics::InitDxBase(HWND hwnd, const int width, const int height)
 	style.ScrollbarRounding = 0.0f;
 	style.TabRounding = 0.0f;
 	//-------------------------------
+	
 	return true;
 }
 
 bool Graphics::InitScene()
 {
-	pointlight.Init(pDevice.Get(), pContext.Get());
-	object.Init(pDevice.Get(), pContext.Get(), "Models\\sponza\\sponza.obj");
-
+	pPointLight.Init(pDevice.Get(), pContext.Get());
+	pObject.Init(pDevice.Get(), pContext.Get(), "Models\\sponza\\sponza.obj");
+	pSkyBox.Init(pDevice.Get(), pContext.Get());
+	
 	return true;
 }
 
@@ -221,7 +222,7 @@ void Graphics::BeginFrame() const noexcept
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 	//check out app.cpp render frame func for desc
-	float bgColor[] = { 0.0f, 0.0f, 0.2f, 1.0f };
+	float bgColor[] = { 0.0f, 0.0f, 0.1f, 1.0f };
 	pContext->ClearRenderTargetView(pRtv.Get(), bgColor);
 	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
 }
@@ -237,13 +238,13 @@ void Graphics::EndFrame() const noexcept
 
 bool Graphics::SceneGraph()
 {
-	pointlight.Draw(cam3D);
-	if (object.HasNormal())
-		pointlight.BindCB();
+	pPointLight.Draw(cam3D);
+	if (pObject.HasNormal())
+		pPointLight.BindCB();
 	else
-		pointlight.BindCBSpec();
-	
-	object.Draw(cam3D);
-
+		pPointLight.BindCBSpec();
+	pContext->OMSetDepthStencilState(pDepthState.Get(), 0u);
+	pSkyBox.Draw(cam3D);
+	pObject.Draw(cam3D);
 	return true;
 }

@@ -109,3 +109,8 @@ void GameObject::Draw(Camera3D cam)
 	pModel.Render(cam);
 	is_rendered = true;
 }
+
+Model* GameObject::GetMesh()
+{
+	return &pModel;
+}

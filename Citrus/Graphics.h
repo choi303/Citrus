@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "SkyBox.h"
 
 class Graphics
 {
@@ -16,13 +17,15 @@ public:
 	bool SceneGraph();
 	Camera3D cam3D;
 	Timer timer;
+	SkyBox pSkyBox;
+	GameObject pObject;
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Device> pDevice = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> pContext = nullptr;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> pChain = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pRtv = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> pDSV = nullptr;
+	wrl::ComPtr<ID3D11DepthStencilState> pDepthState = nullptr;
 private:
-	GameObject object;
-	PointLight pointlight;
+	PointLight pPointLight;
 };

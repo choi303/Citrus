@@ -129,7 +129,10 @@ bool Model::LoadMeshNoMtl(const std::string& file_path)
     const aiScene* p_scene = importer.ReadFile(file_path, //read file from file
         aiProcess_Triangulate |
         aiProcess_ConvertToLeftHanded |
-        aiProcess_JoinIdenticalVertices
+        aiProcess_JoinIdenticalVertices |
+        aiProcess_FixInfacingNormals |
+        aiProcess_PreTransformVertices |
+        aiProcess_OptimizeMeshes
     );   //adding some flags for optimize
 
     if (p_scene == nullptr)
@@ -142,34 +145,33 @@ bool Model::LoadMeshNoMtl(const std::string& file_path)
 
 void Model::LoadNodes(aiNode* p_node, const aiScene* p_scene, const aiMaterial* const* p_materials)
 {
-    const std::string directory = path.substr(0, path.find_last_of("\\") + 1);
+    std::string texture_directory = path.substr(0, path.find_last_of("\\") + 1);
 
     for (size_t i = 0; i < p_node->mNumMeshes; i++)
     {
         //process every mesh in the vector array
         aiMesh* mesh = p_scene->mMeshes[p_node->mMeshes[i]];
         const aiMaterial& mtl = *p_materials[mesh->mMaterialIndex];
-
         if (mesh->mMaterialIndex >= 0) //if model has a material file load model's materials
         {
             //get textures from the model
             //init that textures
             mtl.GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &textureName);
-            textures.push_back(Texture(pDevice, pContext, directory + textureName.C_Str()));
+            textures.push_back(Texture(pDevice, pContext, texture_directory + textureName.C_Str()));
             if (mtl.GetTexture(aiTextureType::aiTextureType_SPECULAR, 0, &textureName) == aiReturn_SUCCESS)
             {
-                textures.push_back(Texture(pDevice, pContext, directory + textureName.C_Str(), 1));
+                textures.push_back(Texture(pDevice, pContext, texture_directory + textureName.C_Str(), 1));
             }
             else
             {
-                float shininess = 35.0f;
+                float shininess = 45.0f;
                 mtl.Get(AI_MATKEY_SHININESS, shininess);
-                textures.push_back(Texture(pDevice, pContext, directory + textureName.C_Str(), 1));
+                textures.push_back(Texture(pDevice, pContext, texture_directory + textureName.C_Str(), 1));
             }
 
             if (mtl.GetTexture(aiTextureType::aiTextureType_NORMALS, 0, &textureName) == aiReturn_SUCCESS)
             {
-                textures.push_back(Texture(pDevice, pContext, directory + textureName.C_Str(), 2));
+                textures.push_back(Texture(pDevice, pContext, texture_directory + textureName.C_Str(), 2));
                 hasNormalmap = true;
             }
         }
