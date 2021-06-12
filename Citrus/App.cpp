@@ -137,5 +137,5 @@ void App::FPSCounter()
 		fpsCounter = 0;
 		gfx.timer.Restart();
 	}
-	UI::DeveloperUI(fps.c_str(), &gfx.cam3D, gfx.pObject.GetDepthBufferEnabled());
+	UI::DeveloperUI(fps.c_str(), &gfx.cam3D, GameObject::GetDepthBufferEnabled(), GameObject::GetBlurEnabled());
 }

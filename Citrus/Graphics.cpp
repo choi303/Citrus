@@ -5,8 +5,9 @@
 bool Graphics::InitializeGraphics(HWND hwnd, const int width, const int height)
 {
 	timer.Start();
-
-	if (!InitDxBase(hwnd, width, height))
+	this->width = width;
+	this->height = height;
+	if (!InitDxBase(hwnd))
 	{
 		Error::Log("Failed to init dx11 basement func."); return false;
 	}
@@ -19,7 +20,7 @@ bool Graphics::InitializeGraphics(HWND hwnd, const int width, const int height)
 	return true;
 }
 
-bool Graphics::InitDxBase(HWND hwnd, const int width, const int height)
+bool Graphics::InitDxBase(HWND hwnd)
 {
 	namespace wrl = Microsoft::WRL;
 	//create device and swap chain
@@ -210,7 +211,7 @@ bool Graphics::InitDxBase(HWND hwnd, const int width, const int height)
 bool Graphics::InitScene()
 {
 	pPointLight.Init(pDevice.Get(), pContext.Get());
-	pObject.Init(pDevice.Get(), pContext.Get(), "Models\\sponza\\sponza.obj");
+	pObject.Init(pDevice.Get(), pContext.Get(), "Models\\sponza\\sponza.obj", width, height);
 	pSkyBox.Init(pDevice.Get(), pContext.Get());
 	
 	return true;

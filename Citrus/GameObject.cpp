@@ -1,12 +1,13 @@
 #include "GameObject.h"
 
 static bool wireFrame;
-static bool depthEnabled = true;
+static bool depthEnabled;
+static bool blurEnabled;
 static float pos[3] = { 0,0,0 };
 static float rot[3] = { 0,0,0 };
 static float scale[3] = { 0.1f,0.1f,0.1f };
 
-bool GameObject::Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std::string filepath)
+bool GameObject::Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std::string filepath, int width, int height)
 {
 	this->pDevice = pDevice;
 	this->pContext = pContext;
@@ -71,6 +72,7 @@ bool GameObject::Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std:
 	matrices_buffer->Init(pDevice, pContext);
 
 	pDepthBuffer.Init(pDevice, pContext);
+	pBlur.Init(pDevice, pContext, width, height);
 
     return true;
 }
@@ -83,6 +85,11 @@ bool GameObject::HasNormal() const
 bool* GameObject::GetDepthBufferEnabled()
 {
 	return &depthEnabled;
+}
+
+bool* GameObject::GetBlurEnabled()
+{
+	return &blurEnabled;
 }
 
 void GameObject::Draw(Camera3D cam)
@@ -118,6 +125,11 @@ void GameObject::Draw(Camera3D cam)
 	if (depthEnabled)
 	{
 		pDepthBuffer.Draw();
+	}
+
+	if (blurEnabled)
+	{
+		pBlur.Draw();
 	}
 
 	pModel.Render(cam);

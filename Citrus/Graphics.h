@@ -7,7 +7,7 @@ class Graphics
 public:
 	Graphics() {}
 	bool InitializeGraphics(HWND hwnd, const int width, const int height);
-	bool InitDxBase(HWND hwnd, const int width, const int height);
+	bool InitDxBase(HWND hwnd);
 	bool InitScene();
 	Graphics(Graphics&) = delete;
 	~Graphics() {}
@@ -28,4 +28,6 @@ protected:
 	wrl::ComPtr<ID3D11DepthStencilState> pDepthState = nullptr;
 private:
 	PointLight pPointLight;
+	int width;
+	int height;
 };

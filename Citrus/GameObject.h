@@ -1,6 +1,7 @@
 #pragma once
 #include "GfxBase.h"
 #include "DepthBuffer.h"
+#include "Blur.h"
 
 struct matrices
 {
@@ -13,9 +14,10 @@ class GameObject
 public:
 	GameObject() = default;
 	GameObject(GameObject&) = default;
-	bool Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std::string filepath);
+	bool Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std::string filepath, int width, int height);
 	bool HasNormal() const;
-	bool* GetDepthBufferEnabled();
+	static bool* GetDepthBufferEnabled();
+	static bool* GetBlurEnabled();
 	void Draw(Camera3D cam);
 	Model* GetMesh();
 	~GameObject() = default;
@@ -38,5 +40,6 @@ private:
 	std::string directory;
 	bool is_rendered = false;
 	DepthBuffer pDepthBuffer;
+	Blur pBlur;
 };
 
