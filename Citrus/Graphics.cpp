@@ -5,6 +5,7 @@
 bool Graphics::InitializeGraphics(HWND hwnd, const int width, const int height)
 {
 	timer.Start();
+	pCPU.Init();
 	this->width = width;
 	this->height = height;
 	if (!InitDxBase(hwnd))
@@ -239,6 +240,7 @@ void Graphics::EndFrame() const noexcept
 
 bool Graphics::SceneGraph()
 {
+	pCPU.Frame();
 	pPointLight.Draw(cam3D);
 	if (pObject.HasNormal())
 		pPointLight.BindCB();

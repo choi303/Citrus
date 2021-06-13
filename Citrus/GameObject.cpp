@@ -1,6 +1,6 @@
 #include "GameObject.h"
 
-static bool wireFrame;
+static bool wireframeEnabled;
 static bool depthEnabled;
 static bool blurEnabled;
 static float pos[3] = { 0,0,0 };
@@ -73,6 +73,7 @@ bool GameObject::Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std:
 
 	pDepthBuffer.Init(pDevice, pContext);
 	pBlur.Init(pDevice, pContext, width, height);
+	pWireframe.Init(pDevice, pContext);
 
     return true;
 }
@@ -92,13 +93,21 @@ bool* GameObject::GetBlurEnabled()
 	return &blurEnabled;
 }
 
+bool* GameObject::GetWireframeEnabled()
+{
+	return &wireframeEnabled;
+}
+
+XMFLOAT3* GameObject::GetWireColor()
+{
+	return Wireframe::GetWireColor();
+}
+
 void GameObject::Draw(Camera3D cam)
 {
 	//bind rasterizers
-	if (!wireFrame)
-		pContext->RSSetState(pRasterizer.Get());
-	else
-		pContext->RSSetState(pRasterizerWireframe.Get());
+	pContext->RSSetState(pRasterizer.Get());
+
 	//bind sampler
 	pContext->PSSetSamplers(0u, 1u, st.GetAddressOf());
 	//if model not has normal texture and just set shaders
@@ -116,7 +125,7 @@ void GameObject::Draw(Camera3D cam)
 		pPSNormal.Bind(pContext);
 	}
 
-	ui->ClassicUI(&pModel, directory.substr(directory.find_last_of("\\") + 1), pos, rot, scale, &wireFrame);
+	ui->ClassicUI(&pModel, directory.substr(directory.find_last_of("\\") + 1), pos, rot, scale);
 	if (is_rendered)
 	matrices_buffer->data.camera_pos = cam.GetPositionFloat3();
 	matrices_buffer->MapData();
@@ -130,6 +139,12 @@ void GameObject::Draw(Camera3D cam)
 	if (blurEnabled)
 	{
 		pBlur.Draw();
+	}
+
+	if (wireframeEnabled)
+	{
+		pContext->RSSetState(pRasterizerWireframe.Get());
+		pWireframe.Draw();
 	}
 
 	pModel.Render(cam);

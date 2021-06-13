@@ -1,4 +1,5 @@
 #include "App.h"
+#pragma warning(disable : 4996)
 
 void App::Init(std::string wndName, std::string className, HINSTANCE hInstance, const int width, const int height)
 {
@@ -133,9 +134,17 @@ void App::FPSCounter()
 	static std::string fps;
 	if (gfx.timer.GetMilisecondsElapsed() > 1000.0f)
 	{
-		fps = "FPS: " + std::to_string(fpsCounter) + "\n";
+		fps = "FPS: " + std::to_string(fpsCounter) + ")";
 		fpsCounter = 0;
 		gfx.timer.Restart();
 	}
-	UI::DeveloperUI(fps.c_str(), &gfx.cam3D, GameObject::GetDepthBufferEnabled(), GameObject::GetBlurEnabled());
+	char tempString[17];
+	char cpuString[17];
+	_itoa_s(gfx.pCPU.GetCpuPercentage(), tempString, 11);
+	strcpy_s(cpuString, "CPU Usage: ");
+	strcat_s(cpuString, tempString);
+	strcat_s(cpuString, "%");
+	std::string a = cpuString;
+	UI::DeveloperUI(std::to_string(gfx.timer.GetMilisecondsElapsed()), a.c_str() ,fps.c_str(), &gfx.cam3D, GameObject::GetDepthBufferEnabled(), GameObject::GetBlurEnabled(), GameObject::GetWireframeEnabled(),
+		GameObject::GetWireColor());
 }

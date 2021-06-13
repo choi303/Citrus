@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "SkyBox.h"
+#include "CPUInfo.h"
 
 class Graphics
 {
@@ -19,6 +20,7 @@ public:
 	Timer timer;
 	SkyBox pSkyBox;
 	GameObject pObject;
+	CPUInfo pCPU;
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Device> pDevice = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> pContext = nullptr;

@@ -2,6 +2,7 @@
 #include "GfxBase.h"
 #include "DepthBuffer.h"
 #include "Blur.h"
+#include "Wireframe.h"
 
 struct matrices
 {
@@ -18,6 +19,8 @@ public:
 	bool HasNormal() const;
 	static bool* GetDepthBufferEnabled();
 	static bool* GetBlurEnabled();
+	static bool* GetWireframeEnabled();
+	static XMFLOAT3* GetWireColor();
 	void Draw(Camera3D cam);
 	Model* GetMesh();
 	~GameObject() = default;
@@ -41,5 +44,6 @@ private:
 	bool is_rendered = false;
 	DepthBuffer pDepthBuffer;
 	Blur pBlur;
+	Wireframe pWireframe;
 };
 
