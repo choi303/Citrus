@@ -21,6 +21,7 @@ public:
 	SkyBox pSkyBox;
 	GameObject pObject;
 	CPUInfo pCPU;
+	PointLight pPointLight;
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Device> pDevice = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> pContext = nullptr;
@@ -29,7 +30,6 @@ protected:
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> pDSV = nullptr;
 	wrl::ComPtr<ID3D11DepthStencilState> pDepthState = nullptr;
 private:
-	PointLight pPointLight;
 	int width;
 	int height;
 };

@@ -3,7 +3,7 @@
 static float Spos[3] = { 0,1.0f, -1.0 };
 static float Srot[3] = { 0,0,0 };
 static float Sscale[3] = { -0.0f, -0.0f, -0.0f };
-static float intensity = 1.0f;
+static float diffuseIntensity = 1.0f;
 static float ambientIntensity = 0.6f;
 static float specularIntensity = 1.0f;
 static BOOL normalMappingEnabled = TRUE;
@@ -47,18 +47,18 @@ void PointLight::Draw(Camera3D cam)
 	ps.Bind(context);	//pixel shader bind
 	tex->Bind(context); //textrue bind
 	cblight->data.lightpos = lightmodel.GetPos();		//constant buffer initialize
-	cblight->data.lightIntensity = intensity;			//constant buffer initialize
+	cblight->data.lightIntensity = diffuseIntensity;			//constant buffer initialize
 	cblight->data.ambientIntensity = ambientIntensity;	//constant buffer initialize
 	cblight->data.normalMappingEnabled = normalMappingEnabled;	//constant buffer initialize
 	cblight->data.specularIntensity = specularIntensity;	//constant buffer initialize
 	cblight->MapData();	//apply data
 	cblightspec->data.lightpos = lightmodel.GetPos();
-	cblightspec->data.lightIntensity = intensity;
+	cblightspec->data.lightIntensity = diffuseIntensity;
 	cblightspec->data.ambientIntensity = ambientIntensity;
 	cblightspec->data.specularIntensity = specularIntensity;
 	cblight->MapData();
 	//point light ui creation
-	ui->PointLight(&lightmodel, "Point Light", Spos, Srot, Sscale, &intensity, &ambientIntensity, &normalMappingEnabled,
+	ui->PointLight(&lightmodel, "Point Light", Spos, Srot, Sscale, &diffuseIntensity, &ambientIntensity, &normalMappingEnabled,
 		&specularIntensity);
 	//model render
 	lightmodel.Render(cam);
@@ -72,4 +72,66 @@ void PointLight::BindCB() const
 void PointLight::BindCBSpec() const
 {
 	cblightspec->PSBind(context, 0u, 1u);
+}
+
+float PointLight::GetAmbientIntensity()
+{
+	return ambientIntensity;
+}
+
+float PointLight::SetAmbientIntensity(float value)
+{
+	return ambientIntensity = value;
+}
+
+float PointLight::GetDiffuseIntensity()
+{
+	return diffuseIntensity;
+}
+
+float PointLight::SetDiffuseIntensity(float value)
+{
+	return diffuseIntensity = value;
+}
+
+float PointLight::GetSpecularIntensity()
+{
+	return specularIntensity;
+}
+
+float PointLight::SetSpecularIntensity(float value)
+{
+	return specularIntensity = value;
+}
+
+float PointLight::GetObjectPositionX()
+{
+	return Spos[2];
+}
+
+float PointLight::GetObjectPositionY()
+{
+	return Spos[1];
+}
+
+float PointLight::GetObjectPositionZ()
+{
+	return Spos[0];
+}
+
+void PointLight::SetObjectPosition(float x, float y, float z)
+{
+	Spos[0] = x;
+	Spos[1] = y;
+	Spos[2] = z;
+}
+
+BOOL PointLight::GetNormalMapEnabled()
+{
+	return normalMappingEnabled;
+}
+
+BOOL PointLight::SetNormalMapEnabled(BOOL value)
+{
+	return normalMappingEnabled = value;
 }

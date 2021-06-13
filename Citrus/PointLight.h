@@ -32,6 +32,19 @@ public:
 	void BindCB() const;
 	void BindCBSpec() const;
 	~PointLight() = default;
+public:
+	static float GetAmbientIntensity();
+	static float SetAmbientIntensity(float value);
+	static float GetDiffuseIntensity();
+	static float SetDiffuseIntensity(float value);
+	static float GetSpecularIntensity();
+	static float SetSpecularIntensity(float value);
+	static float GetObjectPositionX();
+	static float GetObjectPositionY();
+	static float GetObjectPositionZ();
+	static void SetObjectPosition(float x, float y, float z);
+	static BOOL GetNormalMapEnabled();
+	static BOOL SetNormalMapEnabled(BOOL value);
 private:
 	Model lightmodel;
 	VertexShader vs;

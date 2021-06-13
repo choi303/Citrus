@@ -16,6 +16,8 @@ void App::Init(std::string wndName, std::string className, HINSTANCE hInstance, 
 	{
 		Error::Log("Failed to initialize graphics");
 	}
+
+	SetSavedValues();
 }
 
 void App::Update() noexcept
@@ -117,6 +119,25 @@ bool App::ProcessMessages(HINSTANCE hInstance) const noexcept
 	{
 		if (!IsWindow(hwnd))
 		{
+			pointLightSetting.OpenFileWrite("pointlight_settings.txt");
+			pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetAmbientIntensity()));
+			pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetDiffuseIntensity()));
+			pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetSpecularIntensity()));
+			pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetObjectPositionX()));
+			pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetObjectPositionY()));
+			pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetObjectPositionZ()));
+			pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetNormalMapEnabled()));
+			pointLightSetting.AddInfo(pPointLightSavedItems);
+			pointLightSetting.CloseFile();
+			cameraSetting.OpenFileWrite("camera_settings.txt");
+			pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetPositionFloat3().z));
+			pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetPositionFloat3().y));
+			pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetPositionFloat3().x));
+			pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetRotationFloat3().z));
+			pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetRotationFloat3().y));
+			pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetRotationFloat3().x));
+			cameraSetting.AddInfo(pCameraSavedItems);
+			pointLightSetting.CloseFile();
 			hwnd = nullptr; //Message processing loop takes care of destroying this window
 			UnregisterClass("janus", hInstance);
 			return false;
@@ -124,6 +145,28 @@ bool App::ProcessMessages(HINSTANCE hInstance) const noexcept
 	}
 
 	return true;
+}
+
+void App::SetSavedValues()
+{
+	pointLightSetting.OpenFileRead("pointlight_settings.txt");
+	gfx.pPointLight.SetAmbientIntensity(std::atoi(pointLightSetting.GetInfo(0).c_str()));
+	gfx.pPointLight.SetDiffuseIntensity(std::atoi(pointLightSetting.GetInfo(1).c_str()));
+	gfx.pPointLight.SetSpecularIntensity(std::atoi(pointLightSetting.GetInfo(2).c_str()));
+	gfx.pPointLight.SetObjectPosition(std::atoi(pointLightSetting.GetInfo(3).c_str()), std::atoi(pointLightSetting.GetInfo(4).c_str()),
+		std::atoi(pointLightSetting.GetInfo(5).c_str()));
+	if (pointLightSetting.GetInfo(6) == "1")
+		gfx.pPointLight.SetNormalMapEnabled(TRUE);
+	else
+		gfx.pPointLight.SetNormalMapEnabled(FALSE);
+	pointLightSetting.CloseFile();
+
+	cameraSetting.OpenFileRead("camera_settings.txt");
+	gfx.cam3D.SetPosition(std::atoi(cameraSetting.GetInfo(0).c_str()), std::atoi(cameraSetting.GetInfo(1).c_str()),
+		std::atoi(cameraSetting.GetInfo(2).c_str()));
+	gfx.cam3D.SetRotation(std::atoi(cameraSetting.GetInfo(3).c_str()), std::atoi(cameraSetting.GetInfo(4).c_str()),
+		std::atoi(cameraSetting.GetInfo(3).c_str()));
+	cameraSetting.CloseFile();
 }
 
 void App::FPSCounter()

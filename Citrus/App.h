@@ -1,6 +1,7 @@
 #pragma once
 #include "WndProc.h"
 #include <wrl.h>
+#include "SaveSystem.h"
 namespace wrl = Microsoft::WRL;
 
 class App : WndProc
@@ -14,9 +15,14 @@ public:
 	void Update() noexcept; // this function work every second
 	void RenderFrame();
 	bool ProcessMessages(HINSTANCE hInstance) const noexcept;
+	void SetSavedValues();
 private:
 	void FPSCounter();
 	int width;
 	int height;
+	mutable SaveSystem pointLightSetting;
+	mutable std::vector<std::string> pPointLightSavedItems;
+	mutable SaveSystem cameraSetting;
+	mutable std::vector<std::string> pCameraSavedItems;
 };
 
