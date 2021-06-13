@@ -133,3 +133,8 @@ HWND ChoiWin::GetHWND() const noexcept
 {
     return hwnd;
 }
+
+HWND ChoiWin::SetHWND(HWND hwnd) noexcept
+{
+    return this->hwnd = hwnd;
+}

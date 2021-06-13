@@ -37,7 +37,7 @@ void App::Update() noexcept
 		unsigned char keycode = kbe.GetKeyCode();
 
 		if (keycode == VK_ESCAPE) {
-			exit(0);
+			wnd.SetHWND(nullptr);
 		}
 	}
 	float cameraSpeed = 0.0005f;
