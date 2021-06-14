@@ -33,12 +33,19 @@ void UI::PointLight(Model* model, std::string uiTitle, float pos[3], float rot[3
 }
 
 //Developer UI
-void UI::DeveloperUI(std::string ms, const std::string cpu_usage, const std::string fps, Camera3D* cam3d, bool* depthBufferEnabled, bool* blurEnabled, bool* wireframeEnabled, XMFLOAT3* wireColor)
+void UI::DeveloperUI(std::string ms, const std::string cpu_usage, const std::string fps, Camera3D* cam3d, bool* depthBufferEnabled, bool* blurEnabled,
+    bool* wireframeEnabled,
+    XMFLOAT3* wireColor, bool* fogEnabled, XMFLOAT4* fogColor, float* fogStart, float* fogEnd)
 {
     static float wireCol[3] = { 1,1,1 };
     wireColor->x = wireCol[0];
     wireColor->y = wireCol[1];
     wireColor->z = wireCol[2];
+    static float fogCol[4] = { 1,1,1,1 };
+    fogColor->x = fogCol[0];
+    fogColor->y = fogCol[1];
+    fogColor->z = fogCol[2];
+    fogColor->w = fogCol[3];
     ImGui::Begin("Developer Menu", 0, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
     ImGui::Text("Citrus Graphics Renderer v0.1");
     std::string ms_string = ms;
@@ -54,9 +61,13 @@ void UI::DeveloperUI(std::string ms, const std::string cpu_usage, const std::str
     ImGui::Text("Filters");
     ImGui::Checkbox("Depth Buffer Shader", depthBufferEnabled);
     ImGui::Checkbox("Blur Shader", blurEnabled);
-    ImGui::Checkbox("Wireframe", wireframeEnabled);
     ImGui::Text("");
+    ImGui::Checkbox("Fog Shader", fogEnabled);
+    ImGui::DragFloat("Fog Start", fogStart, 0.01f, 0.0f, 100.0f);
+    ImGui::DragFloat("Fog End", fogEnd, 0.01f, 0.0f, 100.0f);
+    ImGui::ColorPicker4("Fog Color", fogCol);
+    ImGui::Text("");
+    ImGui::Checkbox("Wireframe", wireframeEnabled);
     ImGui::ColorPicker3("Wireframe\nColor", wireCol);
-
     ImGui::End();
 }

@@ -3,6 +3,7 @@
 #include "DepthBuffer.h"
 #include "Blur.h"
 #include "Wireframe.h"
+#include "Fog.h"
 
 struct matrices
 {
@@ -20,7 +21,11 @@ public:
 	static bool* GetDepthBufferEnabled();
 	static bool* GetBlurEnabled();
 	static bool* GetWireframeEnabled();
+	static bool* GetFogEnabled();
 	static XMFLOAT3* GetWireColor();
+	static XMFLOAT4* GetFogColor();
+	static float* GetFogStart();
+	static float* GetFogEnd();
 	void Draw(Camera3D cam);
 	Model* GetMesh();
 	~GameObject() = default;
@@ -45,5 +50,6 @@ private:
 	DepthBuffer pDepthBuffer;
 	Blur pBlur;
 	Wireframe pWireframe;
+	Fog pFog;
 };
 

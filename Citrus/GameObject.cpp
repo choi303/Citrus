@@ -3,6 +3,7 @@
 static bool wireframeEnabled;
 static bool depthEnabled;
 static bool blurEnabled;
+static bool fogEnabled;
 static float pos[3] = { 0,0,0 };
 static float rot[3] = { 0,0,0 };
 static float scale[3] = { 0.1f,0.1f,0.1f };
@@ -74,6 +75,7 @@ bool GameObject::Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std:
 	pDepthBuffer.Init(pDevice, pContext);
 	pBlur.Init(pDevice, pContext, width, height);
 	pWireframe.Init(pDevice, pContext);
+	pFog.Init(pDevice, pContext);
 
     return true;
 }
@@ -98,9 +100,29 @@ bool* GameObject::GetWireframeEnabled()
 	return &wireframeEnabled;
 }
 
+bool* GameObject::GetFogEnabled()
+{
+	return &fogEnabled;
+}
+
 XMFLOAT3* GameObject::GetWireColor()
 {
 	return Wireframe::GetWireColor();
+}
+
+XMFLOAT4* GameObject::GetFogColor()
+{
+	return Fog::GetFogColor();
+}
+
+float* GameObject::GetFogStart()
+{
+	return Fog::GetFogStart();
+}
+
+float* GameObject::GetFogEnd()
+{
+	return Fog::GetFogEnd();
 }
 
 void GameObject::Draw(Camera3D cam)
@@ -145,6 +167,11 @@ void GameObject::Draw(Camera3D cam)
 	{
 		pContext->RSSetState(pRasterizerWireframe.Get());
 		pWireframe.Draw();
+	}
+
+	if (fogEnabled)
+	{
+		pFog.Draw();
 	}
 
 	pModel.Render(cam);

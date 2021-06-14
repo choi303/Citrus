@@ -189,5 +189,6 @@ void App::FPSCounter()
 	strcat_s(cpuString, "%");
 	std::string a = cpuString;
 	UI::DeveloperUI(std::to_string(gfx.timer.GetMilisecondsElapsed()), a.c_str() ,fps.c_str(), &gfx.cam3D, GameObject::GetDepthBufferEnabled(), GameObject::GetBlurEnabled(), GameObject::GetWireframeEnabled(),
-		GameObject::GetWireColor());
+		GameObject::GetWireColor(), GameObject::GetFogEnabled(), GameObject::GetFogColor(), GameObject::GetFogStart(),
+		GameObject::GetFogEnd());
 }
