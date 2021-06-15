@@ -20,8 +20,6 @@ private:
 	void FPSCounter();
 	int width;
 	int height;
-	mutable SaveSystem pointLightSetting;
-	mutable std::vector<std::string> pPointLightSavedItems;
 	mutable SaveSystem cameraSetting;
 	mutable std::vector<std::string> pCameraSavedItems;
 	mutable SaveSystem devMenuSettings;

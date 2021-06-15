@@ -5,6 +5,7 @@ class DepthBuffer
 {
 public:
 	DepthBuffer() = default;
+	DepthBuffer(const DepthBuffer&) {}
 	void Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	void Draw();
 	~DepthBuffer()=default;

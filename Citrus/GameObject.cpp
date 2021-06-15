@@ -8,7 +8,7 @@ static float pos[3] = { 0,0,0 };
 static float rot[3] = { 0,0,0 };
 static float scale[3] = { 0.1f,0.1f,0.1f };
 
-bool GameObject::Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std::string filepath, int width, int height)
+bool GameObject::Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std::string filepath, int width, int height, bool hasMaterial)
 {
 	this->pDevice = pDevice;
 	this->pContext = pContext;
@@ -39,7 +39,10 @@ bool GameObject::Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std:
 	//create vertex shader i.l. and bind
 	pLayout = std::make_unique<InputLayout>(pDevice, ied, &pVS);
 	//model initialize
-	pModel.Init(filepath.c_str(), pDevice, pContext);
+	if(hasMaterial)
+		pModel.Init(filepath.c_str(), pDevice, pContext);
+	else
+		pModel.InitNoMtl(filepath.c_str(), pDevice, pContext);
 	this->directory = filepath;
 
 	//create sampler state

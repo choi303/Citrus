@@ -212,9 +212,14 @@ bool Graphics::InitDxBase(HWND hwnd)
 bool Graphics::InitScene()
 {
 	pPointLight.Init(pDevice.Get(), pContext.Get());
-	pObject.Init(pDevice.Get(), pContext.Get(), "Models\\sponza\\sponza.obj", width, height);
+	sphere_tex = std::make_unique<Texture>(pDevice.Get(), pContext.Get(), "Images\\earth.jpg");
+	plane_tex = std::make_unique<Texture>(pDevice.Get(), pContext.Get(), "Images\\bill.png");
+	pPlane.Init(pDevice.Get(), pContext.Get(), "Models\\plane.fbx", width, height, false);
+	pSphere.Init(pDevice.Get(), pContext.Get(), "Models\\sphere_hq.obj", width, height, false);
 	pSkyBox.Init(pDevice.Get(), pContext.Get());
-	
+	pSphere.GetMesh()->SetPos(0.0f, 1.0f, 0.0f);
+	pPlane.GetMesh()->SetScale(4.0f, 2.0f, 2.1f);
+	pSphere.GetMesh()->SetScale(20.0f, 20.0f, 20.0f);
 	return true;
 }
 
@@ -242,12 +247,12 @@ bool Graphics::SceneGraph()
 {
 	pCPU.Frame();
 	pPointLight.Draw(cam3D);
-	if (pObject.HasNormal())
-		pPointLight.BindCB();
-	else
-		pPointLight.BindCBSpec();
 	pContext->OMSetDepthStencilState(pDepthState.Get(), 0u);
+	pPointLight.BindCB();
+	plane_tex->Bind(pContext.Get());
+	pPlane.Draw(cam3D);
+	sphere_tex->Bind(pContext.Get());
+	pSphere.Draw(cam3D);
 	pSkyBox.Draw(cam3D);
-	pObject.Draw(cam3D);
 	return true;
 }

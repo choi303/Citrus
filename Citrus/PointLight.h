@@ -4,6 +4,7 @@
 #include "InputLayout.h"
 #include "UI.h"
 #include "Texture.h"
+#include "SaveSystem.h"
 
 struct Light
 {
@@ -42,9 +43,12 @@ public:
 	static float GetObjectPositionX();
 	static float GetObjectPositionY();
 	static float GetObjectPositionZ();
-	static void SetObjectPosition(float x, float y, float z);
+	void SetObjectPosition(float x, float y, float z);
 	static BOOL GetNormalMapEnabled();
 	static BOOL SetNormalMapEnabled(BOOL value);
+public:
+	mutable SaveSystem pointLightSetting;
+	mutable std::vector<std::string> pPointLightSavedItems;
 private:
 	Model lightmodel;
 	VertexShader vs;

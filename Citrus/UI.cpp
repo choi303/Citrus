@@ -4,13 +4,22 @@
 //Classic UI
 void UI::ClassicUI(Model* model, std::string uiTitle, float pos[3], float rot[3], float scale[3]) const
 {
-    model->SetPos(pos[0], pos[1], pos[2]);
-    model->SetRot(rot[0], rot[1], rot[2]);
-    model->SetScale(scale[0], scale[1], scale[2]);
+    pos[0] = model->GetPos().x;
+    pos[1] = model->GetPos().y;
+    pos[2] = model->GetPos().z;
     ImGui::Begin(uiTitle.c_str(), 0, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
     ImGui::DragFloat3("Pos", pos, 0.01f, -999999.0f, 999999.0f);
+    model->SetPos(pos[0], pos[1], pos[2]);
+    rot[0] = model->GetRot().x;
+    rot[1] = model->GetRot().y;
+    rot[2] = model->GetRot().z;
     ImGui::DragFloat3("Rot", rot, 0.01f, -999999999.0f, 999999999.0f);
+    model->SetRot(rot[0], rot[1], rot[2]);
+    scale[0] = model->GetScale().x;
+    scale[1] = model->GetScale().y;
+    scale[2] = model->GetScale().z;
     ImGui::DragFloat3("Scale", scale, 0.01f, -999999999.0f, (999999999.0f));
+    model->SetScale(scale[0], scale[1], scale[2]);
     ImGui::End();
 }
 
@@ -18,16 +27,37 @@ void UI::ClassicUI(Model* model, std::string uiTitle, float pos[3], float rot[3]
 void UI::PointLight(Model* model, std::string uiTitle, float pos[3], float rot[3], float scale[3], float* Intensity,
     float* ambientIntensity, BOOL* normalMappingEnabled, float* specularlIntensity) const
 {
-    model->SetPos(pos[0], pos[1], pos[2]);
-    model->SetRot(rot[0], rot[1], rot[2]);
-    model->SetScale(scale[0], scale[1], scale[2]);
+    pos[0] = model->GetPos().x;
+    pos[1] = model->GetPos().y;
+    pos[2] = model->GetPos().z;
     ImGui::Begin(uiTitle.c_str(), 0, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
     ImGui::DragFloat3("Pos", pos, 0.01f, -999999999.0f, 999999999.0f);
+    model->SetPos(pos[0], pos[1], pos[2]);
+    rot[0] = model->GetRot().x;
+    rot[1] = model->GetRot().y;
+    rot[2] = model->GetRot().z;
     ImGui::DragFloat3("Rot", rot, 0.01f, -999999999.0f, 999999999.0f);
+    model->SetRot(rot[0], rot[1], rot[2]);
+    scale[0] = model->GetScale().x;
+    scale[1] = model->GetScale().y;
+    scale[2] = model->GetScale().z;
     ImGui::DragFloat3("Scale", scale, 0.01f, -999999999.0f, 999999999.0f);
+    model->SetScale(scale[0], scale[1], scale[2]);
     ImGui::DragFloat("Light\nIntensity", Intensity, 0.01f, 0.0f, 10000.0f);
     ImGui::DragFloat("Ambient\nIntensity", ambientIntensity, 0.01f, 0.0f, 10.0f);
     ImGui::DragFloat("Specular\nIntensity", specularlIntensity, 0.01f, 0.0f, 10.0f);
+    if (ImGui::Button("Reset Position"))
+    {
+        pos[0] = 0.0f;
+        pos[1] = 0.0f;
+        pos[2] = 0.0f;
+        rot[0] = 0.0f;
+        rot[1] = 0.0f;
+        rot[2] = 0.0f;
+        scale[0] = 0.0f;
+        scale[1] = 0.0f;
+        scale[2] = 0.0f;
+    }
     ImGui::Checkbox("Normal Map", reinterpret_cast<bool*>(normalMappingEnabled));
     ImGui::End();
 }

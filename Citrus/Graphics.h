@@ -19,7 +19,8 @@ public:
 	Camera3D cam3D;
 	Timer timer;
 	SkyBox pSkyBox;
-	GameObject pObject;
+	GameObject pPlane;
+	GameObject pSphere;
 	CPUInfo pCPU;
 	PointLight pPointLight;
 protected:
@@ -32,4 +33,6 @@ protected:
 private:
 	int width;
 	int height;
+	std::unique_ptr<Texture> sphere_tex;
+	std::unique_ptr<Texture> plane_tex;
 };

@@ -94,6 +94,12 @@ void App::Update() noexcept
 		//add down position when pressed E
 		gfx.cam3D.AdjustPosition(0.0f, -cameraSpeed * deltaTime, 0.0f);
 	}
+	if (keyboard.KeyIsPressed('C'))
+	{
+		//set point light position to character pos when pressed C
+		gfx.pPointLight.SetObjectPosition(gfx.cam3D.GetPositionFloat3().x,
+			gfx.cam3D.GetPositionFloat3().y, gfx.cam3D.GetPositionFloat3().z);
+	}
 
 	//Set sky box position to camera position
 	//that is makes spherical skybox spherical skybox :D
@@ -134,16 +140,16 @@ bool App::ProcessMessages(HINSTANCE hInstance) const noexcept
 		if (!IsWindow(hwnd))
 		{
 			//open point light txt, stores point light settings
-			pointLightSetting.OpenFileWrite("pointlight_settings.txt");
-			pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetAmbientIntensity()));
-			pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetDiffuseIntensity()));
-			pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetSpecularIntensity()));
-			pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetObjectPositionX()));
-			pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetObjectPositionY()));
-			pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetObjectPositionZ()));
-			pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetNormalMapEnabled()));
-			pointLightSetting.AddInfo(pPointLightSavedItems);
-			pointLightSetting.CloseFile();
+			gfx.pPointLight.pointLightSetting.OpenFileWrite("pointlight_settings.txt");
+			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetAmbientIntensity()));
+			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetDiffuseIntensity()));
+			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetSpecularIntensity()));
+			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetObjectPositionX()));
+			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetObjectPositionY()));
+			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetObjectPositionZ()));
+			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetNormalMapEnabled()));
+			gfx.pPointLight.pointLightSetting.AddInfo(gfx.pPointLight.pPointLightSavedItems);
+			gfx.pPointLight.pointLightSetting.CloseFile();
 			//open camera txt, stores camera position and rotation data
 			cameraSetting.OpenFileWrite("camera_settings.txt");
 			pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetPositionFloat3().z));
@@ -154,6 +160,7 @@ bool App::ProcessMessages(HINSTANCE hInstance) const noexcept
 			pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetRotationFloat3().x));
 			cameraSetting.AddInfo(pCameraSavedItems);
 			cameraSetting.CloseFile();
+
 			//open dev menu txt, stores dev menu settings
 			devMenuSettings.OpenFileWrite("devmenu_settings.txt");
 			pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetDepthBufferEnabled()));
@@ -164,6 +171,7 @@ bool App::ProcessMessages(HINSTANCE hInstance) const noexcept
 			pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetWireframeEnabled()));
 			devMenuSettings.AddInfo(pDevMenuSavedItems);
 			devMenuSettings.CloseFile();
+
 			hwnd = nullptr; //Message processing loop takes care of destroying this window
 			UnregisterClass("janus", hInstance);	//Unregister class (closing window)
 			return false;	//closing program
@@ -175,19 +183,6 @@ bool App::ProcessMessages(HINSTANCE hInstance) const noexcept
 
 void App::SetSavedValues()
 {
-	//set point light saved values
-	pointLightSetting.OpenFileRead("pointlight_settings.txt");
-	gfx.pPointLight.SetAmbientIntensity(float(std::atoi(pointLightSetting.GetInfo(0).c_str())));
-	gfx.pPointLight.SetDiffuseIntensity(float(std::atoi(pointLightSetting.GetInfo(1).c_str())));
-	gfx.pPointLight.SetSpecularIntensity(float(std::atoi(pointLightSetting.GetInfo(2).c_str())));
-	gfx.pPointLight.SetObjectPosition(float(std::atoi(pointLightSetting.GetInfo(3).c_str())), float(std::atoi(pointLightSetting.GetInfo(4).c_str())),
-		float(std::atoi(pointLightSetting.GetInfo(5).c_str())));
-	if (pointLightSetting.GetInfo(6) == "1")
-		gfx.pPointLight.SetNormalMapEnabled(TRUE);
-	else
-		gfx.pPointLight.SetNormalMapEnabled(FALSE);
-	pointLightSetting.CloseFile();
-
 	//set camera saved values
 	cameraSetting.OpenFileRead("camera_settings.txt");
 	gfx.cam3D.SetPosition(float(std::atoi(cameraSetting.GetInfo(0).c_str())), float(std::atoi(cameraSetting.GetInfo(1).c_str())),

@@ -11,7 +11,7 @@ struct PS_IN
 float4 main(PS_IN input) : SV_Target
 {
     float depthValue;
-    float4 color;
+    float4 color = float4(0,0,0,0);
     float4 textureColor = obj_texture.Sample(obj_sampler, input.tex);
     textureColor.w = 0.4f;
     
