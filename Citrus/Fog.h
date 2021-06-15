@@ -22,6 +22,12 @@ public:
 	static XMFLOAT4* GetFogColor();
 	static float* GetFogStart();
 	static float* GetFogEnd();
+	static float SetFogStart(float value);
+	static float SetFogEnd(float value);
+	static float SetColorX(float value);
+	static float SetColorY(float value);
+	static float SetColorZ(float value);
+	static float SetColorW(float value);
 	~Fog() = default;
 private:
 	Microsoft::WRL::ComPtr<ID3D11Device> pDevice;

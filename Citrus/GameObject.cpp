@@ -72,6 +72,7 @@ bool GameObject::Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std:
 	matrices_buffer = std::make_unique<CBuffer<matrices>>();
 	matrices_buffer->Init(pDevice, pContext);
 
+	//Filters Initialize
 	pDepthBuffer.Init(pDevice, pContext);
 	pBlur.Init(pDevice, pContext, width, height);
 	pWireframe.Init(pDevice, pContext);
@@ -82,47 +83,92 @@ bool GameObject::Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std:
 
 bool GameObject::HasNormal() const
 {
+	//if has a normal return true else return false
 	return pModel.GetHasNormal();
 }
 
 bool* GameObject::GetDepthBufferEnabled()
 {
+	//if depth is enabled return true else return false
 	return &depthEnabled;
 }
 
 bool* GameObject::GetBlurEnabled()
 {
+	//if blur filter is enabled return true else return false
 	return &blurEnabled;
 }
 
 bool* GameObject::GetWireframeEnabled()
 {
+	//if wireframe filter is enabled than return true else return false
 	return &wireframeEnabled;
 }
 
 bool* GameObject::GetFogEnabled()
 {
+	//if fog filter is enabled than return true else return false
 	return &fogEnabled;
 }
 
 XMFLOAT3* GameObject::GetWireColor()
 {
+	//return wire Color
 	return Wireframe::GetWireColor();
 }
 
 XMFLOAT4* GameObject::GetFogColor()
-{
+{	
+	//return fog Color
 	return Fog::GetFogColor();
 }
 
 float* GameObject::GetFogStart()
 {
+	//return fog start value
 	return Fog::GetFogStart();
 }
 
 float* GameObject::GetFogEnd()
 {
+	//return fog end value
 	return Fog::GetFogEnd();
+}
+
+bool GameObject::SetDepthBufferEnabled(bool value)
+{
+	//set depth buffer enabled to value
+	return depthEnabled = value;
+}
+
+bool GameObject::SetBlurEnabled(bool value)
+{
+	//set blur enabled to value
+	return blurEnabled = value;
+}
+
+bool GameObject::SetFogEnabled(bool value)
+{
+	//set fog enabled to value
+	return fogEnabled = value;
+}
+
+bool GameObject::SetWireframeEnabled(bool value)
+{
+	//set wireframe enabled to value
+	return wireframeEnabled = value;
+}
+
+float GameObject::SetFogStart(float value)
+{
+	//set fog start to value
+	return Fog::SetFogStart(value);
+}
+
+float GameObject::SetFogEnd(float value)
+{
+	//set fog end to value
+	return Fog::SetFogEnd(value);
 }
 
 void GameObject::Draw(Camera3D cam)
@@ -147,33 +193,39 @@ void GameObject::Draw(Camera3D cam)
 		pPSNormal.Bind(pContext);
 	}
 
+	//Classic Object UI Creation
 	ui->ClassicUI(&pModel, directory.substr(directory.find_last_of("\\") + 1), pos, rot, scale);
 	if (is_rendered)
 	matrices_buffer->data.camera_pos = cam.GetPositionFloat3();
 	matrices_buffer->MapData();
 	matrices_buffer->VSBind(pContext, 1u, 1u);
 
+	//if depth checkbox true draw depth buffer filter
 	if (depthEnabled)
 	{
 		pDepthBuffer.Draw();
 	}
 
+	//if blur checkbox is true than draw blur filter
 	if (blurEnabled)
 	{
 		pBlur.Draw();
 	}
 
+	//if wireframe checkbox is true than draw wireframe filter
 	if (wireframeEnabled)
 	{
 		pContext->RSSetState(pRasterizerWireframe.Get());
 		pWireframe.Draw();
 	}
 
+	//if fog checkbox is true than draw fog filter
 	if (fogEnabled)
 	{
 		pFog.Draw();
 	}
 
+	//Render Model
 	pModel.Render(cam);
 	is_rendered = true;
 }

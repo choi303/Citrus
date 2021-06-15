@@ -20,9 +20,11 @@ struct VS_OUT
 VS_OUT main(VS_IN input)
 {
     VS_OUT vso;
+    //set pos multiply with world matrix
     vso.pos = mul(float4(input.pos, 1.0f), world);
     vso.pos = mul(vso.pos, view);
     vso.pos = mul(vso.pos, projection);
+    //set out tc to in tc
     vso.tc = input.tc;
     return vso;
 }

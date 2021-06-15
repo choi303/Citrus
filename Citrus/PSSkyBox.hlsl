@@ -9,5 +9,6 @@ struct PS_IN
 
 float4 main(PS_IN input) : SV_Target
 {
+    //sample sky map texture
     return sky_map.Sample(obj_sampler_state, input.tc);
 }

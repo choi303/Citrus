@@ -17,6 +17,7 @@ struct VS_OUT
 
 VS_OUT main(VS_IN input)
 {
+    //ONLY GET POSITION BECAUSE WE DON'T NEED ANYTHING ELSE
     VS_OUT vso;
     vso.pos = mul(float4(input.pos, 1.0f), world);
     vso.pos = mul(vso.pos, view);

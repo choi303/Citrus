@@ -24,5 +24,7 @@ private:
 	mutable std::vector<std::string> pPointLightSavedItems;
 	mutable SaveSystem cameraSetting;
 	mutable std::vector<std::string> pCameraSavedItems;
+	mutable SaveSystem devMenuSettings;
+	mutable std::vector<std::string> pDevMenuSavedItems;
 };
 

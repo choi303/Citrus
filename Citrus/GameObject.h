@@ -26,6 +26,12 @@ public:
 	static XMFLOAT4* GetFogColor();
 	static float* GetFogStart();
 	static float* GetFogEnd();
+	static bool SetDepthBufferEnabled(bool value);
+	static bool SetBlurEnabled(bool value);
+	static bool SetFogEnabled(bool value);
+	static bool SetWireframeEnabled(bool value);
+	static float SetFogStart(float value);
+	static float SetFogEnd(float value);
 	void Draw(Camera3D cam);
 	Model* GetMesh();
 	~GameObject() = default;

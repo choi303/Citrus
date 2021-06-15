@@ -71,67 +71,67 @@ void PointLight::BindCB() const
 
 void PointLight::BindCBSpec() const
 {
-	cblightspec->PSBind(context, 0u, 1u);
+	cblightspec->PSBind(context, 0u, 1u);	//spec constant buffer bind
 }
 
 float PointLight::GetAmbientIntensity()
 {
-	return ambientIntensity;
+	return ambientIntensity; //return ambient intensity
 }
 
 float PointLight::SetAmbientIntensity(float value)
 {
-	return ambientIntensity = value;
+	return ambientIntensity = value;	//set ambient intensity to value
 }
 
 float PointLight::GetDiffuseIntensity()
 {
-	return diffuseIntensity;
+	return diffuseIntensity;	//return diffuse intenisty
 }
 
 float PointLight::SetDiffuseIntensity(float value)
 {
-	return diffuseIntensity = value;
+	return diffuseIntensity = value;	//set diffuse intensity to value
 }
 
 float PointLight::GetSpecularIntensity()
 {
-	return specularIntensity;
+	return specularIntensity;	//return specular intensity
 }
 
 float PointLight::SetSpecularIntensity(float value)
 {
-	return specularIntensity = value;
+	return specularIntensity = value;	//set specular intensity to value
 }
 
 float PointLight::GetObjectPositionX()
 {
-	return Spos[2];
+	return Spos[2];	//return object x position
 }
 
 float PointLight::GetObjectPositionY()
 {
-	return Spos[1];
+	return Spos[1]; //return object y position
 }
 
 float PointLight::GetObjectPositionZ()
 {
-	return Spos[0];
+	return Spos[0]; //return object z position
 }
 
 void PointLight::SetObjectPosition(float x, float y, float z)
 {
-	Spos[0] = x;
-	Spos[1] = y;
-	Spos[2] = z;
+	Spos[0] = x;	//Set object position to reference X	
+	Spos[1] = y;	//Set object position to reference Y
+	Spos[2] = z;	//Set object position to reference Z
 }
 
 BOOL PointLight::GetNormalMapEnabled()
 {
-	return normalMappingEnabled;
+	return normalMappingEnabled;	//return normal mapping enabled as a BOOL (win32 boolean)
 }
 
 BOOL PointLight::SetNormalMapEnabled(BOOL value)
 {
-	return normalMappingEnabled = value;
+	return normalMappingEnabled = value;	//set normal mapping to reference value
 }

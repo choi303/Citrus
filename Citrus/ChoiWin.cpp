@@ -131,10 +131,12 @@ bool ChoiWin::InitializeWindow(std::string wndName, std::string className, HINST
 
 HWND ChoiWin::GetHWND() const noexcept
 {
+    //return hwnd
     return hwnd;
 }
 
 HWND ChoiWin::SetHWND(HWND hwnd) noexcept
 {
+    //set hwnd to reference value
     return this->hwnd = hwnd;
 }
