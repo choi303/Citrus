@@ -48,15 +48,9 @@ void UI::PointLight(Model* model, std::string uiTitle, float pos[3], float rot[3
     ImGui::DragFloat("Specular\nIntensity", specularlIntensity, 0.01f, 0.0f, 10.0f);
     if (ImGui::Button("Reset Position"))
     {
-        pos[0] = 0.0f;
-        pos[1] = 0.0f;
-        pos[2] = 0.0f;
-        rot[0] = 0.0f;
-        rot[1] = 0.0f;
-        rot[2] = 0.0f;
-        scale[0] = 0.0f;
-        scale[1] = 0.0f;
-        scale[2] = 0.0f;
+        model->SetPos(0.0f, 0.0f, 0.0f);
+        model->SetRot(0.0f, 0.0f, 0.0f);
+        model->SetScale(1.0f, 1.0f, 1.0f);
     }
     ImGui::Checkbox("Normal Map", reinterpret_cast<bool*>(normalMappingEnabled));
     ImGui::End();
