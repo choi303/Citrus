@@ -81,8 +81,6 @@ bool Graphics::InitDxBase(HWND hwnd)
 	dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
 	hr = pDevice->CreateDepthStencilState(&dsDesc, &pDepthState);
 	if (FAILED(hr)) { Error::Log(hr, "Failed to create depths stencil state check out description."); return false; }
-	
-	pContext->OMSetDepthStencilState(pDepthState.Get(), 1u);
 
 	//create depth stencil texture
 	wrl::ComPtr<ID3D11Texture2D> pDepthStencil;
@@ -91,7 +89,7 @@ bool Graphics::InitDxBase(HWND hwnd)
 	stencilDesc.Height = height;
 	stencilDesc.MipLevels = 1u;
 	stencilDesc.ArraySize = 1u;
-	stencilDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	stencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	stencilDesc.SampleDesc.Count = 1u;
 	stencilDesc.SampleDesc.Quality = 0u;
 	stencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
@@ -100,10 +98,10 @@ bool Graphics::InitDxBase(HWND hwnd)
 
 	//create depth stencil view
 	CD3D11_DEPTH_STENCIL_VIEW_DESC DSVdesc = {};
-	DSVdesc.Format = DXGI_FORMAT_D32_FLOAT;
+	DSVdesc.Format = stencilDesc.Format;
 	DSVdesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	DSVdesc.Texture2D.MipSlice = 0u;
-	hr = pDevice->CreateDepthStencilView(pDepthStencil.Get(), nullptr, &pDSV);
+	hr = pDevice->CreateDepthStencilView(pDepthStencil.Get(), &DSVdesc, &pDSV);
 	if (FAILED(hr)) { Error::Log(hr, "Failed to create texture 2d in depth stencil view"); return false; }
 
 	pContext->OMSetRenderTargets(1u, pRtv.GetAddressOf(), pDSV.Get());
@@ -205,21 +203,17 @@ bool Graphics::InitDxBase(HWND hwnd)
 	style.ScrollbarRounding = 0.0f;
 	style.TabRounding = 0.0f;
 	//-------------------------------
-	
+
 	return true;
 }
 
 bool Graphics::InitScene()
 {
 	pPointLight.Init(pDevice.Get(), pContext.Get());
-	sphere_tex = std::make_unique<Texture>(pDevice.Get(), pContext.Get(), "Images\\earth.jpg");
-	plane_tex = std::make_unique<Texture>(pDevice.Get(), pContext.Get(), "Images\\bill.png");
-	pPlane.Init(pDevice.Get(), pContext.Get(), "Models\\plane.fbx", width, height, false);
-	pSphere.Init(pDevice.Get(), pContext.Get(), "Models\\sphere_hq.obj", width, height, false);
+	pObject.Init(pDevice.Get(), pContext.Get(), "Models\\sponza\\sponza.obj", width, height, true);
 	pSkyBox.Init(pDevice.Get(), pContext.Get());
-	pSphere.GetMesh()->SetPos(0.0f, 1.0f, 0.0f);
-	pPlane.GetMesh()->SetScale(4.0f, 2.0f, 2.1f);
-	pSphere.GetMesh()->SetScale(20.0f, 20.0f, 20.0f);
+	pObject.GetMesh()->SetScale(0.1f, 0.1f, 0.1f);
+
 	return true;
 }
 
@@ -231,7 +225,7 @@ void Graphics::BeginFrame() const noexcept
 	//check out app.cpp render frame func for desc
 	float bgColor[] = { 0.0f, 0.0f, 0.1f, 1.0f };
 	pContext->ClearRenderTargetView(pRtv.Get(), bgColor);
-	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
+	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
 void Graphics::EndFrame() const noexcept
@@ -245,14 +239,11 @@ void Graphics::EndFrame() const noexcept
 
 bool Graphics::SceneGraph()
 {
+	pContext->OMSetDepthStencilState(pDepthState.Get(), 0);
 	pCPU.Frame();
 	pPointLight.Draw(cam3D);
-	pContext->OMSetDepthStencilState(pDepthState.Get(), 0u);
 	pPointLight.BindCB();
-	plane_tex->Bind(pContext.Get());
-	pPlane.Draw(cam3D);
-	sphere_tex->Bind(pContext.Get());
-	pSphere.Draw(cam3D);
+	pObject.Draw(cam3D);
 	pSkyBox.Draw(cam3D);
 	return true;
 }

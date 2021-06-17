@@ -63,8 +63,12 @@ float4 main(PS_IN input) : SV_Target
     //specular reflection creation
     const float3 specular = att * diffuse * specularIntensity * pow(max(0.0f, dot(normalize(r), normalize(input.viewDirection))), specularPower);
     
+    const float4 diffTexture = diff.Sample(object_sampler, input.tc);
+    if(diffTexture.a < 0.5f)
+        discard;
+    
     //final light (diffuse + ambient) * sample.rgb + specular * reflection color
-    const float4 finalLight = float4(saturate((diffuse + ambient_light) * diff.Sample(object_sampler, input.tc).rgb + specular), 1.0f);
+    const float4 finalLight = float4(saturate((diffuse + ambient_light) * diffTexture.rgb + specular), 1.0f);
     //return final light
     return finalLight;
 }

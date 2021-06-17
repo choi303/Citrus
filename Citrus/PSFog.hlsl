@@ -17,6 +17,8 @@ float4 main(PS_IN input) : SV_Target
 {
     //texture sample
     float4 tex_sample = obj_texture.Sample(obj_sampler, input.tex);
+    if(tex_sample.a < 0.5f)
+        discard;
     //set fog color
     //set final color texture multiply with fog factor
     float4 finalColor = input.fogFactor * tex_sample + (1.0 - input.fogFactor) * fogColor;
