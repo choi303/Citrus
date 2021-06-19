@@ -1,243 +1,333 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{c0a01662-1525-44f7-a042-b166aafa8e2f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
+    <Filter Include="Graphics\Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
+    <Filter Include="Graphics\Header Files\Log">
+      <UniqueIdentifier>{f5b2f8e1-4771-4367-a619-df525b0917fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\ImGui">
+      <UniqueIdentifier>{b179d923-1e64-44ed-8f6c-2fb32d262629}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Input">
+      <UniqueIdentifier>{c9be84aa-4b92-4573-b544-b104220bef68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Input">
-      <UniqueIdentifier>{c9be84aa-4b92-4573-b544-b104220bef68}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders">
+    <Filter Include="Graphics\Shaders">
       <UniqueIdentifier>{cdab28be-18bb-4757-9db8-1f8fe3ac1ebc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ImGui">
-      <UniqueIdentifier>{b179d923-1e64-44ed-8f6c-2fb32d262629}</UniqueIdentifier>
+    <Filter Include="Graphics\Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Graphics\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Camera3D.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Graphics\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ChoiWin.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Color.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Graphics\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Converter.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Graphics\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Graphics.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Graphics\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Graphics\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PointLight.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Graphics\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Graphics\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Timer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Graphics\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WICTexture.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Graphics\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WndProc.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Graphics\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Graphics\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="KeyboardEvent.cpp">
-      <Filter>Input</Filter>
+      <Filter>Graphics\Input</Filter>
     </ClCompile>
     <ClCompile Include="KeyboardClass.cpp">
-      <Filter>Input</Filter>
+      <Filter>Graphics\Input</Filter>
     </ClCompile>
     <ClCompile Include="MouseClass.cpp">
-      <Filter>Input</Filter>
+      <Filter>Graphics\Input</Filter>
     </ClCompile>
     <ClCompile Include="MouseEvent.cpp">
-      <Filter>Input</Filter>
+      <Filter>Graphics\Input</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Graphics\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui_demo.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Graphics\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui_draw.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Graphics\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui_impl_dx11.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Graphics\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui_impl_win32.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Graphics\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui_tables.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Graphics\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui_widgets.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Graphics\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="Model.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Graphics\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Graphics\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CubeTexture.cpp">
+      <Filter>Graphics\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyBox.cpp">
+      <Filter>Graphics\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthBuffer.cpp">
+      <Filter>Graphics\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Blur.cpp">
+      <Filter>Graphics\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Wireframe.cpp">
+      <Filter>Graphics\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CPUInfo.cpp">
+      <Filter>Graphics\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SaveSystem.cpp">
+      <Filter>Graphics\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fog.cpp">
+      <Filter>Graphics\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTexture.cpp">
+      <Filter>Graphics\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
-      <Filter>Header Files</Filter>
+      <Filter>Graphics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Camera3D.h">
-      <Filter>Header Files</Filter>
+      <Filter>Graphics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CBuffer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Graphics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ChoiWin.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Color.h">
-      <Filter>Header Files</Filter>
+      <Filter>Graphics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Converter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Error.h">
-      <Filter>Header Files</Filter>
+      <Filter>Graphics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GfxBase.h">
-      <Filter>Header Files</Filter>
+      <Filter>Graphics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Graphics.h">
-      <Filter>Header Files</Filter>
+      <Filter>Graphics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IndexBuffer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Graphics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="InputLayout.h">
-      <Filter>Header Files</Filter>
+      <Filter>Graphics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
-      <Filter>Header Files</Filter>
+      <Filter>Graphics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Model.h">
-      <Filter>Header Files</Filter>
+      <Filter>Graphics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PointLight.h">
-      <Filter>Header Files</Filter>
+      <Filter>Graphics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
+      <Filter>Graphics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Shaders.h">
-      <Filter>Header Files</Filter>
+      <Filter>Graphics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
-      <Filter>Header Files</Filter>
+      <Filter>Graphics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Graphics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UI.h">
-      <Filter>Header Files</Filter>
+      <Filter>Graphics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="VertexBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WICTexture.h">
-      <Filter>Header Files</Filter>
+      <Filter>Graphics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="WndProc.h">
-      <Filter>Header Files</Filter>
+      <Filter>Graphics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="KeyboardEvent.h">
-      <Filter>Input</Filter>
+      <Filter>Graphics\Input</Filter>
     </ClInclude>
     <ClInclude Include="KeyboardClass.h">
-      <Filter>Input</Filter>
+      <Filter>Graphics\Input</Filter>
     </ClInclude>
     <ClInclude Include="MouseEvent.h">
-      <Filter>Input</Filter>
+      <Filter>Graphics\Input</Filter>
     </ClInclude>
     <ClInclude Include="MouseClass.h">
-      <Filter>Input</Filter>
+      <Filter>Graphics\Input</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imconfig.h">
-      <Filter>ImGui</Filter>
+      <Filter>Graphics\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imgui.h">
-      <Filter>ImGui</Filter>
+      <Filter>Graphics\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imgui_impl_dx11.h">
-      <Filter>ImGui</Filter>
+      <Filter>Graphics\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imgui_impl_win32.h">
-      <Filter>ImGui</Filter>
+      <Filter>Graphics\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imgui_internal.h">
-      <Filter>ImGui</Filter>
+      <Filter>Graphics\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imstb_rectpack.h">
-      <Filter>ImGui</Filter>
+      <Filter>Graphics\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imstb_textedit.h">
-      <Filter>ImGui</Filter>
+      <Filter>Graphics\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imstb_truetype.h">
-      <Filter>ImGui</Filter>
+      <Filter>Graphics\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="resource1.h">
-      <Filter>Header Files</Filter>
+      <Filter>Graphics\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Graphics\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Error.h">
+      <Filter>Graphics\Header Files\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeTexture.h">
+      <Filter>Graphics\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyBox.h">
+      <Filter>Graphics\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthBuffer.h">
+      <Filter>Graphics\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Blur.h">
+      <Filter>Graphics\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Wireframe.h">
+      <Filter>Graphics\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CPUInfo.h">
+      <Filter>Graphics\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveSystem.h">
+      <Filter>Graphics\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fog.h">
+      <Filter>Graphics\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTexture.h">
+      <Filter>Graphics\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ColorPixel.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Graphics\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="ColorVertex.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="PhongPS.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Graphics\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="PhongVS.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Graphics\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="TexturePS.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Graphics\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="TextureVS.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Graphics\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PhongPSSpec.hlsl">
+      <Filter>Graphics\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PSNormalMap.hlsl">
+      <Filter>Graphics\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VSNormalMap.hlsl">
+      <Filter>Graphics\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VSSkyBox.hlsl">
+      <Filter>Graphics\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PSSkyBox.hlsl">
+      <Filter>Graphics\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VSDepthBuffer.hlsl">
+      <Filter>Graphics\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PSDepthBuffer.hlsl">
+      <Filter>Graphics\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VSBlur.hlsl">
+      <Filter>Graphics\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PSBlur.hlsl">
+      <Filter>Graphics\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VSWireframe.hlsl">
+      <Filter>Graphics\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PSWireframe.hlsl">
+      <Filter>Graphics\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VSFog.hlsl">
+      <Filter>Graphics\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PSFog.hlsl">
+      <Filter>Graphics\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Citrus.rc">
-      <Filter>Resource Files</Filter>
+      <Filter>Graphics\Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Images\linux.ico">
-      <Filter>Resource Files</Filter>
+      <Filter>Graphics\Resource Files</Filter>
     </Image>
   </ItemGroup>
 </Project>
