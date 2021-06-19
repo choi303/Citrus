@@ -2,7 +2,7 @@
 # Citrus
 ### 3D renderer using DirectX 11 - C++11! Citrus only working on Windows 7+ for now :)
 
-![](https://img.shields.io/github/stars/choi303/Citrus.svg) ![](https://img.shields.io/github/forks/choi303/Citrus.svg) ![](https://img.shields.io/github/tag/choi303/Citrus.svg) ![](https://img.shields.io/github/release/choi303/Citrus.svg) ![](https://img.shields.io/github/issues/choi303/Citrus.svg) ![](https://img.shields.io/bower/v/Citrus.svg)
+![](https://img.shields.io/github/stars/choi303/Citrus.svg) ![](https://img.shields.io/github/forks/choi303/Citrus.svg) ![](https://img.shields.io/github/release/choi303/Citrus.svg) ![](https://img.shields.io/github/issues/choi303/Citrus.svg)
 
 ### To Do List
 - Shadow Mapping
