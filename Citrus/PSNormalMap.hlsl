@@ -59,11 +59,11 @@ float4 main(PS_IN input) : SV_Target
     
     //specular texture
     const float4 specular_sample = spec.Sample(object_sampler, input.tc);
-    const float specularPower = pow(2.0f, specular_sample.a * 6.0f); //specular power based texture (a) channel
+    const float specularPower = pow(2.0f, specular_sample.a * 7.0f); //specular power based texture (a) channel
     //specular reflection creation
     const float3 specular = att * diffuse * specularIntensity * pow(max(0.0f, dot(normalize(r), normalize(input.viewDirection))), specularPower);
     
-    const float4 diffTexture = diff.Sample(object_sampler, input.tc);
+    float4 diffTexture = diff.Sample(object_sampler, input.tc);
     if(diffTexture.a < 0.5f)
         discard;
     

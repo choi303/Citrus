@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <d3d11.h>
 #include <wrl.h>
@@ -17,3 +18,4 @@
 #include "Timer.h"
 #include "PointLight.h"
 #include "Converter.h"
+#include "CubeTexture.h"
