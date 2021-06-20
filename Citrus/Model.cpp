@@ -58,6 +58,14 @@ XMFLOAT3 Model::AdjustPos(float x, float y, float z)
     return pos;
 }
 
+XMFLOAT3 Model::AdjustRot(float roll, float pitch, float yaw)
+{
+    rot.x += roll;
+    rot.y += pitch;
+    rot.z += yaw;
+    return rot;
+}
+
 XMFLOAT3 Model::SetRot(const float x, const float y, const float z)
 {
     rot.x = x;

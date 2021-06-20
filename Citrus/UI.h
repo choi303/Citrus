@@ -1,7 +1,7 @@
 #pragma once
 #include "Model.h"
 #include <DirectXMath.h>
-using namespace DirectX;
+
 class UI
 {
 public:

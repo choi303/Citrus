@@ -32,8 +32,8 @@ void Blur::Draw()
 	pVS.Bind(pContext.Get());
 	pPS.Bind(pContext.Get());
 	//bind c buffer
-	pBlurCBuffer->data.screenWidth = width;
-	pBlurCBuffer->data.screenHeight = height;
+	pBlurCBuffer->data.screenWidth = static_cast<float>(width);
+	pBlurCBuffer->data.screenHeight = static_cast<float>(height);
 	pBlurCBuffer->MapData();
 	pBlurCBuffer->VSBind(pContext.Get(), 1u, 1u);
 }

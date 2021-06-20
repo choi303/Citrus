@@ -25,6 +25,7 @@ public:
 	void Render(const Camera3D cam);
 	XMFLOAT3 SetPos(const float x, const float y, const float z);
 	XMFLOAT3 AdjustPos(float x, float y, float z);
+	XMFLOAT3 AdjustRot(float roll, float pitch, float yaw);
 	XMFLOAT3 SetRot(const float x, const float y, const float z);
 	XMFLOAT3 SetScale(const float x, const float y, const float z);
 	XMFLOAT3 GetPos() const;

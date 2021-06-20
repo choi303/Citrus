@@ -7,11 +7,11 @@ class Graphics
 {
 public:
 	Graphics() {}
+	Graphics(const Graphics&) {}
+	~Graphics() {}
 	bool InitializeGraphics(HWND hwnd, const int width, const int height);
 	bool InitDxBase(HWND hwnd);
 	bool InitScene();
-	Graphics(Graphics&) = delete;
-	~Graphics() {}
 public:
 	void BeginFrame() const noexcept;
 	void EndFrame() const noexcept;
@@ -22,9 +22,9 @@ public:
 	GameObject pObject;
 	CPUInfo pCPU;
 	PointLight pPointLight;
-protected:
-	Microsoft::WRL::ComPtr<ID3D11Device> pDevice = nullptr;
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext> pContext = nullptr;
+public:
+	Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> pContext;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> pChain = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pRtv = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> pDSV = nullptr;
