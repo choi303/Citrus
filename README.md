@@ -41,6 +41,11 @@ As you can see in the [diagram](https://miro.com/app/board/o9J_lXORBkk=/), input
         }
 ```
 You can reach all virtual key codes on [microsoft site](https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes).
+- 'W-A-S-D' for movement
+- 'Left Shift' for 2x sprint
+- 'F' for for 1.5x sprint
+- 'C' for get point light position to camera position
+- 'Escape' for quit.
 
 # Gallery
 Lighting looking
