@@ -2,6 +2,7 @@
 #include "imgui\imgui_impl_dx11.h"
 #include "imgui\imgui_impl_win32.h"
 
+DXGI_ADAPTER_DESC pAdapterDesc;
 bool Graphics::InitializeGraphics(HWND hwnd, const int width, const int height)
 {
 	timer.Start();
@@ -115,6 +116,13 @@ bool Graphics::InitDxBase(HWND hwnd)
 	vp.TopLeftX = 0;
 	vp.TopLeftY = 0;
 	pContext->RSSetViewports(1u, &vp);
+
+	//read adapter data (video card data)
+	Microsoft::WRL::ComPtr<IDXGIFactory> pFactory;
+	hr = CreateDXGIFactory(__uuidof(IDXGIFactory), reinterpret_cast<void**>(pFactory.GetAddressOf()));
+	if (FAILED(hr)) { Error::Log(hr, "Failed to create dxgi factory."); return false; }
+	pFactory->EnumAdapters(0u, pAdapter.GetAddressOf());
+	pAdapter->GetDesc(&pAdapterDesc);
 
 	cam3D.SetPosition(0.0f, 0.0f, -2.0f);
 	//camera 3d
@@ -246,4 +254,9 @@ bool Graphics::SceneGraph()
 	pObject.Draw(cam3D);
 	pSkyBox.Draw(cam3D);
 	return true;
+}
+
+DXGI_ADAPTER_DESC Graphics::GetAdapterDesc() const
+{
+	return pAdapterDesc;
 }

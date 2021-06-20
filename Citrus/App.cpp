@@ -236,8 +236,12 @@ void App::FPSCounter()
 	strcat_s(cpuString, tempString);
 	strcat_s(cpuString, "%");
 	std::string cpu_usage_string = cpuString;
+	//print video card name (adapter name)
+	WCHAR* adapter_name_wchar = gfx.GetAdapterDesc().Description;
+	std::wstring adapter_name_wstring = std::wstring(adapter_name_wchar);
+	std::string adapter_name = std::string(adapter_name_wstring.begin(), adapter_name_wstring.end());
 	//dev menu creation
-	UI::DeveloperUI(cpu_usage_string.c_str() ,fps.c_str(), &gfx.cam3D, GameObject::GetDepthBufferEnabled(), GameObject::GetBlurEnabled(), GameObject::GetWireframeEnabled(),
+	UI::DeveloperUI(adapter_name ,cpu_usage_string.c_str() ,fps.c_str(), &gfx.cam3D, GameObject::GetDepthBufferEnabled(), GameObject::GetBlurEnabled(), GameObject::GetWireframeEnabled(),
 		GameObject::GetWireColor(), GameObject::GetFogEnabled(), GameObject::GetFogColor(), GameObject::GetFogStart(),
 		GameObject::GetFogEnd());
 }

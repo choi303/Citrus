@@ -63,7 +63,7 @@ void UI::PointLight(Model* model, std::string uiTitle, float pos[3], float rot[3
 }
 
 //Developer UI
-void UI::DeveloperUI(const std::string cpu_usage, const std::string fps, Camera3D* cam3d, bool* depthBufferEnabled, bool* blurEnabled,
+void UI::DeveloperUI(std::string adapter_name, const std::string cpu_usage, const std::string fps, Camera3D* cam3d, bool* depthBufferEnabled, bool* blurEnabled,
     bool* wireframeEnabled,
     XMFLOAT3* wireColor, bool* fogEnabled, XMFLOAT4* fogColor, float* fogStart, float* fogEnd)
 {
@@ -78,6 +78,8 @@ void UI::DeveloperUI(const std::string cpu_usage, const std::string fps, Camera3
     fogColor->w = fogCol[3];
     ImGui::Begin("Developer Menu", 0, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
     ImGui::Text("Citrus Graphics Renderer v0.1");
+    std::string adapter = "GPU: " + adapter_name;
+    ImGui::Text(adapter.c_str());
     ImGui::Text(cpu_usage.c_str());
     if (ImGui::Button("Reset Camera Position", ImVec2(200, 45)))
     {
