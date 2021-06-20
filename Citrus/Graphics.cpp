@@ -212,6 +212,7 @@ bool Graphics::InitScene()
 	pPointLight.Init(pDevice.Get(), pContext.Get());
 	pObject.Init(pDevice.Get(), pContext.Get(), "Models\\sponza\\sponza.obj", width, height, true);
 	pSkyBox.Init(pDevice.Get(), pContext.Get());
+	pObject.GetMesh()->SetScale(0.1f, 0.1f, 0.1f);
 
 	return true;
 }

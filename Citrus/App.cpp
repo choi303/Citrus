@@ -224,7 +224,7 @@ void App::FPSCounter()
 	//set fps text value
 	if (gfx.timer.GetMilisecondsElapsed() > 1000.0f)
 	{
-		fps = "FPS: " + std::to_string(fpsCounter) + ")";
+		fps = "FPS: " + std::to_string(fpsCounter);
 		fpsCounter = 0;
 		gfx.timer.Restart();
 	}
@@ -235,9 +235,9 @@ void App::FPSCounter()
 	strcpy_s(cpuString, "CPU Usage: ");
 	strcat_s(cpuString, tempString);
 	strcat_s(cpuString, "%");
-	std::string a = cpuString;
+	std::string cpu_usage_string = cpuString;
 	//dev menu creation
-	UI::DeveloperUI(std::to_string(gfx.timer.GetMilisecondsElapsed()), a.c_str() ,fps.c_str(), &gfx.cam3D, GameObject::GetDepthBufferEnabled(), GameObject::GetBlurEnabled(), GameObject::GetWireframeEnabled(),
+	UI::DeveloperUI(cpu_usage_string.c_str() ,fps.c_str(), &gfx.cam3D, GameObject::GetDepthBufferEnabled(), GameObject::GetBlurEnabled(), GameObject::GetWireframeEnabled(),
 		GameObject::GetWireColor(), GameObject::GetFogEnabled(), GameObject::GetFogColor(), GameObject::GetFogStart(),
 		GameObject::GetFogEnd());
 }
