@@ -3,7 +3,7 @@
 void MouseClass::OnLeftPressed(int x, int y)
 {
 	this->leftIsDown = true;
-	MouseEvent me(MouseEvent::EventType::LPress, x, y);
+	const MouseEvent me(MouseEvent::EventType::LPress, x, y);
 	this->eventBuffer.push(me);
 }
 
@@ -61,42 +61,42 @@ void MouseClass::OnMouseMoveRaw(int x, int y)
 	this->eventBuffer.push(MouseEvent(MouseEvent::EventType::RAW_MOVE, x, y));
 }
 
-bool MouseClass::IsLeftDown()
+bool MouseClass::IsLeftDown() const
 {
 	return this->leftIsDown;
 }
 
-bool MouseClass::IsMiddleDown()
+bool MouseClass::IsMiddleDown() const
 {
 	return this->mbuttonDown;
 }
 
-bool MouseClass::IsRightDown()
+bool MouseClass::IsRightDown() const
 {
 	return this->rightIsDown;
 }
 
-bool MouseClass::IsRightRelease()
+bool MouseClass::IsRightRelease() const
 {
 	return rightIsRelease;
 }
 
-int MouseClass::GetPosX()
+int MouseClass::GetPosX() const
 {
 	return this->x;
 }
 
-int MouseClass::GetPosY()
+int MouseClass::GetPosY() const
 {
 	return this->y;
 }
 
-MousePoint MouseClass::GetPos()
+MousePoint MouseClass::GetPos() const
 {
 	return{ this->x, this->y };
 }
 
-bool MouseClass::EventBufferIsEmpty()
+bool MouseClass::EventBufferIsEmpty() const
 {
 	return this->eventBuffer.empty();
 }

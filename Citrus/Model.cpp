@@ -153,7 +153,7 @@ bool Model::LoadMeshNoMtl(const std::string& file_path)
 
 void Model::LoadNodes(aiNode* p_node, const aiScene* p_scene, const aiMaterial* const* p_materials)
 {
-    std::string texture_directory = path.substr(0, path.find_last_of("\\") + 1);
+    const std::string texture_directory = path.substr(0, path.find_last_of("\\") + 1);
 
     for (size_t i = 0; i < p_node->mNumMeshes; i++)
     {

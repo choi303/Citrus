@@ -16,16 +16,16 @@ public:
 	void OnMouseMove(int x, int y);
 	void OnMouseMoveRaw(int x, int y);
 
-	bool IsLeftDown();
-	bool IsMiddleDown();
-	bool IsRightDown();
-	bool IsRightRelease();
+	bool IsLeftDown() const;
+	bool IsMiddleDown() const;
+	bool IsRightDown() const;
+	bool IsRightRelease() const;
 
-	int GetPosX();
-	int GetPosY();
-	MousePoint GetPos();
+	int GetPosX() const;
+	int GetPosY() const;
+	MousePoint GetPos() const;
 
-	bool EventBufferIsEmpty();
+	bool EventBufferIsEmpty() const;
 	MouseEvent ReadEvent();
 
 private:

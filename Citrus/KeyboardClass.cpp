@@ -11,12 +11,12 @@ bool KeyboardClass::KeyIsPressed(const unsigned char keycode)
 	return this->keyStates[keycode];
 }
 
-bool KeyboardClass::KeyBufferIsEmpty()
+bool KeyboardClass::KeyBufferIsEmpty() const
 {
 	return this->keyBuffer.empty();
 }
 
-bool KeyboardClass::CharBufferIsEmpty()
+bool KeyboardClass::CharBufferIsEmpty() const
 {
 	return this->charBuffer.empty();
 }
@@ -43,7 +43,7 @@ unsigned char KeyboardClass::ReadChar()
 	}
 	else
 	{
-		unsigned char e = this->charBuffer.front(); //Get first char from queue
+		const unsigned char e = this->charBuffer.front(); //Get first char from queue
 		this->charBuffer.pop(); //Remove first char from queue
 		return e; //Returns char
 	}
@@ -86,12 +86,12 @@ void KeyboardClass::DisableAutoRepeatChars()
 	this->autoRepeatChars = false;
 }
 
-bool KeyboardClass::IsKeysAutoRepeat()
+bool KeyboardClass::IsKeysAutoRepeat() const
 {
 	return this->autoRepeatKeys;
 }
 
-bool KeyboardClass::IsCharsAutoRepeat()
+bool KeyboardClass::IsCharsAutoRepeat() const
 {
 	return this->autoRepeatChars;
 }

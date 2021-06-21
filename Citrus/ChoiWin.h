@@ -1,8 +1,6 @@
 #pragma once
 #include <windows.h>
-#include <iostream>
 #include <string>
-#include "Error.h"
 
 class ChoiWin
 {
@@ -13,8 +11,8 @@ public:
 	HWND SetHWND(HWND hwnd) noexcept;
 	~ChoiWin()=default;
 private:
-	HWND hwnd = NULL;
-	HINSTANCE hInstance = NULL;
+	HWND hwnd = nullptr;
+	HINSTANCE hInstance = nullptr;
 
 };
 

@@ -41,7 +41,7 @@ public:
 		desc.MiscFlags = 0;
 		desc.ByteWidth = static_cast<UINT>(sizeof(T) + (16 - (sizeof(T) % 16)));
 		desc.StructureByteStride = 0;
-		HRESULT hr = device->CreateBuffer(&desc, 0, cb.GetAddressOf());
+		const HRESULT hr = device->CreateBuffer(&desc, nullptr, cb.GetAddressOf());
 		return hr;
 	}
 

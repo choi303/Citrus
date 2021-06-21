@@ -44,7 +44,7 @@ VS_OUT main(VS_IN input)
 	//calculating normal and normalize the normals
     vso.normal = mul(input.normal, (float3x3) world);
     vso.normal = normalize(vso.normal);
-    vso.worldPos = mul(float4(input.pos, 1.0f), world);//calculating world pos based world matrix for calculating vec to light or specular reflections
+    vso.worldPos = mul(float4(input.pos, 1.0f), world);//calculating world pos based world matrix for calculating vec to light
     //set tangent value
 	vso.tan = mul(input.tan, (float3x3)world);
     vso.tan = normalize(vso.tan);
@@ -52,7 +52,8 @@ VS_OUT main(VS_IN input)
     vso.binormal = mul(input.binormal, (float3x3) world);
     vso.binormal = normalize(vso.binormal);
 	//get world position from world matrix
-    world_position = mul(input.pos, world);
+    world_position = mul(float4(input.pos, 1.0f), view);
+    world_position = mul(float4(input.pos, 1.0f), world);
 	//calculating view direction
     vso.viewDirection = camera_pos.xyz - world_position.xyz;
     vso.viewDirection = normalize(vso.viewDirection);

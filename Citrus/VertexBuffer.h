@@ -24,7 +24,7 @@ public:
 	{
 		return vb.Get();
 	}
-	//get buffer adress or as ptr
+	//get buffer address or as ptr
 	ID3D11Buffer* const* GetAddressOf() const noexcept	
 	{
 		return vb.GetAddressOf();
@@ -35,7 +35,7 @@ public:
 		return buffersize;
 	}
 	//returns stride
-	const UINT Stride() const noexcept
+	UINT Stride() const noexcept
 	{
 		return *stride.get();
 	}
@@ -61,7 +61,7 @@ public:
 		vbd.MiscFlags = 0u;
 		D3D11_SUBRESOURCE_DATA vsd = {};
 		vsd.pSysMem = data;
-		HRESULT hr = pDevice->CreateBuffer(&vbd, &vsd, &vb);
+		const HRESULT hr = pDevice->CreateBuffer(&vbd, &vsd, &vb);
 		if (FAILED(hr)) { Error::Log(hr, "Failed to create buffer vertex"); return false; }
 
 		return hr;

@@ -39,11 +39,11 @@ bool PointLight::Init(ID3D11Device* device, ID3D11DeviceContext* context)
 
 	//set point light saved values
 	pointLightSetting.OpenFileRead("pointlight_settings.txt");
-	ambientIntensity = float(std::atoi(pointLightSetting.GetInfo(0).c_str()));
-	diffuseIntensity = float(std::atoi(pointLightSetting.GetInfo(1).c_str()));
-	specularIntensity = float(std::atoi(pointLightSetting.GetInfo(2).c_str()));
-	lightmodel.SetPos(float(std::atoi(pointLightSetting.GetInfo(3).c_str())), float(std::atoi(pointLightSetting.GetInfo(4).c_str())),
-		float(std::atoi(pointLightSetting.GetInfo(5).c_str())));
+	ambientIntensity = static_cast<float>(std::atoi(pointLightSetting.GetInfo(0).c_str()));
+	diffuseIntensity = static_cast<float>(std::atoi(pointLightSetting.GetInfo(1).c_str()));
+	specularIntensity = static_cast<float>(std::atoi(pointLightSetting.GetInfo(2).c_str()));
+	lightmodel.SetPos(static_cast<float>(std::atoi(pointLightSetting.GetInfo(3).c_str())), static_cast<float>(std::atoi(pointLightSetting.GetInfo(4).c_str())),
+		static_cast<float>(std::atoi(pointLightSetting.GetInfo(5).c_str())));
 	if (pointLightSetting.GetInfo(6) == "1")
 		normalMappingEnabled = TRUE;
 	else
@@ -92,7 +92,7 @@ float PointLight::GetAmbientIntensity()
 	return ambientIntensity; //return ambient intensity
 }
 
-float PointLight::SetAmbientIntensity(float value)
+float PointLight::SetAmbientIntensity(const float value)
 {
 	return ambientIntensity = value;	//set ambient intensity to value
 }
@@ -102,7 +102,7 @@ float PointLight::GetDiffuseIntensity()
 	return diffuseIntensity;	//return diffuse intenisty
 }
 
-float PointLight::SetDiffuseIntensity(float value)
+float PointLight::SetDiffuseIntensity(const float value)
 {
 	return diffuseIntensity = value;	//set diffuse intensity to value
 }
@@ -112,7 +112,7 @@ float PointLight::GetSpecularIntensity()
 	return specularIntensity;	//return specular intensity
 }
 
-float PointLight::SetSpecularIntensity(float value)
+float PointLight::SetSpecularIntensity(const float value)
 {
 	return specularIntensity = value;	//set specular intensity to value
 }
@@ -132,9 +132,9 @@ float PointLight::GetObjectPositionZ()
 	return Spos[0]; //return object z position
 }
 
-void PointLight::SetObjectPosition(float x, float y, float z)
+void PointLight::SetObjectPosition(const float x, const float y, const float z)
 {
-	lightmodel.SetPos(x, y, z);
+	lightmodel.SetPos(x, y, z);	//set object position to reference x,y,z
 }
 
 BOOL PointLight::GetNormalMapEnabled()
@@ -142,7 +142,7 @@ BOOL PointLight::GetNormalMapEnabled()
 	return normalMappingEnabled;	//return normal mapping enabled as a BOOL (win32 boolean)
 }
 
-BOOL PointLight::SetNormalMapEnabled(BOOL value)
+BOOL PointLight::SetNormalMapEnabled(const BOOL value)
 {
 	return normalMappingEnabled = value;	//set normal mapping to reference value
 }

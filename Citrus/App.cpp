@@ -1,7 +1,7 @@
 #include "App.h"
 #pragma warning(disable : 4996)
 
-void App::Init(std::string wndName, std::string className, HINSTANCE hInstance, const int width, const int height)
+void App::Init(const std::string wndName, const std::string className, const HINSTANCE hInstance, const int width, const int height)
 {
 	this->width = width;
 	this->height = height;
@@ -24,11 +24,6 @@ void App::Update() noexcept
 {
 	const float deltaTime = static_cast<float>(timer.GetMilisecondsElapsed());
 	timer.Restart();
-	//Set any char to any event
-	while (!keyboard.CharBufferIsEmpty())
-	{
-		unsigned char ch = keyboard.ReadChar();
-	}
 
 	//Set any key to any event
 	while (!keyboard.KeyBufferIsEmpty())
@@ -40,7 +35,7 @@ void App::Update() noexcept
 			wnd.SetHWND(nullptr);
 		}
 	}
-	float cameraSpeed = 0.0005f;
+	float camera_speed = 0.0005f;
 	//Set any mouse event to any event
 	while (!mouse.EventBufferIsEmpty())
 	{
@@ -57,42 +52,42 @@ void App::Update() noexcept
 	if (keyboard.KeyIsPressed(VK_SHIFT))
 	{
 		//increase speed when pressed left shift
-		cameraSpeed = 0.1f * deltaTime;
+		camera_speed = 0.1f * deltaTime;
 	}
 	if (keyboard.KeyIsPressed('F'))
 	{
 		//increase speed when pressed F
-		cameraSpeed = 0.001f * deltaTime;
+		camera_speed = 0.001f * deltaTime;
 	}
 	if (keyboard.KeyIsPressed('W'))
 	{
 		//move forward when pressed W
-		gfx.cam3D.AdjustPosition(gfx.cam3D.GetForwardVector() * cameraSpeed * deltaTime);
+		gfx.cam3D.AdjustPosition(gfx.cam3D.GetForwardVector() * camera_speed * deltaTime);
 	}
 	if (keyboard.KeyIsPressed('S'))
 	{
 		//move backward when pressed S
-		gfx.cam3D.AdjustPosition(gfx.cam3D.GetBackwardVector() * cameraSpeed * deltaTime);
+		gfx.cam3D.AdjustPosition(gfx.cam3D.GetBackwardVector() * camera_speed * deltaTime);
 	}
 	if (keyboard.KeyIsPressed('A'))
 	{
 		//move left when pressed A
-		gfx.cam3D.AdjustPosition(gfx.cam3D.GetLeftVector() * cameraSpeed * deltaTime);
+		gfx.cam3D.AdjustPosition(gfx.cam3D.GetLeftVector() * camera_speed * deltaTime);
 	}
 	if (keyboard.KeyIsPressed('D'))
 	{
 		//move right when pressed D
-		gfx.cam3D.AdjustPosition(gfx.cam3D.GetRightVector() * cameraSpeed * deltaTime);
+		gfx.cam3D.AdjustPosition(gfx.cam3D.GetRightVector() * camera_speed * deltaTime);
 	}
 	if (keyboard.KeyIsPressed('Q'))
 	{
 		//add up position when pressed Q
-		gfx.cam3D.AdjustPosition(0.0f, cameraSpeed * deltaTime, 0.0f);
+		gfx.cam3D.AdjustPosition(0.0f, camera_speed * deltaTime, 0.0f);
 	}
 	if (keyboard.KeyIsPressed('E'))
 	{
 		//add down position when pressed E
-		gfx.cam3D.AdjustPosition(0.0f, -cameraSpeed * deltaTime, 0.0f);
+		gfx.cam3D.AdjustPosition(0.0f, -camera_speed * deltaTime, 0.0f);
 	}
 	if (keyboard.KeyIsPressed('C'))
 	{
@@ -102,7 +97,7 @@ void App::Update() noexcept
 	}
 
 	//Set sky box position to camera position
-	//that is makes spherical skybox spherical skybox :D
+	//that is makes spherical sky box spherical sky box :D
 	gfx.pSkyBox.SetPos(gfx.cam3D.GetPositionFloat3(), deltaTime);
 }
 
@@ -208,9 +203,9 @@ void App::SetSavedValues()
 	else
 		GameObject::SetFogEnabled(false);
 
-	GameObject::SetFogStart(float(std::atoi(devMenuSettings.GetInfo(3).c_str())));
-	GameObject::SetFogEnd(float(std::atoi(devMenuSettings.GetInfo(4).c_str())));
-	GameObject::SetWireframeEnabled(float(std::atoi(devMenuSettings.GetInfo(5).c_str())));
+	GameObject::SetFogStart(static_cast<float>(std::atoi(devMenuSettings.GetInfo(3).c_str())));
+	GameObject::SetFogEnd(static_cast<float>(std::atoi(devMenuSettings.GetInfo(4).c_str())));
+	GameObject::SetWireframeEnabled(static_cast<float>(std::atoi(devMenuSettings.GetInfo(5).c_str())));
 	//close dev menu file
 	devMenuSettings.CloseFile();
 }
@@ -218,30 +213,29 @@ void App::SetSavedValues()
 void App::FPSCounter()
 {
 	//fps counter
-	static int fpsCounter = 0;
-	fpsCounter += 1;
+	static int fps_counter = 0;
+	fps_counter += 1;
 	static std::string fps;
 	//set fps text value
 	if (gfx.timer.GetMilisecondsElapsed() > 1000.0f)
 	{
-		fps = "FPS: " + std::to_string(fpsCounter);
-		fpsCounter = 0;
+		fps = "FPS: " + std::to_string(fps_counter);
+		fps_counter = 0;
 		gfx.timer.Restart();
 	}
-	char tempString[17];
-	char cpuString[17];
+	char temp_string[17];
+	char cpu_string[17];
 	//Print cpu usage data
-	_itoa_s(gfx.pCPU.GetCpuPercentage(), tempString, 11);
-	strcpy_s(cpuString, "CPU Usage: ");
-	strcat_s(cpuString, tempString);
-	strcat_s(cpuString, "%");
-	std::string cpu_usage_string = cpuString;
+	_itoa_s(gfx.pCPU.GetCpuPercentage(), temp_string, 11);
+	strcpy_s(cpu_string, "CPU Usage: ");
+	strcat_s(cpu_string, temp_string);
+	strcat_s(cpu_string, "%");
+	const std::string cpu_usage_string = cpu_string;
 	//print video card name (adapter name)
 	WCHAR* adapter_name_wchar = gfx.GetAdapterDesc().Description;
-	std::wstring adapter_name_wstring = std::wstring(adapter_name_wchar);
-	std::string adapter_name = std::string(adapter_name_wstring.begin(), adapter_name_wstring.end());
+	auto adapter_name = std::wstring(adapter_name_wchar);
 	//dev menu creation
-	UI::DeveloperUI(adapter_name ,cpu_usage_string.c_str() ,fps.c_str(), &gfx.cam3D, GameObject::GetDepthBufferEnabled(), GameObject::GetBlurEnabled(), GameObject::GetWireframeEnabled(),
+	UI::DeveloperUI(std::string(adapter_name.begin(), adapter_name.end()),cpu_usage_string.c_str() ,fps.c_str(), &gfx.cam3D, GameObject::GetDepthBufferEnabled(), GameObject::GetBlurEnabled(), GameObject::GetWireframeEnabled(),
 		GameObject::GetWireColor(), GameObject::GetFogEnabled(), GameObject::GetFogColor(), GameObject::GetFogStart(),
 		GameObject::GetFogEnd());
 }

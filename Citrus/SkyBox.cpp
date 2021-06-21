@@ -17,7 +17,7 @@ void SkyBox::Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	pLayout = std::make_unique<InputLayout>(pDevice, skybox_ied, &pVS);
 	//Create a skybox texture
 	pTexture = std::make_unique<Texture>(pDevice, pContext, "Images\\SkyBox.png");
-	//init sphere model for spherical skybox
+	//init sphere model for spherical sky box
 	sphere.InitNoMtl("Models\\sphere_hq.obj", pDevice, pContext);
 
 	//create pasteurizer

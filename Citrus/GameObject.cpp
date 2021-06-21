@@ -174,7 +174,7 @@ float GameObject::SetFogEnd(float value)
 	return Fog::SetFogEnd(value);
 }
 
-void GameObject::Draw(Camera3D cam)
+void GameObject::Draw(const Camera3D cam)
 {
 	//bind rasterizers
 	pContext->RSSetState(pRasterizer.Get());
@@ -215,7 +215,7 @@ void GameObject::Draw(Camera3D cam)
 		pBlur.Draw();
 	}
 
-	//if wireframe checkbox is true than draw wireframe filter
+	//if wire frame checkbox is true than draw wire frame filter
 	if (wireframeEnabled)
 	{
 		pContext->RSSetState(pRasterizerWireframe.Get());

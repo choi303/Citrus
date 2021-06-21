@@ -7,7 +7,7 @@ void UI::ClassicUI(Model* model, std::string uiTitle, float pos[3], float rot[3]
     pos[0] = model->GetPos().x;
     pos[1] = model->GetPos().y;
     pos[2] = model->GetPos().z;
-    ImGui::Begin(uiTitle.c_str(), 0, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
+    ImGui::Begin(uiTitle.c_str(), nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
     ImGui::DragFloat3("Position\nX/Y/Z", pos, 0.01f, -999999.0f, 999999.0f);
     model->SetPos(pos[0], pos[1], pos[2]);
     rot[0] = model->GetRot().x;
@@ -30,8 +30,8 @@ void UI::ClassicUI(Model* model, std::string uiTitle, float pos[3], float rot[3]
 }
 
 //Custom UI for point light
-void UI::PointLight(Model* model, std::string uiTitle, float pos[3], float rot[3], float scale[3], float* Intensity,
-    float* ambientIntensity, BOOL* normalMappingEnabled, float* specularlIntensity) const
+void UI::PointLight(Model* model, const std::string uiTitle, float pos[3], float rot[3], float scale[3], float* Intensity,
+    float* ambientIntensity, BOOL* normalMappingEnabled, float* specularIntensity) const
 {
     pos[0] = model->GetPos().x;
     pos[1] = model->GetPos().y;
@@ -51,7 +51,7 @@ void UI::PointLight(Model* model, std::string uiTitle, float pos[3], float rot[3
     model->SetScale(scale[0], scale[1], scale[2]);
     ImGui::DragFloat("Light\nIntensity", Intensity, 0.01f, 0.0f, 10000.0f);
     ImGui::DragFloat("Ambient\nIntensity", ambientIntensity, 0.01f, 0.0f, 10.0f);
-    ImGui::DragFloat("Specular\nIntensity", specularlIntensity, 0.01f, 0.0f, 10.0f);
+    ImGui::DragFloat("Specular\nIntensity", specularIntensity, 0.01f, 0.0f, 10.0f);
     if (ImGui::Button("Reset Position", ImVec2(200, 45)))
     {
         model->SetPos(0.0f, 0.0f, 0.0f);
@@ -76,9 +76,10 @@ void UI::DeveloperUI(std::string adapter_name, const std::string cpu_usage, cons
     fogColor->y = fogCol[1];
     fogColor->z = fogCol[2];
     fogColor->w = fogCol[3];
-    ImGui::Begin("Developer Menu", 0, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
+    ImGui::Begin("Developer Menu", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
     ImGui::Text("Citrus Graphics Renderer v0.1");
-    std::string adapter = "GPU: " + adapter_name;
+    ImGui::Text(fps.c_str());
+    const std::string adapter = "GPU: " + adapter_name;
     ImGui::Text(adapter.c_str());
     ImGui::Text(cpu_usage.c_str());
     if (ImGui::Button("Reset Camera Position", ImVec2(200, 45)))

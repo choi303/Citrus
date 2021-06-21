@@ -80,7 +80,7 @@ Texture::Texture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const std
 
 		m_resource = static_cast<ID3D11Texture2D*>(p2DTexture);
 
-		pContext->UpdateSubresource(m_resource.Get(), 0u, nullptr, (UINT*)pImage->pixels, (UINT)pImage->rowPitch, 0);
+		pContext->UpdateSubresource(m_resource.Get(), 0u, nullptr, reinterpret_cast<UINT*>(pImage->pixels), static_cast<UINT>(pImage->rowPitch), 0);
 
 		CD3D11_SHADER_RESOURCE_VIEW_DESC srvDesc(D3D11_SRV_DIMENSION_TEXTURE2D, textureDesc.Format);
 		hr = pDevice->CreateShaderResourceView(m_resource.Get(), &srvDesc, &m_view);

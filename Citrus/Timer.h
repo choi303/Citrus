@@ -5,7 +5,7 @@ class Timer
 {
 public:
 	Timer();
-	double GetMilisecondsElapsed();
+	double GetMilisecondsElapsed() const;
 	void Restart();
 	bool Stop();
 	bool Start();

@@ -28,7 +28,7 @@ std::string SaveSystem::GetInfo(int line)
 	//create data string
 	std::string data;
 	data = std::to_string(line); //set data value to line number
-	std::getline(pFile, data); 	//get data from refernce line
+	std::getline(pFile, data); 	//get data from reference line
 	return data; //return the data
 }
 

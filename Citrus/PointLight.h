@@ -35,17 +35,17 @@ public:
 	~PointLight() = default;
 public:
 	static float GetAmbientIntensity();
-	static float SetAmbientIntensity(float value);
+	static float SetAmbientIntensity(const float value);
 	static float GetDiffuseIntensity();
-	static float SetDiffuseIntensity(float value);
+	static float SetDiffuseIntensity(const float value);
 	static float GetSpecularIntensity();
-	static float SetSpecularIntensity(float value);
+	static float SetSpecularIntensity(const float value);
 	static float GetObjectPositionX();
 	static float GetObjectPositionY();
 	static float GetObjectPositionZ();
-	void SetObjectPosition(float x, float y, float z);
+	void SetObjectPosition(const float x, const float y, const float z);
 	static BOOL GetNormalMapEnabled();
-	static BOOL SetNormalMapEnabled(BOOL value);
+	static BOOL SetNormalMapEnabled(const BOOL value);
 public:
 	mutable SaveSystem pointLightSetting;
 	mutable std::vector<std::string> pPointLightSavedItems;

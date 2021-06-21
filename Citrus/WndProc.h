@@ -9,7 +9,7 @@ class WndProc
 {
 public:
 	WndProc();
-	LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 protected:
 	ChoiWin wnd;
 	KeyboardClass keyboard;

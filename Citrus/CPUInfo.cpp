@@ -1,25 +1,12 @@
 #include "CPUInfo.h"
 
-CPUInfo::CPUInfo()
-{
-}
-
-CPUInfo::CPUInfo(const CPUInfo&)
-{
-}
-
-CPUInfo::~CPUInfo()
-{
-}
-
 void CPUInfo::Init()
 {
-    PDH_STATUS pStatus;
     //initialize and check errors
     m_canReadCpu = true;
 
     //create query object pool for cpu usage
-    pStatus = PdhOpenQuery(NULL, 0, &m_queryHandle);
+    PDH_STATUS pStatus = PdhOpenQuery(nullptr, 0, &m_queryHandle);
     if(pStatus != ERROR_SUCCESS)
     {m_canReadCpu = false; }
 
@@ -45,7 +32,7 @@ void CPUInfo::Frame()
 
             PdhCollectQueryData(m_queryHandle);
 
-            PdhGetFormattedCounterValue(m_counterHandle, PDH_FMT_LONG, NULL, &value);
+            PdhGetFormattedCounterValue(m_counterHandle, PDH_FMT_LONG, nullptr, &value);
 
             m_cpuUsage = value.longValue;
         }
@@ -54,7 +41,7 @@ void CPUInfo::Frame()
     return;
 }
 
-void CPUInfo::ShutDown()
+void CPUInfo::ShutDown() const
 {
     if (m_canReadCpu)
     {
@@ -63,13 +50,13 @@ void CPUInfo::ShutDown()
     return;
 }
 
-int CPUInfo::GetCpuPercentage()
+int CPUInfo::GetCpuPercentage() const
 {
     int usage;
 
     if (m_canReadCpu)
     {
-        usage = (int)m_cpuUsage;
+        usage = static_cast<int>(m_cpuUsage);
     }
     else
     {

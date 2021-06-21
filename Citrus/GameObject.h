@@ -32,7 +32,7 @@ public:
 	static bool SetWireframeEnabled(bool value);
 	static float SetFogStart(float value);
 	static float SetFogEnd(float value);
-	void Draw(Camera3D cam);
+	void Draw(const Camera3D cam);
 	Model* GetMesh();
 	~GameObject() = default;
 private:

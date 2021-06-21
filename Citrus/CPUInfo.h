@@ -1,18 +1,17 @@
 #pragma once
 #pragma comment(lib, "pdh.lib")
 #include <Pdh.h>
-#include <wrl.h>
 
 class CPUInfo
 {
 public:
-	CPUInfo();
-	CPUInfo(const CPUInfo&);
-	~CPUInfo();
+	CPUInfo()=default;
+	CPUInfo(const CPUInfo&)=default;
+	~CPUInfo()=default;
 	void Init();
 	void Frame();
-	void ShutDown();
-	int GetCpuPercentage();
+	void ShutDown() const;
+	int GetCpuPercentage() const;
 private:
 	bool m_canReadCpu;
 	HQUERY m_queryHandle;
