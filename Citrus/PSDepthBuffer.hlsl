@@ -24,7 +24,7 @@ float4 main(PS_IN input) : SV_Target
         color = float4(1.0f, 0.0f, 0.0f, 1.0f) * textureColor;
     }
     
-    //if range bigger than 0.9f return blue
+    //if range bigger than 0.9f return green
     if(depthValue > 0.9f)
     {
         color = float4(0.0f, 1.0f, 0.0f, 1.0f) * textureColor;

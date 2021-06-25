@@ -16,7 +16,6 @@
     <ClCompile Include="ChoiWin.cpp" />
     <ClCompile Include="Converter.cpp" />
     <ClCompile Include="CPUInfo.cpp" />
-    <ClCompile Include="CubeTexture.cpp" />
     <ClCompile Include="DepthBuffer.cpp" />
     <ClCompile Include="Fog.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -53,7 +52,6 @@
     <ClInclude Include="ChoiWin.h" />
     <ClInclude Include="Converter.h" />
     <ClInclude Include="CPUInfo.h" />
-    <ClInclude Include="CubeTexture.h" />
     <ClInclude Include="DepthBuffer.h" />
     <ClInclude Include="Error.h" />
     <ClInclude Include="Fog.h" />

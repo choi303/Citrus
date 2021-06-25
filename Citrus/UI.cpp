@@ -24,7 +24,7 @@ void UI::ClassicUI(Model* model, std::string uiTitle, float pos[3], float rot[3]
     {
         model->SetPos(0.0f, 0.0f, 0.0f);
         model->SetRot(0.0f, 0.0f, 0.0f);
-        model->SetScale(0.1f, 0.1f, 0.1f);
+        model->SetScale(1.0f, 1.0f, 1.0f);
     }
     ImGui::End();
 }
@@ -50,8 +50,8 @@ void UI::PointLight(Model* model, const std::string uiTitle, float pos[3], float
     ImGui::DragFloat3("Scale\n/X/Y/Z", scale, 0.01f, -999999999.0f, 999999999.0f);
     model->SetScale(scale[0], scale[1], scale[2]);
     ImGui::DragFloat("Light\nIntensity", Intensity, 0.01f, 0.0f, 10000.0f);
-    ImGui::DragFloat("Ambient\nIntensity", ambientIntensity, 0.01f, 0.0f, 10.0f);
-    ImGui::DragFloat("Specular\nIntensity", specularIntensity, 0.01f, 0.0f, 10.0f);
+    ImGui::DragFloat("Ambient\nIntensity", ambientIntensity, 0.01f, 0.0f, 1000.0f);
+    ImGui::DragFloat("Specular\nIntensity", specularIntensity, 0.01f, 0.0f, 1000.0f);
     if (ImGui::Button("Reset Position", ImVec2(200, 45)))
     {
         model->SetPos(0.0f, 0.0f, 0.0f);
@@ -95,8 +95,8 @@ void UI::DeveloperUI(std::string adapter_name, const std::string cpu_usage, cons
     ImGui::Checkbox("Blur Shader", blurEnabled);
     ImGui::Text("");
     ImGui::Checkbox("Fog Shader", fogEnabled);
-    ImGui::DragFloat("Fog Start", fogStart, 0.01f, 0.0f, 100.0f);
-    ImGui::DragFloat("Fog End", fogEnd, 0.01f, 0.0f, 100.0f);
+    ImGui::DragFloat("Fog Start", fogStart, 0.01f, 0.0f, 2000.0f);
+    ImGui::DragFloat("Fog End", fogEnd, 0.01f, 0.0f, 2000.0f);
     ImGui::ColorPicker4("Fog Color", fogCol);
     ImGui::Text("");
     ImGui::Checkbox("Wireframe", wireframeEnabled);

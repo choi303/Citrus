@@ -18,4 +18,3 @@
 #include "Timer.h"
 #include "PointLight.h"
 #include "Converter.h"
-#include "CubeTexture.h"

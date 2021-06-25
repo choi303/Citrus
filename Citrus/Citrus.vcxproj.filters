@@ -105,9 +105,6 @@
     <ClCompile Include="GameObject.cpp">
       <Filter>Graphics\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CubeTexture.cpp">
-      <Filter>Graphics\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SkyBox.cpp">
       <Filter>Graphics\Source Files</Filter>
     </ClCompile>
@@ -235,9 +232,6 @@
     </ClInclude>
     <ClInclude Include="Error.h">
       <Filter>Graphics\Header Files\Log</Filter>
-    </ClInclude>
-    <ClInclude Include="CubeTexture.h">
-      <Filter>Graphics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SkyBox.h">
       <Filter>Graphics\Header Files</Filter>
