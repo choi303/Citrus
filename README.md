@@ -9,7 +9,6 @@
 - Ambient Occlusion
 - Cube Mapping
 - Particle System
-- Planar Reflections
 - Global Illumination
 - Volumetric Lighting
 - PBR Support
@@ -54,5 +53,5 @@ Lighting looking
 Wireframe looking
 ![Debug Screenshot 2021 06 18 - 22 20 13 65](https://user-images.githubusercontent.com/60492235/122608394-cbe56100-d084-11eb-9178-ce2ef3043cad.png)
 
-Fog Shader looking
+Fog effect looking
 ![Debug Screenshot 2021 06 18 - 22 21 18 96](https://user-images.githubusercontent.com/60492235/122608416-d43d9c00-d084-11eb-9754-5af7420cdc67.png)
