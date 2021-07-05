@@ -61,7 +61,7 @@ float4 main(PS_IN input) : SV_Target
     if (reflectionEnabled)
     {
         //final light (d + a) * texture or color
-        float4 finalLight = float4(saturate((diffuse + ambientLight) * (diffTexture.rgb * reflectionColor) + specular * specularReflectionColor), 
+        float4 finalLight = float4(saturate((diffuse + ambientLight) * (diffTexture.rgb * reflectionColor.rgb) + specular * specularReflectionColor),
         1.0f);
         
         return finalLight;

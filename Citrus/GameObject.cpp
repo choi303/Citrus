@@ -8,7 +8,7 @@ static float pos[3] = { 0,0,0 };
 static float rot[3] = { 0,0,0 };
 static float scale[3] = { 0.1f,0.1f,0.1f };
 
-bool GameObject::Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std::string filepath, int width, int height, bool hasMaterial)
+bool GameObject::init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std::string filepath, int width, int height, bool hasMaterial)
 {
 	this->pDevice = pDevice;
 	this->pContext = pContext;
@@ -174,7 +174,7 @@ float GameObject::SetFogEnd(float value)
 	return Fog::SetFogEnd(value);
 }
 
-void GameObject::Draw(const Camera3D cam)
+void GameObject::draw(const Camera3D cam)
 {
 	//bind rasterizers
 	pContext->RSSetState(pRasterizer.Get());

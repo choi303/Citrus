@@ -126,10 +126,7 @@ bool Graphics::InitDxBase(HWND hwnd)
 
 	cam3D.SetPosition(0.0f, 0.0f, -2.0f);
 	//camera 3d
-	cam3D.SetProjectionValues(70.0f, static_cast<float>(width) / static_cast<float>(height), 1.0f, 99999.0f);
-
-	//set primitive topology
-	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	cam3D.SetProjectionValues(70.0f, static_cast<float>(width) / static_cast<float>(height), 1.0f, 99999.0f * 99999.0f);
 
 	//imgui init
 	IMGUI_CHECKVERSION();
@@ -217,13 +214,15 @@ bool Graphics::InitDxBase(HWND hwnd)
 
 bool Graphics::InitScene()
 {
+	gridMap.init(pDevice.Get(), pContext.Get());
 	pPointLight.Init(pDevice.Get(), pContext.Get());
 	pSkyBox.Init(pDevice.Get(), pContext.Get());
-	nanosuit.Init(pDevice.Get(), pContext.Get(), "Models\\sponza\\sponza.obj", width, height, true);
-	object.Init(pDevice.Get(), pContext.Get(),
+	nanosuit.init(pDevice.Get(), pContext.Get(), "Models\\sponza\\sponza.obj", width, height, true);
+	object.init(pDevice.Get(), pContext.Get(),
 		"Models\\sphere_hq.obj", width, height, false);
 	sphereTex = std::make_unique<Texture>(pDevice.Get(), pContext.Get(), "Images\\bill.png");
 	envTex = std::make_unique<Texture>(pDevice.Get(), pContext.Get(), "Images\\SkyBox.png", 2);
+
 	return true;
 }
 
@@ -255,12 +254,15 @@ bool Graphics::SceneGraph()
 {
 	pContext->OMSetDepthStencilState(pDepthState.Get(), 0);
 	pCPU.Frame();
+	gridMap.draw(cam3D);
+	//set primitive topology
+	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	pPointLight.Draw(cam3D);
 	pPointLight.BindCB();
 	sphereTex->Bind(pContext.Get());
 	envTex->Bind(pContext.Get());
-	object.Draw(cam3D);
-	nanosuit.Draw(cam3D);
+	object.draw(cam3D);
+	nanosuit.draw(cam3D);
 	pSkyBox.Draw(cam3D);
 	return true;
 }

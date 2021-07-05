@@ -166,6 +166,7 @@ bool App::ProcessMessages(HINSTANCE hInstance) const noexcept
 			pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetFogStart()));
 			pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetFogEnd()));
 			pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetWireframeEnabled()));
+			pDevMenuSavedItems.push_back(std::to_string(*GridMap::getRender()));
 			devMenuSettings.AddInfo(pDevMenuSavedItems);
 			devMenuSettings.CloseFile();
 
@@ -207,7 +208,16 @@ void App::SetSavedValues()
 
 	GameObject::SetFogStart(static_cast<float>(std::atoi(devMenuSettings.GetInfo(3).c_str())));
 	GameObject::SetFogEnd(static_cast<float>(std::atoi(devMenuSettings.GetInfo(4).c_str())));
-	GameObject::SetWireframeEnabled(static_cast<float>(std::atoi(devMenuSettings.GetInfo(5).c_str())));
+
+	if (devMenuSettings.GetInfo(5) == "1")
+		GameObject::SetWireframeEnabled(true);
+	else
+		GameObject::SetWireframeEnabled(false);
+
+	if (devMenuSettings.GetInfo(6) == "1")
+		GridMap::setRender(true);
+	else
+		GridMap::setRender(false);
 	//close dev menu file
 	devMenuSettings.CloseFile();
 }
@@ -239,5 +249,6 @@ void App::FPSCounter()
 	//dev menu creation
 	UI::DeveloperUI(std::string(adapter_name.begin(), adapter_name.end()),cpu_usage_string.c_str() ,fps.c_str(), &gfx.cam3D, GameObject::GetDepthBufferEnabled(), GameObject::GetBlurEnabled(), GameObject::GetWireframeEnabled(),
 		GameObject::GetWireColor(), GameObject::GetFogEnabled(), GameObject::GetFogColor(), GameObject::GetFogStart(),
-		GameObject::GetFogEnd(), &gfx.vsync);
+		GameObject::GetFogEnd(), &gfx.vsync, GridMap::getRender(),
+		GridMap::getColor());
 }

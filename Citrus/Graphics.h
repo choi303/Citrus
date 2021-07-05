@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "SkyBox.h"
 #include "CPUInfo.h"
+#include "GridMap.h"
 
 class Graphics
 {
@@ -24,6 +25,7 @@ public:
 	SkyBox pSkyBox;
 	CPUInfo pCPU;
 	PointLight pPointLight;
+	GridMap gridMap;
 	bool vsync = true;
 public:
 	wrl::ComPtr<ID3D11Device> pDevice;

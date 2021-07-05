@@ -129,6 +129,9 @@
     <ClCompile Include="RenderTexture.cpp">
       <Filter>Graphics\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GridMap.cpp">
+      <Filter>Graphics\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -257,6 +260,9 @@
     <ClInclude Include="RenderTexture.h">
       <Filter>Graphics\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GridMap.h">
+      <Filter>Graphics\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ColorPixel.hlsl">
@@ -311,6 +317,12 @@
       <Filter>Graphics\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="PSFog.hlsl">
+      <Filter>Graphics\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VSGridMap.hlsl">
+      <Filter>Graphics\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PSGridMap.hlsl">
       <Filter>Graphics\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

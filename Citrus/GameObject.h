@@ -16,7 +16,7 @@ class GameObject
 public:
 	GameObject() = default;
 	GameObject(const GameObject&) {}
-	bool Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std::string filepath, int width, int height, bool hasMaterial);
+	bool init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std::string filepath, int width, int height, bool hasMaterial);
 	bool HasNormal() const;
 	static bool* GetDepthBufferEnabled();
 	static bool* GetBlurEnabled();
@@ -32,7 +32,7 @@ public:
 	static bool SetWireframeEnabled(bool value);
 	static float SetFogStart(float value);
 	static float SetFogEnd(float value);
-	void Draw(const Camera3D cam);
+	void draw(const Camera3D cam);
 	Model* GetMesh();
 	~GameObject() = default;
 private:
