@@ -31,7 +31,7 @@ void UI::ClassicUI(Model* model, std::string uiTitle, float pos[3], float rot[3]
 
 //Custom UI for point light
 void UI::PointLight(Model* model, const std::string uiTitle, float pos[3], float rot[3], float scale[3], float* Intensity,
-    float* ambientIntensity, BOOL* normalMappingEnabled, float* specularIntensity) const
+    float* ambientIntensity, BOOL* normalMappingEnabled, float* specularIntensity, BOOL* reflectionEnabled, float* reflectionIntensity) const
 {
     pos[0] = model->GetPos().x;
     pos[1] = model->GetPos().y;
@@ -52,6 +52,7 @@ void UI::PointLight(Model* model, const std::string uiTitle, float pos[3], float
     ImGui::DragFloat("Light\nIntensity", Intensity, 0.01f, 0.0f, 10000.0f);
     ImGui::DragFloat("Ambient\nIntensity", ambientIntensity, 0.01f, 0.0f, 1000.0f);
     ImGui::DragFloat("Specular\nIntensity", specularIntensity, 0.01f, 0.0f, 1000.0f);
+    ImGui::DragFloat("Reflection\nIntensity", reflectionIntensity, 0.01f, 0.0f, 1000.0f);
     if (ImGui::Button("Reset Position", ImVec2(200, 45)))
     {
         model->SetPos(0.0f, 0.0f, 0.0f);
@@ -59,13 +60,14 @@ void UI::PointLight(Model* model, const std::string uiTitle, float pos[3], float
         model->SetScale(1.0f, 1.0f, 1.0f);
     }
     ImGui::Checkbox("Normal Mapping", reinterpret_cast<bool*>(normalMappingEnabled));
+    ImGui::Checkbox("Reflection", reinterpret_cast<bool*>(reflectionEnabled));
     ImGui::End();
 }
 
 //Developer UI
 void UI::DeveloperUI(std::string adapter_name, const std::string cpu_usage, const std::string fps, Camera3D* cam3d, bool* depthBufferEnabled, bool* blurEnabled,
     bool* wireframeEnabled,
-    XMFLOAT3* wireColor, bool* fogEnabled, XMFLOAT4* fogColor, float* fogStart, float* fogEnd)
+    XMFLOAT3* wireColor, bool* fogEnabled, XMFLOAT4* fogColor, float* fogStart, float* fogEnd, bool* vsync)
 {
     static float wireCol[3] = { 1,1,1 };
     wireColor->x = wireCol[0];
@@ -82,6 +84,7 @@ void UI::DeveloperUI(std::string adapter_name, const std::string cpu_usage, cons
     const std::string adapter = "GPU: " + adapter_name;
     ImGui::Text(adapter.c_str());
     ImGui::Text(cpu_usage.c_str());
+    ImGui::Checkbox("Vsync", vsync);
     if (ImGui::Button("Reset Camera Position", ImVec2(200, 45)))
     {
         cam3d->SetPosition(0.0f, 0.0f, -2.0f);

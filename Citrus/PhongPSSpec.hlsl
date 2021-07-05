@@ -4,7 +4,7 @@ cbuffer Light : register(b0)
     float lightIntensity;
     float ambientIntensity;
     float specularIntensity;
-    float pad[2];
+    bool reflectionEnabled;
 };
 
 struct PS_IN
@@ -13,10 +13,12 @@ struct PS_IN
     float2 tc : Texcoord;
     float3 normal : Normal;
     float3 worldPos : WorldPos;
+    float3 viewDirection : ViewDirection;
 };
 
 Texture2D diff : register(t0);
 Texture2D spec : register(t1);
+Texture2D environment : register(t2);
 SamplerState objsampler : register(s0);
 
 float4 main(PS_IN input) : SV_Target
@@ -46,10 +48,27 @@ float4 main(PS_IN input) : SV_Target
     float3 specularReflectionColor = specularSample.rgb; //sample colors
     float specularPower = pow(2.0f, specularSample.a * 13.0f); //specular power based texture (a) channel
     //specular reflection creation
-    float3 specular = att * (diffuseColor * diffuseIntesity) * specularIntensity * pow(max(0.0f, dot(normalize(-r), normalize(input.worldPos))), specularPower);
+    float3 specular = att * (diffuseColor * diffuseIntesity) * specularIntensity * pow(max(0.0f, dot(normalize(-r), normalize(input.viewDirection))), specularPower);
+    
+    float4 diffTexture = diff.Sample(objsampler, input.tc);
+    
+    float3 incident = -input.viewDirection;
+    float2 reflectionVector = reflect(incident, input.normal);
+    float4 reflectionColor = environment.Sample(objsampler,
+        reflectionVector);
+    float4 reflectionFactor = reflectionColor * 9.0f;
+    
+    if (reflectionEnabled)
+    {
+        //final light (d + a) * texture or color
+        float4 finalLight = float4(saturate((diffuse + ambientLight) * (diffTexture.rgb * reflectionColor) + specular * specularReflectionColor), 
+        1.0f);
+        
+        return finalLight;
+    }
     
     //final light (d + a) * texture or color
-    float4 finalLight = float4(saturate((diffuse + ambientLight) * diff.Sample(objsampler, input.tc).rgb + specular * specularReflectionColor), 1.0f);
-
+    float4 finalLight = float4(saturate((diffuse + ambientLight) * diffTexture.rgb + specular * specularReflectionColor), 1.0f);
+    
     return finalLight;
 }

@@ -13,6 +13,9 @@ struct Light
 	float ambientIntensity;
 	BOOL normalMappingEnabled;
 	float specularIntensity;
+	BOOL reflectionEnabled;
+	float reflectionIntensity;
+	float pad[3];
 };
 
 struct LightSpec
@@ -21,7 +24,8 @@ struct LightSpec
 	float lightIntensity;
 	float ambientIntensity;
 	float specularIntensity;
-	float pad[2];
+	BOOL reflectionEnabled;
+	float pad;
 };
 
 class PointLight
@@ -35,17 +39,15 @@ public:
 	~PointLight() = default;
 public:
 	static float GetAmbientIntensity();
-	static float SetAmbientIntensity(const float value);
 	static float GetDiffuseIntensity();
-	static float SetDiffuseIntensity(const float value);
 	static float GetSpecularIntensity();
-	static float SetSpecularIntensity(const float value);
+	static float GetReflectionIntensity();
 	static float GetObjectPositionX();
 	static float GetObjectPositionY();
 	static float GetObjectPositionZ();
 	void SetObjectPosition(const float x, const float y, const float z);
 	static BOOL GetNormalMapEnabled();
-	static BOOL SetNormalMapEnabled(const BOOL value);
+	static BOOL GetReflectionEnabled();
 public:
 	mutable SaveSystem pointLightSetting;
 	mutable std::vector<std::string> pPointLightSavedItems;

@@ -13,7 +13,7 @@ struct VS_IN
 
 struct VS_OUT
 {
-    float4 pos : Sv_Position;
+    float4 pos : SV_Position;
     float2 tc : Texcoord;
 };
 

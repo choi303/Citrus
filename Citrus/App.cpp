@@ -22,7 +22,7 @@ void App::Init(const std::string wndName, const std::string className, const HIN
 
 void App::Update() noexcept
 {
-	const float deltaTime = static_cast<float>(timer.GetMilisecondsElapsed());
+	const double deltaTime = timer.GetMilisecondsElapsed();
 	timer.Restart();
 
 	//Set any key to any event
@@ -139,10 +139,12 @@ bool App::ProcessMessages(HINSTANCE hInstance) const noexcept
 			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetAmbientIntensity()));
 			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetDiffuseIntensity()));
 			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetSpecularIntensity()));
+			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetReflectionIntensity()));
 			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetObjectPositionX()));
 			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetObjectPositionY()));
 			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetObjectPositionZ()));
 			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetNormalMapEnabled()));
+			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetReflectionEnabled()));
 			gfx.pPointLight.pointLightSetting.AddInfo(gfx.pPointLight.pPointLightSavedItems);
 			gfx.pPointLight.pointLightSetting.CloseFile();
 			//open camera txt, stores camera position and rotation data
@@ -237,5 +239,5 @@ void App::FPSCounter()
 	//dev menu creation
 	UI::DeveloperUI(std::string(adapter_name.begin(), adapter_name.end()),cpu_usage_string.c_str() ,fps.c_str(), &gfx.cam3D, GameObject::GetDepthBufferEnabled(), GameObject::GetBlurEnabled(), GameObject::GetWireframeEnabled(),
 		GameObject::GetWireColor(), GameObject::GetFogEnabled(), GameObject::GetFogColor(), GameObject::GetFogStart(),
-		GameObject::GetFogEnd());
+		GameObject::GetFogEnd(), &gfx.vsync);
 }

@@ -5,7 +5,8 @@ bool Model::Init(const std::string& file_path, ID3D11Device* p_device, ID3D11Dev
     this->pDevice = p_device;
     this->pContext = p_context;
     this->path = file_path;
-	
+    textures.push_back(Texture(pDevice, pContext, "Images\\SkyBox.png", 3));
+
     if (!LoadMesh(file_path))
         Error::Log("Failed to load mesh.");
 
@@ -181,6 +182,11 @@ void Model::LoadNodes(aiNode* p_node, const aiScene* p_scene, const aiMaterial* 
             {
                 textures.push_back(Texture(pDevice, pContext, texture_directory + textureName.C_Str(), 2));
                 hasNormalmap = true;
+            }
+
+            if (mtl.GetTexture(aiTextureType::aiTextureType_REFLECTION, 0, &textureName) == aiReturn_SUCCESS)
+            {
+                textures.push_back(Texture(pDevice, pContext, texture_directory + textureName.C_Str(), 3));
             }
         }
         

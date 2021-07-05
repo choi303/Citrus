@@ -218,10 +218,12 @@ bool Graphics::InitDxBase(HWND hwnd)
 bool Graphics::InitScene()
 {
 	pPointLight.Init(pDevice.Get(), pContext.Get());
-	pObject.Init(pDevice.Get(), pContext.Get(), "Models\\sponza\\sponza.obj", width, height, true);
 	pSkyBox.Init(pDevice.Get(), pContext.Get());
-	pObject.GetMesh()->SetScale(0.1f, 0.1f, 0.1f);
-
+	nanosuit.Init(pDevice.Get(), pContext.Get(), "Models\\sponza\\sponza.obj", width, height, true);
+	object.Init(pDevice.Get(), pContext.Get(),
+		"Models\\sphere_hq.obj", width, height, false);
+	sphereTex = std::make_unique<Texture>(pDevice.Get(), pContext.Get(), "Images\\bill.png");
+	envTex = std::make_unique<Texture>(pDevice.Get(), pContext.Get(), "Images\\SkyBox.png", 2);
 	return true;
 }
 
@@ -233,7 +235,8 @@ void Graphics::BeginFrame() const noexcept
 	//check out app.cpp render frame func for desc
 	float bgColor[] = { 0.0f, 0.0f, 0.1f, 1.0f };
 	pContext->ClearRenderTargetView(pRtv.Get(), bgColor);
-	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH
+		| D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
 void Graphics::EndFrame() const noexcept
@@ -242,7 +245,10 @@ void Graphics::EndFrame() const noexcept
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 	//check out app.cpp render frame func for desc
-	pChain->Present(1u, 0u);
+	if (vsync)
+		pChain->Present(1u, 0u);
+	else
+		pChain->Present(0u, 0u);
 }
 
 bool Graphics::SceneGraph()
@@ -251,7 +257,10 @@ bool Graphics::SceneGraph()
 	pCPU.Frame();
 	pPointLight.Draw(cam3D);
 	pPointLight.BindCB();
-	pObject.Draw(cam3D);
+	sphereTex->Bind(pContext.Get());
+	envTex->Bind(pContext.Get());
+	object.Draw(cam3D);
+	nanosuit.Draw(cam3D);
 	pSkyBox.Draw(cam3D);
 	return true;
 }

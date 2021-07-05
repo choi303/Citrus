@@ -7,7 +7,6 @@
 ### To Do List
 - Shadow Mapping
 - Ambient Occlusion
-- Cube Mapping
 - Particle System
 - Global Illumination
 - Volumetric Lighting
@@ -18,7 +17,7 @@
 - Phong Lighting
 - 3D Model Loader
 - Normal Map & Specular Map support
-- Spherical Skybox
+- Environment Mapping
 - Filters (blur, depth, fog)
 - GUI Support (Dear Imgui <3)
 - Save System
