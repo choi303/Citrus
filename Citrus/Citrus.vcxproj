@@ -37,7 +37,6 @@
     <ClCompile Include="MouseClass.cpp" />
     <ClCompile Include="MouseEvent.cpp" />
     <ClCompile Include="PointLight.cpp" />
-    <ClCompile Include="RenderTexture.cpp" />
     <ClCompile Include="SaveSystem.cpp" />
     <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -78,7 +77,6 @@
     <ClInclude Include="MouseClass.h" />
     <ClInclude Include="MouseEvent.h" />
     <ClInclude Include="PointLight.h" />
-    <ClInclude Include="RenderTexture.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
     <ClInclude Include="SaveSystem.h" />

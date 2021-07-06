@@ -17,6 +17,7 @@ public:
 		bool* wireframeEnabled, XMFLOAT3* wireColor, bool* fogEnabled, XMFLOAT4* fogColor, float* fogStart,
 		float* fogEnd, bool* vsync, bool* gridMapEnabled, XMFLOAT3* gridMapColor);
 
+	static void ToolBar();
 	~UI() = default;
 };
 

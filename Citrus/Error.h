@@ -20,4 +20,10 @@ public:
 		MessageBoxA(NULL, message.c_str(), "Citrus Log", MB_ICONERROR);
 		exit(-1);
 	}
+
+	static void InfoLog(std::string msg) noexcept
+	{
+		std::string message = msg + "\n";
+		MessageBoxA(NULL, message.c_str(), "Citrus Info Log", MB_ICONINFORMATION);
+	}
 };

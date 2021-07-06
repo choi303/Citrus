@@ -22,7 +22,7 @@ void App::Init(const std::string wndName, const std::string className, const HIN
 
 void App::Update() noexcept
 {
-	const double deltaTime = timer.GetMilisecondsElapsed();
+	const float deltaTime = static_cast<float>(timer.GetMilisecondsElapsed());
 	timer.Restart();
 
 	//Set any key to any event
@@ -251,4 +251,7 @@ void App::FPSCounter()
 		GameObject::GetWireColor(), GameObject::GetFogEnabled(), GameObject::GetFogColor(), GameObject::GetFogStart(),
 		GameObject::GetFogEnd(), &gfx.vsync, GridMap::getRender(),
 		GridMap::getColor());
+
+	//toolbar creation
+	UI::ToolBar();
 }

@@ -146,3 +146,19 @@ void UI::DeveloperUI(std::string adapter_name, const
     ImGui::ColorPicker3("Grid Map\nColor", gridmapCol);
     ImGui::End();
 }
+
+void UI::ToolBar()
+{
+    if (ImGui::BeginMainMenuBar())
+    {
+        if (ImGui::BeginMenu("About"))
+        {
+            if (ImGui::MenuItem("Info"))
+            {
+                Error::InfoLog("Citrus Graphics Renderer v0.1\nGitHub: https://github.com/choi303/Citrus");
+            }
+            ImGui::EndMenu();
+        }
+        ImGui::EndMainMenuBar();
+    }
+}
