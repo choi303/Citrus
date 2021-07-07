@@ -1,4 +1,4 @@
-#include "UI.h"
+﻿#include "UI.h"
 #include <Pdh.h>
 
 //Classic UI
@@ -89,8 +89,7 @@ void UI::PointLight(Model* model, const std::string
 //Developer UI
 void UI::DeveloperUI(std::string adapter_name, const
     std::string cpu_usage, const std::string fps, Camera3D*
-    cam3d, bool* depthBufferEnabled, bool* blurEnabled,
-    bool* wireframeEnabled,
+    cam3d, bool* wireframeEnabled,
     XMFLOAT3* wireColor, bool* fogEnabled, XMFLOAT4* 
     fogColor, float* fogStart, float* fogEnd, bool* vsync,
     bool* gridMapEnabled, XMFLOAT3* gridMapColor)
@@ -127,30 +126,97 @@ void UI::DeveloperUI(std::string adapter_name, const
     {
         cam3d->SetRotation(0.0f, 0.0f, 0.0f);
     }
-    ImGui::Text("Filters");
-    ImGui::Checkbox("Depth Buffer Shader", 
-        depthBufferEnabled);
-    ImGui::Checkbox("Blur Shader", blurEnabled);
-    ImGui::Text("");
-    ImGui::Checkbox("Fog Shader", fogEnabled);
+    if (*fogEnabled)
     ImGui::DragFloat("Fog Start", fogStart, 0.01f, 0.0f, 
         2000.0f);
+    if (*fogEnabled)
     ImGui::DragFloat("Fog End", fogEnd, 0.01f, 0.0f, 
         2000.0f);
+    if(*fogEnabled)
     ImGui::ColorPicker4("Fog Color", fogCol);
-    ImGui::Text("");
-    ImGui::Checkbox("Wireframe", wireframeEnabled);
+    if (*wireframeEnabled)
     ImGui::ColorPicker3("Wireframe\nColor", wireCol);
-    ImGui::Text("");
-    ImGui::Checkbox("Grid Map", gridMapEnabled);
+    if(*gridMapEnabled)
     ImGui::ColorPicker3("Grid Map\nColor", gridmapCol);
     ImGui::End();
 }
 
-void UI::ToolBar()
+void UI::ToolBar(bool* gridMapEnabled, bool* 
+    wireframeEnabled, bool* fogEnabled,
+    bool* depthBufferEnabled, bool* blurEnabled)
 {
     if (ImGui::BeginMainMenuBar())
     {
+        if (ImGui::BeginMenu("Editor"))
+        {
+            if (ImGui::MenuItem("Grid Map"))
+            {
+                if(*gridMapEnabled)
+                {
+                    *gridMapEnabled = false;
+                }
+                else
+                {
+                    *gridMapEnabled = true;
+                }
+            }
+
+            if (ImGui::MenuItem("Wireframe"))
+            {
+                if (*wireframeEnabled)
+                {
+                    *wireframeEnabled = false;
+                }
+                else
+                {
+                    *wireframeEnabled = true;
+                }
+            }
+
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Effects"))
+        {
+            if (ImGui::MenuItem("Fog Effect"))
+            {
+                if (*fogEnabled)
+                {
+                    *fogEnabled = false;
+                }
+                else
+                {
+                    *fogEnabled = true;
+                }
+            }
+
+            if (ImGui::MenuItem("Blur Effect"))
+            {
+                if (*blurEnabled)
+                {
+                    *blurEnabled = false;
+                }
+                else
+                {
+                    *blurEnabled = true;
+                }
+            }
+
+            if (ImGui::MenuItem("Depth Effect"))
+            {
+                if (*depthBufferEnabled)
+                {
+                    *depthBufferEnabled = false;
+                }
+                else
+                {
+                    *depthBufferEnabled = true;
+                }
+            }
+
+            ImGui::EndMenu();
+        }
+
         if (ImGui::BeginMenu("About"))
         {
             if (ImGui::MenuItem("Info"))

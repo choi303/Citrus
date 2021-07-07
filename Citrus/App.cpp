@@ -247,11 +247,15 @@ void App::FPSCounter()
 	WCHAR* adapter_name_wchar = gfx.GetAdapterDesc().Description;
 	auto adapter_name = std::wstring(adapter_name_wchar);
 	//dev menu creation
-	UI::DeveloperUI(std::string(adapter_name.begin(), adapter_name.end()),cpu_usage_string.c_str() ,fps.c_str(), &gfx.cam3D, GameObject::GetDepthBufferEnabled(), GameObject::GetBlurEnabled(), GameObject::GetWireframeEnabled(),
+	UI::DeveloperUI(std::string(adapter_name.begin(), adapter_name.end()),cpu_usage_string.c_str() ,fps.c_str(), &gfx.cam3D, GameObject::GetWireframeEnabled(),
 		GameObject::GetWireColor(), GameObject::GetFogEnabled(), GameObject::GetFogColor(), GameObject::GetFogStart(),
 		GameObject::GetFogEnd(), &gfx.vsync, GridMap::getRender(),
 		GridMap::getColor());
 
 	//toolbar creation
-	UI::ToolBar();
+	UI::ToolBar(GridMap::getRender(),
+		GameObject::GetWireframeEnabled(),
+		GameObject::GetFogEnabled(), 
+		GameObject::GetDepthBufferEnabled(),
+		GameObject::GetBlurEnabled());
 }

@@ -13,11 +13,12 @@ public:
 		float* ambientIntensity, BOOL* normalMappingEnabled, float* specularIntensity, BOOL* reflectionEnabled, float* reflectionIntensity) const;
 	
 	static void DeveloperUI(std::string adapter_name, const std::string cpu_usage,
-		const std::string fps, Camera3D* cam3d, bool* depthBufferEnabled, bool* blurEnabled,
+		const std::string fps, Camera3D* cam3d,
 		bool* wireframeEnabled, XMFLOAT3* wireColor, bool* fogEnabled, XMFLOAT4* fogColor, float* fogStart,
 		float* fogEnd, bool* vsync, bool* gridMapEnabled, XMFLOAT3* gridMapColor);
 
-	static void ToolBar();
+	static void ToolBar(bool* gridMapEnabled, bool* wireframeEnabled, bool* fogEnabled,
+		bool* depthBufferEnabled, bool* blurEnabled);
 	~UI() = default;
 };
 
