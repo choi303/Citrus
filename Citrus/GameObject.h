@@ -32,7 +32,7 @@ public:
 	static bool SetWireframeEnabled(bool value);
 	static float SetFogStart(float value);
 	static float SetFogEnd(float value);
-	void draw(const Camera3D cam);
+	void draw(Camera3D cam);
 	Model* GetMesh();
 	~GameObject() = default;
 private:
@@ -57,5 +57,7 @@ private:
 	Blur pBlur;
 	Wireframe pWireframe;
 	Fog pFog;
+	int width;
+	int height;
 };
 

@@ -12,6 +12,8 @@ bool GameObject::init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std:
 {
 	this->pDevice = pDevice;
 	this->pContext = pContext;
+	this->width = width;
+	this->height = height;
 	//normal mapping vertex shader initialize
 	pVSNormal.Init(L"VSNormalMap.cso", pDevice);
 	pPSNormal.Init(L"PSNormalMap.cso", pDevice);
@@ -174,7 +176,7 @@ float GameObject::SetFogEnd(float value)
 	return Fog::SetFogEnd(value);
 }
 
-void GameObject::draw(const Camera3D cam)
+void GameObject::draw(Camera3D cam)
 {
 	//bind rasterizers
 	pContext->RSSetState(pRasterizer.Get());
@@ -206,6 +208,8 @@ void GameObject::draw(const Camera3D cam)
 	//if depth checkbox true draw depth buffer filter
 	if (depthEnabled)
 	{
+		cam.SetProjectionValues(70.0f, static_cast<float>(width) / static_cast<float>(height)
+			, 100.0f, 999999.0f * 999999.0f);
 		pDepthBuffer.Draw();
 	}
 
