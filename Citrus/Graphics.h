@@ -27,6 +27,8 @@ public:
 	PointLight pPointLight;
 	GridMap gridMap;
 	bool vsync = true;
+	UINT msaaQuality = 1;
+	bool msaaEnabled;
 public:
 	wrl::ComPtr<ID3D11Device> pDevice;
 	wrl::ComPtr<ID3D11DeviceContext> pContext;

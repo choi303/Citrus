@@ -1,5 +1,9 @@
 ﻿#include "UI.h"
 #include <Pdh.h>
+#include "Graphics.h"
+#include "App.h"
+
+static bool applyVisiblity = false;
 
 //Classic UI
 void UI::ClassicUI(Model* model, std::string uiTitle, float
@@ -92,21 +96,29 @@ void UI::DeveloperUI(std::string adapter_name, const
     cam3d, bool* wireframeEnabled,
     XMFLOAT3* wireColor, bool* fogEnabled, XMFLOAT4* 
     fogColor, float* fogStart, float* fogEnd, bool* vsync,
-    bool* gridMapEnabled, XMFLOAT3* gridMapColor)
+    bool* gridMapEnabled, XMFLOAT3* gridMapColor, Graphics* gfx, HWND hwnd, App* app, bool* msaaEnabled)
 {
     static float wireCol[3] = { 1,1,1 };
     wireColor->x = wireCol[0];
     wireColor->y = wireCol[1];
     wireColor->z = wireCol[2];
+
     static float gridmapCol[3] = { 1,1,1 };
     gridMapColor->x = gridmapCol[0];
     gridMapColor->y = gridmapCol[1];
     gridMapColor->z = gridmapCol[2];
+
     static float fogCol[4] = { 1,1,1,1 };
     fogColor->x = fogCol[0];
     fogColor->y = fogCol[1];
     fogColor->z = fogCol[2];
     fogColor->w = fogCol[3];
+
+    static const char* items[] = {"2", "4",
+        "8"};
+    static bool selected[sizeof(items)];
+    static std::string previewValue = std::to_string(gfx->msaaQuality);
+
     ImGui::Begin("Developer Menu", nullptr, 
         ImGuiWindowFlags_NoMove | 
         ImGuiWindowFlags_NoCollapse);
@@ -126,6 +138,42 @@ void UI::DeveloperUI(std::string adapter_name, const
     {
         cam3d->SetRotation(0.0f, 0.0f, 0.0f);
     }
+    if (*msaaEnabled)
+    {
+        ImGui::Text("Msaa Quality");
+        if (ImGui::BeginCombo("", std::to_string(gfx->msaaQuality).c_str()))
+        {
+            for (size_t i = 0; i < IM_ARRAYSIZE(items);
+                i++)
+            {
+                ImGui::Selectable(items[i], &selected[i]);
+                if (selected[i])
+                {
+                    gfx->msaaQuality = std::atoi(items[i]);
+                    applyVisiblity = true;
+                }
+            }
+
+            ImGui::EndCombo();
+        }
+        if (applyVisiblity)
+        {
+            if (ImGui::Button("Apply"))
+            {
+                app->SaveValues();
+
+            #ifdef _DEBUG
+                ShellExecuteA(NULL, NULL, static_cast<LPCSTR>("..\\x64\\Debug\\Citrus.exe"), NULL, NULL, SW_SHOW);
+            #else
+                system("..\\x64\\Release\\Citrus.exe");
+            #endif 
+
+                applyVisiblity = false;
+                exit(0);
+            }
+            ImGui::Text("");
+        }
+    }
     if (*fogEnabled)
     ImGui::DragFloat("Fog Start", fogStart, 0.01f, 0.0f, 
         2000.0f);
@@ -143,7 +191,7 @@ void UI::DeveloperUI(std::string adapter_name, const
 
 void UI::ToolBar(bool* gridMapEnabled, bool* 
     wireframeEnabled, bool* fogEnabled,
-    bool* depthBufferEnabled, bool* blurEnabled)
+    bool* depthBufferEnabled, bool* blurEnabled, bool* msaaEnabled, App* app)
 {
     if (ImGui::BeginMainMenuBar())
     {
@@ -211,6 +259,28 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
                 else
                 {
                     *depthBufferEnabled = true;
+                }
+            }
+
+            if (ImGui::MenuItem("MSAA"))
+            {
+                if (*msaaEnabled)
+                {
+                    *msaaEnabled = false;
+                    app->SaveValues();
+
+#ifdef _DEBUG
+                    ShellExecuteA(NULL, NULL, static_cast<LPCSTR>("..\\x64\\Debug\\Citrus.exe"), NULL, NULL, SW_SHOW);
+#else
+                    system("..\\x64\\Release\\Citrus.exe");
+#endif 
+
+                    exit(0);
+                }
+                else
+                {
+                    *msaaEnabled = true;
+                    applyVisiblity = true;
                 }
             }
 

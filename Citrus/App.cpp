@@ -6,6 +6,8 @@ void App::Init(const std::string wndName, const std::string className, const HIN
 	this->width = width;
 	this->height = height;
 	timer.Start();
+	//set saved values
+	SetSavedValues();
 	//Overloaded initialize window
 	if (!wnd.InitializeWindow(wndName, className, hInstance, width, height))
 	{
@@ -16,8 +18,6 @@ void App::Init(const std::string wndName, const std::string className, const HIN
 	{
 		Error::Log("Failed to initialize graphics");
 	}
-
-	SetSavedValues();
 }
 
 void App::Update() noexcept
@@ -116,7 +116,7 @@ void App::RenderFrame()
 	gfx.EndFrame();
 }
 
-bool App::ProcessMessages(HINSTANCE hInstance) const noexcept
+bool App::ProcessMessages(HINSTANCE hInstance) noexcept
 {
 	//Create msg and hwnd
 	MSG msg;
@@ -134,41 +134,7 @@ bool App::ProcessMessages(HINSTANCE hInstance) const noexcept
 	{
 		if (!IsWindow(hwnd))
 		{
-			//open point light txt, stores point light settings
-			gfx.pPointLight.pointLightSetting.OpenFileWrite("pointlight_settings.txt");
-			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetAmbientIntensity()));
-			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetDiffuseIntensity()));
-			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetSpecularIntensity()));
-			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetReflectionIntensity()));
-			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetObjectPositionX()));
-			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetObjectPositionY()));
-			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetObjectPositionZ()));
-			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetNormalMapEnabled()));
-			gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetReflectionEnabled()));
-			gfx.pPointLight.pointLightSetting.AddInfo(gfx.pPointLight.pPointLightSavedItems);
-			gfx.pPointLight.pointLightSetting.CloseFile();
-			//open camera txt, stores camera position and rotation data
-			cameraSetting.OpenFileWrite("camera_settings.txt");
-			pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetPositionFloat3().z));
-			pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetPositionFloat3().y));
-			pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetPositionFloat3().x));
-			pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetRotationFloat3().z));
-			pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetRotationFloat3().y));
-			pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetRotationFloat3().x));
-			cameraSetting.AddInfo(pCameraSavedItems);
-			cameraSetting.CloseFile();
-
-			//open dev menu txt, stores dev menu settings
-			devMenuSettings.OpenFileWrite("devmenu_settings.txt");
-			pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetDepthBufferEnabled()));
-			pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetBlurEnabled()));
-			pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetFogEnabled()));
-			pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetFogStart()));
-			pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetFogEnd()));
-			pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetWireframeEnabled()));
-			pDevMenuSavedItems.push_back(std::to_string(*GridMap::getRender()));
-			devMenuSettings.AddInfo(pDevMenuSavedItems);
-			devMenuSettings.CloseFile();
+			SaveValues();
 
 			hwnd = nullptr; //Message processing loop takes care of destroying this window
 			UnregisterClass("janus", hInstance);	//Unregister class (closing window)
@@ -218,7 +184,55 @@ void App::SetSavedValues()
 		GridMap::setRender(true);
 	else
 		GridMap::setRender(false);
+	gfx.msaaQuality = static_cast<UINT>(std::atoi(devMenuSettings.GetInfo(7).c_str()));
+
+	if (devMenuSettings.GetInfo(8) == "1")
+		gfx.msaaEnabled = true;
+	else
+		gfx.msaaEnabled = false;
+
 	//close dev menu file
+	devMenuSettings.CloseFile();
+}
+
+void App::SaveValues()
+{
+	//open point light txt, stores point light settings
+	gfx.pPointLight.pointLightSetting.OpenFileWrite("pointlight_settings.txt");
+	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetAmbientIntensity()));
+	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetDiffuseIntensity()));
+	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetSpecularIntensity()));
+	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetReflectionIntensity()));
+	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetObjectPositionX()));
+	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetObjectPositionY()));
+	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetObjectPositionZ()));
+	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetNormalMapEnabled()));
+	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetReflectionEnabled()));
+	gfx.pPointLight.pointLightSetting.AddInfo(gfx.pPointLight.pPointLightSavedItems);
+	gfx.pPointLight.pointLightSetting.CloseFile();
+	//open camera txt, stores camera position and rotation data
+	cameraSetting.OpenFileWrite("camera_settings.txt");
+	pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetPositionFloat3().z));
+	pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetPositionFloat3().y));
+	pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetPositionFloat3().x));
+	pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetRotationFloat3().z));
+	pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetRotationFloat3().y));
+	pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetRotationFloat3().x));
+	cameraSetting.AddInfo(pCameraSavedItems);
+	cameraSetting.CloseFile();
+
+	//open dev menu txt, stores dev menu settings
+	devMenuSettings.OpenFileWrite("devmenu_settings.txt");
+	pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetDepthBufferEnabled()));
+	pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetBlurEnabled()));
+	pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetFogEnabled()));
+	pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetFogStart()));
+	pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetFogEnd()));
+	pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetWireframeEnabled()));
+	pDevMenuSavedItems.push_back(std::to_string(*GridMap::getRender()));
+	pDevMenuSavedItems.push_back(std::to_string(gfx.msaaQuality));
+	pDevMenuSavedItems.push_back(std::to_string(gfx.msaaEnabled));
+	devMenuSettings.AddInfo(pDevMenuSavedItems);
 	devMenuSettings.CloseFile();
 }
 
@@ -235,13 +249,12 @@ void App::FPSCounter()
 		fps_counter = 0;
 		gfx.timer.Restart();
 	}
-	char temp_string[17];
-	char cpu_string[17];
+	char temp_string[19];
+	char cpu_string[19];
 	//Print cpu usage data
-	_itoa_s(gfx.pCPU.GetCpuPercentage(), temp_string, 11);
-	strcpy_s(cpu_string, "CPU Usage: ");
+	_itoa_s(gfx.pCPU.GetCpuPercentage(), temp_string, 15);
+	strcpy_s(cpu_string, "CPU Usage: %%");
 	strcat_s(cpu_string, temp_string);
-	strcat_s(cpu_string, "%");
 	const std::string cpu_usage_string = cpu_string;
 	//print video card name (adapter name)
 	WCHAR* adapter_name_wchar = gfx.GetAdapterDesc().Description;
@@ -250,12 +263,11 @@ void App::FPSCounter()
 	UI::DeveloperUI(std::string(adapter_name.begin(), adapter_name.end()),cpu_usage_string.c_str() ,fps.c_str(), &gfx.cam3D, GameObject::GetWireframeEnabled(),
 		GameObject::GetWireColor(), GameObject::GetFogEnabled(), GameObject::GetFogColor(), GameObject::GetFogStart(),
 		GameObject::GetFogEnd(), &gfx.vsync, GridMap::getRender(),
-		GridMap::getColor());
-
-	//toolbar creation
+		GridMap::getColor(), &gfx, wnd.GetHWND(), this, &gfx.msaaEnabled);
+	//toolbar creationdsd
 	UI::ToolBar(GridMap::getRender(),
 		GameObject::GetWireframeEnabled(),
 		GameObject::GetFogEnabled(), 
 		GameObject::GetDepthBufferEnabled(),
-		GameObject::GetBlurEnabled());
+		GameObject::GetBlurEnabled(), &gfx.msaaEnabled, this);
 }

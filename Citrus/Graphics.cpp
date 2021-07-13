@@ -34,7 +34,10 @@ bool Graphics::InitDxBase(HWND hwnd)
 	sd.BufferDesc.RefreshRate.Denominator = 1;
 	sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-	sd.SampleDesc.Count = 1;
+	if (msaaEnabled)
+		sd.SampleDesc.Count = msaaQuality;
+	else
+		sd.SampleDesc.Count = 1;
 	sd.SampleDesc.Quality = 0;
 	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	sd.BufferCount = 1;
@@ -91,7 +94,7 @@ bool Graphics::InitDxBase(HWND hwnd)
 	stencilDesc.MipLevels = 1u;
 	stencilDesc.ArraySize = 1u;
 	stencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	stencilDesc.SampleDesc.Count = 1u;
+	stencilDesc.SampleDesc.Count = sd.SampleDesc.Count;
 	stencilDesc.SampleDesc.Quality = 0u;
 	stencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	hr = pDevice->CreateTexture2D(&stencilDesc, nullptr, &pDepthStencil);
@@ -100,7 +103,7 @@ bool Graphics::InitDxBase(HWND hwnd)
 	//create depth stencil view
 	CD3D11_DEPTH_STENCIL_VIEW_DESC DSVdesc = {};
 	DSVdesc.Format = stencilDesc.Format;
-	DSVdesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	DSVdesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
 	DSVdesc.Texture2D.MipSlice = 0u;
 	hr = pDevice->CreateDepthStencilView(pDepthStencil.Get(), &DSVdesc, &pDSV);
 	if (FAILED(hr)) { Error::Log(hr, "Failed to create texture 2d in depth stencil view"); return false; }

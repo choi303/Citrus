@@ -11,7 +11,7 @@
 - Global Illumination
 - Volumetric Lighting
 - PBR Support
-- Anti Aliasing (msaa, fxaa, taa)
+- Anti Aliasing (fxaa, taa)
 
 ### Current Features
 - Phong Lighting
@@ -19,6 +19,7 @@
 - Normal Map & Specular Map support
 - Environment Mapping
 - Filters (blur, depth, fog)
+- Anti Aliasing (msaa)
 - GUI Support (Dear Imgui <3)
 - Save System
 - Input System
