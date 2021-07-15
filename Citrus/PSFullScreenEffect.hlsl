@@ -13,7 +13,7 @@ struct PS_IN
     float2 uv : Texcoord;
 };
 
-static int r = blurIntensity;
+static int r = 3 * blurIntensity;
 
 float4 main(PS_IN input) : SV_Target
 {
@@ -33,7 +33,7 @@ float4 main(PS_IN input) : SV_Target
             }
         }
         
-        return acc / 5.0f;
+        return acc / 9.0f;
     }
     
     return tex.Sample(splr, input.uv).rgba;

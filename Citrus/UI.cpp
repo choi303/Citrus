@@ -176,7 +176,10 @@ void UI::DeveloperUI(std::string adapter_name, const
         }
     }
     if (*blurEnabled)
-    ImGui::DragFloat("Blue Intensity", blurIntensity, 0.01f, 0.0f, 200.0f);
+    {
+        ImGui::Text("Blur Intensity");
+        ImGui::DragFloat("", blurIntensity, 0.01f, 0.1f, 5.0f);
+    }
     if (*fogEnabled)
     ImGui::DragFloat("Fog Start", fogStart, 0.01f, 0.0f, 
         2000.0f);
