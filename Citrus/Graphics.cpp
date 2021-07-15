@@ -217,6 +217,12 @@ bool Graphics::InitDxBase(HWND hwnd)
 
 bool Graphics::InitScene()
 {
+	ds = std::make_unique<DepthStencil>(pDevice.Get(),
+		pContext.Get(), width, height);
+	rt = std::make_unique<RenderTarget>(pDevice.Get(),
+		pContext.Get(), width, height);
+	quad = std::make_unique<FSQuad>(pDevice.Get(),
+		pContext.Get());
 	gridMap.init(pDevice.Get(), pContext.Get());
 	pPointLight.Init(pDevice.Get(), pContext.Get());
 	pSkyBox.Init(pDevice.Get(), pContext.Get());
@@ -231,14 +237,13 @@ bool Graphics::InitScene()
 
 void Graphics::BeginFrame() const noexcept
 {
+	float bgColor[] = { 0.0f, 0.0f, 0.1f, 1.0f };
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 	//check out app.cpp render frame func for desc
-	float bgColor[] = { 0.0f, 0.0f, 0.1f, 1.0f };
-	pContext->ClearRenderTargetView(pRtv.Get(), bgColor);
-	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH
-		| D3D11_CLEAR_STENCIL, 1.0f, 0);
+	rt->BindAsTarget(pContext.Get(), ds->pDepthStencilView.Get());
+	ds->Clear(pContext.Get());
 }
 
 void Graphics::EndFrame() const noexcept
@@ -255,18 +260,21 @@ void Graphics::EndFrame() const noexcept
 
 bool Graphics::SceneGraph()
 {
-	pContext->OMSetDepthStencilState(pDepthState.Get(), 0);
 	pCPU.Frame();
 	gridMap.draw(cam3D);
 	//set primitive topology
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	pPointLight.Draw(cam3D);
-	pPointLight.BindCB();
 	sphereTex->Bind(pContext.Get());
 	envTex->Bind(pContext.Get());
 	object.draw(cam3D);
-	nanosuit.draw(cam3D);
 	pSkyBox.Draw(cam3D);
+	pPointLight.BindCB();
+	pPointLight.Draw(cam3D);
+	nanosuit.draw(cam3D);
+	//full screen pass
+	pContext->OMSetRenderTargets(1u, pRtv.GetAddressOf(), nullptr);
+	rt->BindAsTexture(pContext.Get(), 0);
+	quad->draw(pContext.Get());
 	return true;
 }
 

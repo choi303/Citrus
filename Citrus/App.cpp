@@ -33,6 +33,7 @@ void App::Update() noexcept
 
 		if (keycode == VK_ESCAPE) {
 			wnd.SetHWND(nullptr);
+			SaveValues();
 		}
 	}
 	float camera_speed = 0.0005f;
@@ -163,30 +164,32 @@ void App::SetSavedValues()
 		GameObject::SetDepthBufferEnabled(false);
 
 	if (devMenuSettings.GetInfo(1) == "1")
-		GameObject::SetBlurEnabled(true);
+		FSQuad::SetBlurEnabled(true);
 	else
-		GameObject::SetBlurEnabled(false);
+		FSQuad::SetBlurEnabled(false);
 
-	if (devMenuSettings.GetInfo(2) == "1")
+	FSQuad::SetBlurIntensity(float(std::atoi(devMenuSettings.GetInfo(2).c_str())));
+
+	if (devMenuSettings.GetInfo(3) == "1")
 		GameObject::SetFogEnabled(true);
 	else
 		GameObject::SetFogEnabled(false);
 
-	GameObject::SetFogStart(static_cast<float>(std::atoi(devMenuSettings.GetInfo(3).c_str())));
-	GameObject::SetFogEnd(static_cast<float>(std::atoi(devMenuSettings.GetInfo(4).c_str())));
+	GameObject::SetFogStart(static_cast<float>(std::atoi(devMenuSettings.GetInfo(4).c_str())));
+	GameObject::SetFogEnd(static_cast<float>(std::atoi(devMenuSettings.GetInfo(5).c_str())));
 
-	if (devMenuSettings.GetInfo(5) == "1")
+	if (devMenuSettings.GetInfo(6) == "1")
 		GameObject::SetWireframeEnabled(true);
 	else
 		GameObject::SetWireframeEnabled(false);
 
-	if (devMenuSettings.GetInfo(6) == "1")
+	if (devMenuSettings.GetInfo(7) == "1")
 		GridMap::setRender(true);
 	else
 		GridMap::setRender(false);
-	gfx.msaaQuality = static_cast<UINT>(std::atoi(devMenuSettings.GetInfo(7).c_str()));
+	gfx.msaaQuality = static_cast<UINT>(std::atoi(devMenuSettings.GetInfo(8).c_str()));
 
-	if (devMenuSettings.GetInfo(8) == "1")
+	if (devMenuSettings.GetInfo(9) == "1")
 		gfx.msaaEnabled = true;
 	else
 		gfx.msaaEnabled = false;
@@ -224,7 +227,8 @@ void App::SaveValues()
 	//open dev menu txt, stores dev menu settings
 	devMenuSettings.OpenFileWrite("devmenu_settings.txt");
 	pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetDepthBufferEnabled()));
-	pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetBlurEnabled()));
+	pDevMenuSavedItems.push_back(std::to_string(*FSQuad::GetBlurEnabled()));
+	pDevMenuSavedItems.push_back(std::to_string(*FSQuad::GetBlurIntensity()));
 	pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetFogEnabled()));
 	pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetFogStart()));
 	pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetFogEnd()));
@@ -263,11 +267,12 @@ void App::FPSCounter()
 	UI::DeveloperUI(std::string(adapter_name.begin(), adapter_name.end()),cpu_usage_string.c_str() ,fps.c_str(), &gfx.cam3D, GameObject::GetWireframeEnabled(),
 		GameObject::GetWireColor(), GameObject::GetFogEnabled(), GameObject::GetFogColor(), GameObject::GetFogStart(),
 		GameObject::GetFogEnd(), &gfx.vsync, GridMap::getRender(),
-		GridMap::getColor(), &gfx, wnd.GetHWND(), this, &gfx.msaaEnabled);
-	//toolbar creationdsd
+		GridMap::getColor(), &gfx, wnd.GetHWND(), this, &gfx.msaaEnabled, FSQuad::GetBlurEnabled(), 
+		FSQuad::GetBlurIntensity());
+	//toolbar creation
 	UI::ToolBar(GridMap::getRender(),
 		GameObject::GetWireframeEnabled(),
 		GameObject::GetFogEnabled(), 
 		GameObject::GetDepthBufferEnabled(),
-		GameObject::GetBlurEnabled(), &gfx.msaaEnabled, this);
+		FSQuad::GetBlurEnabled(), &gfx.msaaEnabled, this);
 }

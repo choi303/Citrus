@@ -2,7 +2,6 @@
 
 static bool wireframeEnabled;
 static bool depthEnabled;
-static bool blurEnabled;
 static bool fogEnabled;
 static float pos[3] = { 0,0,0 };
 static float rot[3] = { 0,0,0 };
@@ -79,7 +78,6 @@ bool GameObject::init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std:
 
 	//Filters Initialize
 	pDepthBuffer.Init(pDevice, pContext);
-	pBlur.Init(pDevice, pContext, width, height);
 	pWireframe.Init(pDevice, pContext);
 	pFog.Init(pDevice, pContext);
 
@@ -96,12 +94,6 @@ bool* GameObject::GetDepthBufferEnabled()
 {
 	//if depth is enabled return true else return false
 	return &depthEnabled;
-}
-
-bool* GameObject::GetBlurEnabled()
-{
-	//if blur filter is enabled return true else return false
-	return &blurEnabled;
 }
 
 bool* GameObject::GetWireframeEnabled()
@@ -144,12 +136,6 @@ bool GameObject::SetDepthBufferEnabled(bool value)
 {
 	//set depth buffer enabled to value
 	return depthEnabled = value;
-}
-
-bool GameObject::SetBlurEnabled(bool value)
-{
-	//set blur enabled to value
-	return blurEnabled = value;
 }
 
 bool GameObject::SetFogEnabled(bool value)
@@ -211,12 +197,6 @@ void GameObject::draw(Camera3D cam)
 		cam.SetProjectionValues(70.0f, static_cast<float>(width) / static_cast<float>(height)
 			, 100.0f, 999999.0f * 999999.0f);
 		pDepthBuffer.Draw();
-	}
-
-	//if blur checkbox is true than draw blur filter
-	if (blurEnabled)
-	{
-		pBlur.Draw();
 	}
 
 	//if wire frame checkbox is true than draw wire frame filter

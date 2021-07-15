@@ -3,6 +3,9 @@
 #include "SkyBox.h"
 #include "CPUInfo.h"
 #include "GridMap.h"
+#include "DepthStencil.h"
+#include "RenderTarget.h"
+#include "FSQuad.h"
 
 class Graphics
 {
@@ -26,6 +29,9 @@ public:
 	CPUInfo pCPU;
 	PointLight pPointLight;
 	GridMap gridMap;
+	std::unique_ptr<DepthStencil> ds;
+	std::unique_ptr<RenderTarget> rt;
+	std::unique_ptr<FSQuad> quad;
 	bool vsync = true;
 	UINT msaaQuality = 1;
 	bool msaaEnabled;

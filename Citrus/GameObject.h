@@ -1,7 +1,6 @@
 #pragma once
 #include "GfxBase.h"
 #include "DepthBuffer.h"
-#include "Blur.h"
 #include "Wireframe.h"
 #include "Fog.h"
 
@@ -27,7 +26,6 @@ public:
 	static float* GetFogStart();
 	static float* GetFogEnd();
 	static bool SetDepthBufferEnabled(bool value);
-	static bool SetBlurEnabled(bool value);
 	static bool SetFogEnabled(bool value);
 	static bool SetWireframeEnabled(bool value);
 	static float SetFogStart(float value);
@@ -54,7 +52,6 @@ private:
 	std::string directory;
 	bool is_rendered = false;
 	DepthBuffer pDepthBuffer;
-	Blur pBlur;
 	Wireframe pWireframe;
 	Fog pFog;
 	int width;

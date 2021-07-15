@@ -96,7 +96,8 @@ void UI::DeveloperUI(std::string adapter_name, const
     cam3d, bool* wireframeEnabled,
     XMFLOAT3* wireColor, bool* fogEnabled, XMFLOAT4* 
     fogColor, float* fogStart, float* fogEnd, bool* vsync,
-    bool* gridMapEnabled, XMFLOAT3* gridMapColor, Graphics* gfx, HWND hwnd, App* app, bool* msaaEnabled)
+    bool* gridMapEnabled, XMFLOAT3* gridMapColor, Graphics* gfx, HWND hwnd, App* app, bool* msaaEnabled,
+    bool* blurEnabled, float* blurIntensity)
 {
     static float wireCol[3] = { 1,1,1 };
     wireColor->x = wireCol[0];
@@ -174,6 +175,8 @@ void UI::DeveloperUI(std::string adapter_name, const
             ImGui::Text("");
         }
     }
+    if (*blurEnabled)
+    ImGui::DragFloat("Blue Intensity", blurIntensity, 0.01f, 0.0f, 200.0f);
     if (*fogEnabled)
     ImGui::DragFloat("Fog Start", fogStart, 0.01f, 0.0f, 
         2000.0f);
