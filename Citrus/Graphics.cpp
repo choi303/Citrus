@@ -218,9 +218,11 @@ bool Graphics::InitDxBase(HWND hwnd)
 bool Graphics::InitScene()
 {
 	ds = std::make_unique<DepthStencil>(pDevice.Get(),
-		pContext.Get(), width, height);
+		pContext.Get(), width, height, msaaQuality,
+		msaaEnabled);
 	rt = std::make_unique<RenderTarget>(pDevice.Get(),
-		pContext.Get(), width, height);
+		pContext.Get(), width, height, msaaQuality,
+		msaaEnabled);
 	quad = std::make_unique<FSQuad>(pDevice.Get(),
 		pContext.Get());
 	gridMap.init(pDevice.Get(), pContext.Get());

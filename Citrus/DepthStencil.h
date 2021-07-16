@@ -10,7 +10,7 @@ class DepthStencil
 public:
 	DepthStencil(ID3D11Device* pDevice, 
 		ID3D11DeviceContext* pContext,
-		int width, int height);
+		int width, int height, UINT msaaQuality, bool msaaEnabled);
 	void BindAsDepthStencil(ID3D11DeviceContext* 
 		pContext) const noexcept;
 	void Clear(ID3D11DeviceContext* pContext) const noexcept;

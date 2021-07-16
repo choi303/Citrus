@@ -1,7 +1,8 @@
 #include "DepthStencil.h"
 #include "Converter.h"
 
-DepthStencil::DepthStencil(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height)
+DepthStencil::DepthStencil(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height,
+	UINT msaaQuality, bool msaaEnabled)
 {
 	//create depth stencil texture
 	wrl::ComPtr<ID3D11Texture2D> pDepthStencil;
@@ -11,7 +12,10 @@ DepthStencil::DepthStencil(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
 	descDepth.MipLevels = 1u;
 	descDepth.ArraySize = 1u;
 	descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	descDepth.SampleDesc.Count = 1;
+	if (msaaEnabled)
+		descDepth.SampleDesc.Count = msaaQuality;
+	else
+		descDepth.SampleDesc.Count = 1;
 	descDepth.SampleDesc.Quality = 0u;
 	descDepth.Usage = D3D11_USAGE_DEFAULT;
 	descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;

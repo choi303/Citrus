@@ -18,6 +18,7 @@ void App::Init(const std::string wndName, const std::string className, const HIN
 	{
 		Error::Log("Failed to initialize graphics");
 	}
+	SetSavedValues();
 }
 
 void App::Update() noexcept

@@ -1,7 +1,7 @@
 #include "RenderTarget.h"
 #include "DepthStencil.h"
 
-RenderTarget::RenderTarget(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height)
+RenderTarget::RenderTarget(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height, UINT msaaQuality, bool msaaEnabled)
 {
 	//create texture resource
 	D3D11_TEXTURE2D_DESC textureDesc = {};
@@ -10,7 +10,10 @@ RenderTarget::RenderTarget(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
 	textureDesc.MipLevels = 1;
 	textureDesc.ArraySize = 1;
 	textureDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-	textureDesc.SampleDesc.Count = 1;
+	if (msaaEnabled)
+		textureDesc.SampleDesc.Count = msaaQuality;
+	else
+		textureDesc.SampleDesc.Count = 1;
 	textureDesc.SampleDesc.Quality = 0;
 	textureDesc.Usage = D3D11_USAGE_DEFAULT;
 	textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE 

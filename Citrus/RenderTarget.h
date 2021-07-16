@@ -9,7 +9,7 @@ class RenderTarget
 public:
 	RenderTarget(ID3D11Device* pDevice, 
 		ID3D11DeviceContext* pContext, int width,
-		int height);
+		int height, UINT msaaQuality, bool msaaEnabled);
 	void BindAsTexture(ID3D11DeviceContext* pContext, UINT slot) const noexcept;
 	void BindAsTarget(ID3D11DeviceContext* pContext) const noexcept;
 	void BindAsTarget(ID3D11DeviceContext* pContext,
