@@ -224,7 +224,7 @@ bool Graphics::InitScene()
 		pContext.Get(), width, height, msaaQuality,
 		msaaEnabled);
 	quad = std::make_unique<FSQuad>(pDevice.Get(),
-		pContext.Get());
+		pContext.Get(), width, height);
 	gridMap.init(pDevice.Get(), pContext.Get());
 	pPointLight.Init(pDevice.Get(), pContext.Get());
 	pSkyBox.Init(pDevice.Get(), pContext.Get());

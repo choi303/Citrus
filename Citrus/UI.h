@@ -22,7 +22,7 @@ public:
 		bool* blurEnabled, float* blurIntensity);
 
 	static void ToolBar(bool* gridMapEnabled, bool* wireframeEnabled, bool* fogEnabled,
-		bool* depthBufferEnabled, bool* blurEnabled, bool* msaaEnabled, App* app);
+		bool* depthBufferEnabled, bool* blurEnabled, bool* msaaEnabled, App* app, bool* fxaaEnabled);
 	~UI() = default;
 };
 

@@ -1,5 +1,5 @@
-Texture2D tex;
-SamplerState splr;
+Texture2D tex : register(t0);
+SamplerState splr : register(s0);
 
 cbuffer param : register(b0)
 {

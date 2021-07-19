@@ -50,3 +50,8 @@ void SkyBox::SetPos(XMFLOAT3 pos, float deltaTime)
 	//set sky box to reference pos value and multiply with deltaTime
 	sphere.SetPos(pos.x * 0.0001f, pos.y * 0.0001f, pos.z * 0.0001f);
 }
+
+void SkyBox::AdjustRot(float x, float y, float z)
+{
+	sphere.AdjustRot(x, y, z);
+}

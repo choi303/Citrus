@@ -197,7 +197,7 @@ void UI::DeveloperUI(std::string adapter_name, const
 
 void UI::ToolBar(bool* gridMapEnabled, bool* 
     wireframeEnabled, bool* fogEnabled,
-    bool* depthBufferEnabled, bool* blurEnabled, bool* msaaEnabled, App* app)
+    bool* depthBufferEnabled, bool* blurEnabled, bool* msaaEnabled, App* app, bool* fxaaEnabled)
 {
     if (ImGui::BeginMainMenuBar())
     {
@@ -290,17 +290,33 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
                 }
             }
 
+            if (ImGui::MenuItem("FXAA"))
+            {
+                if (*fxaaEnabled)
+                {
+                    *fxaaEnabled = false;
+                }
+                else
+                {
+                    *fxaaEnabled = true;
+                }
+            }
+
             ImGui::EndMenu();
         }
 
-        if (ImGui::BeginMenu("About"))
-        {
-            if (ImGui::MenuItem("Info"))
-            {
-                Error::InfoLog("Citrus Graphics Renderer v0.1\nGitHub: https://github.com/choi303/Citrus");
-            }
-            ImGui::EndMenu();
-        }
-        ImGui::EndMainMenuBar();
     }
+
+    if (ImGui::BeginMenu("About"))
+    {
+        if (ImGui::MenuItem("Info"))
+        {
+            Error::InfoLog("Citrus Graphics Renderer v0.1\nGitHub: https://github.com/choi303/Citrus");
+        }
+        ImGui::EndMenu();
+    }
+
+   ImGui::EndMainMenuBar();
+    
 }
+

@@ -8,6 +8,7 @@ public:
 	void Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	void Draw(Camera3D cam);
 	void SetPos(XMFLOAT3 pos, float deltaTime);
+	void AdjustRot(float x, float y, float z);
 	~SkyBox()=default;
 private:
 	Model sphere;

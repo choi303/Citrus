@@ -334,6 +334,12 @@
     <FxCompile Include="PSFullScreenEffect.hlsl">
       <Filter>Graphics\DirectX 11\Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="VSFXAA.hlsl">
+      <Filter>Graphics\DirectX 11\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PSFXAA.hlsl">
+      <Filter>Graphics\DirectX 11\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Citrus.rc">

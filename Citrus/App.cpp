@@ -195,6 +195,11 @@ void App::SetSavedValues()
 	else
 		gfx.msaaEnabled = false;
 
+	if (devMenuSettings.GetInfo(10) == "1")
+		FSQuad::SetFxaaEnabled(true);
+	else
+		FSQuad::SetFxaaEnabled(false);
+
 	//close dev menu file
 	devMenuSettings.CloseFile();
 }
@@ -237,6 +242,7 @@ void App::SaveValues()
 	pDevMenuSavedItems.push_back(std::to_string(*GridMap::getRender()));
 	pDevMenuSavedItems.push_back(std::to_string(gfx.msaaQuality));
 	pDevMenuSavedItems.push_back(std::to_string(gfx.msaaEnabled));
+	pDevMenuSavedItems.push_back(std::to_string(*FSQuad::GetFxaaEnabled()));
 	devMenuSettings.AddInfo(pDevMenuSavedItems);
 	devMenuSettings.CloseFile();
 }
@@ -275,5 +281,5 @@ void App::FPSCounter()
 		GameObject::GetWireframeEnabled(),
 		GameObject::GetFogEnabled(), 
 		GameObject::GetDepthBufferEnabled(),
-		FSQuad::GetBlurEnabled(), &gfx.msaaEnabled, this);
+		FSQuad::GetBlurEnabled(), &gfx.msaaEnabled, this, FSQuad::GetFxaaEnabled());
 }
