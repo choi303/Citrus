@@ -7,6 +7,7 @@ static float diffuseIntensity = 1.0f;
 static float ambientIntensity = 0.6f;
 static float specularIntensity = 1.0f;
 static float reflectionIntensity = 14.0f;
+static XMFLOAT3 lightColor = XMFLOAT3(1.0f, 1.0f, 1.0f);
 static BOOL normalMappingEnabled = TRUE;
 static BOOL reflectionEnabled = FALSE;
 
@@ -73,6 +74,7 @@ void PointLight::Draw(Camera3D cam)
 	cblight->data.specularIntensity = specularIntensity;	//constant buffer initialize
 	cblight->data.reflectionEnabled = reflectionEnabled;	//constant buffer initialize
 	cblight->data.reflectionIntensity = reflectionIntensity;	//constant buffer initialize
+	cblight->data.lightColor = lightColor;	//constant buffer initialize
 	cblight->MapData();	//apply data
 	cblightspec->data.lightpos = lightmodel.GetPos();
 	cblightspec->data.lightIntensity = diffuseIntensity;
@@ -82,7 +84,7 @@ void PointLight::Draw(Camera3D cam)
 	cblight->MapData();
 	//point light ui creation
 	ui->PointLight(&lightmodel, "Point Light", Spos, Srot, Sscale, &diffuseIntensity, &ambientIntensity, &normalMappingEnabled,
-		&specularIntensity, &reflectionEnabled, &reflectionIntensity);
+		&specularIntensity, &reflectionEnabled, &reflectionIntensity, &lightColor);
 	//model render
 	lightmodel.Render(cam);
 }
@@ -130,6 +132,11 @@ float PointLight::GetObjectPositionY()
 float PointLight::GetObjectPositionZ()
 {
 	return Spos[0]; //return object z position
+}
+
+XMFLOAT3 PointLight::GetLightColor()
+{
+	return lightColor;
 }
 
 void PointLight::SetObjectPosition(const float x, const float y, const float z)

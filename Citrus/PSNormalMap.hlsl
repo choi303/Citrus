@@ -7,7 +7,8 @@ cbuffer Light : register(b0)
     float specularIntensity;
     bool reflectionEnabled;
     float reflectionIntensity;
-    float pad[3];
+    float3 lightColor;
+    float pad[2];
 };
 
 struct PS_IN
@@ -54,7 +55,7 @@ float4 main(PS_IN input) : SV_Target
     const float att = 1.0f / (att1 + att2 * distanceToLight + att3 * (distanceToLight * distanceToLight)); //calculate attenuation
     
     //diffuse light
-    const float3 diffuseColor = { 1, 1, 1 }; //diffuse color
+    const float3 diffuseColor = lightColor; //diffuse color
     const float diffuseIntensity = lightIntensity; //diffuse Intensity or Light Amount
     const float3 diffuse = diffuseColor * diffuseIntensity * att * max(0.0f, dot(dirToLight, input.normal)); //diffuse light creation
     

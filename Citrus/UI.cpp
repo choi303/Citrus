@@ -46,8 +46,13 @@ void UI::PointLight(Model* model, const std::string
     float* Intensity,
     float* ambientIntensity, BOOL* normalMappingEnabled,
     float* specularIntensity, BOOL* reflectionEnabled, 
-    float* reflectionIntensity) const
+    float* reflectionIntensity, XMFLOAT3* lightColor) const
 {
+    static float lightColorF[3] = { 1,1,1 };
+    lightColor->x = lightColorF[0];
+    lightColor->y = lightColorF[1];
+    lightColor->z = lightColorF[2];
+
     pos[0] = model->GetPos().x;
     pos[1] = model->GetPos().y;
     pos[2] = model->GetPos().z;
@@ -77,6 +82,7 @@ void UI::PointLight(Model* model, const std::string
         specularIntensity, 0.01f, 0.0f, 1000.0f);
     ImGui::DragFloat("Reflection\nIntensity", 
         reflectionIntensity, 0.01f, 0.0f, 1000.0f);
+    ImGui::ColorEdit3("Light Color", lightColorF);
     if (ImGui::Button("Reset Position", ImVec2(200, 45)))
     {
         model->SetPos(0.0f, 0.0f, 0.0f);

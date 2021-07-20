@@ -15,7 +15,8 @@ struct Light
 	float specularIntensity;
 	BOOL reflectionEnabled;
 	float reflectionIntensity;
-	float pad[3];
+	XMFLOAT3 lightColor;
+	float pad[2];
 };
 
 struct LightSpec
@@ -45,6 +46,7 @@ public:
 	static float GetObjectPositionX();
 	static float GetObjectPositionY();
 	static float GetObjectPositionZ();
+	static XMFLOAT3 GetLightColor();
 	void SetObjectPosition(const float x, const float y, const float z);
 	static BOOL GetNormalMapEnabled();
 	static BOOL GetReflectionEnabled();
