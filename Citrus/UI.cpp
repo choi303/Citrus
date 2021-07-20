@@ -199,11 +199,16 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
     wireframeEnabled, bool* fogEnabled,
     bool* depthBufferEnabled, bool* blurEnabled, bool* msaaEnabled, App* app, bool* fxaaEnabled)
 {
+    std::string title = "";
     if (ImGui::BeginMainMenuBar())
     {
         if (ImGui::BeginMenu("Editor"))
         {
-            if (ImGui::MenuItem("Grid Map"))
+            if (*gridMapEnabled)
+                title = "Grid Map: On";
+            else
+                title = "Grid Map: Off";
+            if (ImGui::MenuItem(title.c_str()))
             {
                 if(*gridMapEnabled)
                 {
@@ -215,7 +220,11 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
                 }
             }
 
-            if (ImGui::MenuItem("Wireframe"))
+            if (*wireframeEnabled)
+                title = "Wireframe: On";
+            else
+                title = "Wireframe: Off";
+            if (ImGui::MenuItem(title.c_str()))
             {
                 if (*wireframeEnabled)
                 {
@@ -232,7 +241,11 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
 
         if (ImGui::BeginMenu("Effects"))
         {
-            if (ImGui::MenuItem("Fog Effect"))
+            if (*fogEnabled)
+                title = "Fog: On";
+            else
+                title = "Fog: Off";
+            if (ImGui::MenuItem(title.c_str()))
             {
                 if (*fogEnabled)
                 {
@@ -244,7 +257,11 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
                 }
             }
 
-            if (ImGui::MenuItem("Blur Effect"))
+            if (*blurEnabled)
+                title = "Blur: On";
+            else
+                title = "Blur: Off";
+            if (ImGui::MenuItem(title.c_str()))
             {
                 if (*blurEnabled)
                 {
@@ -256,7 +273,11 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
                 }
             }
 
-            if (ImGui::MenuItem("Depth Effect"))
+            if (*depthBufferEnabled)
+                title = "Depth Buffer: On";
+            else
+                title = "Depth Buffer: Off";
+            if (ImGui::MenuItem(title.c_str()))
             {
                 if (*depthBufferEnabled)
                 {
@@ -268,7 +289,13 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
                 }
             }
 
-            if (ImGui::MenuItem("MSAA"))
+            if (*msaaEnabled && applyVisiblity)
+                title = "MSAA: Partly On";
+            else if (*msaaEnabled && !applyVisiblity)
+                title = "MSAA: On";
+            else
+                title = "MSAA: Off";
+            if (ImGui::MenuItem(title.c_str()))
             {
                 if (*msaaEnabled)
                 {
@@ -290,7 +317,11 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
                 }
             }
 
-            if (ImGui::MenuItem("FXAA"))
+            if (*fxaaEnabled)
+                title = "FXAA: On";
+            else
+                title = "FXAA: Off";
+            if (ImGui::MenuItem(title.c_str()))
             {
                 if (*fxaaEnabled)
                 {

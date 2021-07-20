@@ -145,7 +145,10 @@ float4 main(PS_IN input) : SV_Target
     float lumaEndP = lumaN;
     bool doneN = false;
     bool doneP = false;
-    
+    #if FXAA_SEARCH_ACCELERATION == 1
+        posN += offNP * float2(-1.0, -1.0);
+        posP += offNP * float2(1.0, 1.0);
+    #endif
     for (int i = 0; i < FXAA_SEARCH_STEPS; i++)
     {
     #if FXAA_SEARCH_ACCELERATION == 1
