@@ -246,6 +246,14 @@ void Graphics::BeginFrame() const noexcept
 	//check out app.cpp render frame func for desc
 	rt->BindAsTarget(pContext.Get(), ds->pDepthStencilView.Get());
 	ds->Clear(pContext.Get());
+	if (*GameObject::GetWireframeEnabled())
+	{
+		pContext->OMSetRenderTargets(1u, pRtv.GetAddressOf(), pDSV.Get());
+		float bgColor[] = { 0.0f, 0.0f, 0.1f, 1.0f };
+		pContext->ClearRenderTargetView(pRtv.Get(), bgColor);
+		pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH
+			| D3D11_CLEAR_STENCIL, 1.0f, 0);
+	}
 }
 
 void Graphics::EndFrame() const noexcept
@@ -274,9 +282,12 @@ bool Graphics::SceneGraph()
 	pPointLight.Draw(cam3D);
 	nanosuit.draw(cam3D);
 	//full screen pass
-	pContext->OMSetRenderTargets(1u, pRtv.GetAddressOf(), nullptr);
-	rt->BindAsTexture(pContext.Get(), 0);
-	quad->draw(pContext.Get());
+	if (!*GameObject::GetWireframeEnabled())
+	{		
+		pContext->OMSetRenderTargets(1u, pRtv.GetAddressOf(), nullptr);
+		rt->BindAsTexture(pContext.Get(), 0);
+		quad->draw(pContext.Get());
+	}
 	return true;
 }
 

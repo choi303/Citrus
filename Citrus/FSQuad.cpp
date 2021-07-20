@@ -57,7 +57,7 @@ void FSQuad::draw(ID3D11DeviceContext* pContext)
 	pVSBlur.Bind(pContext);
 	pPSBlur.Bind(pContext);
 	//bind fxaa shaders
-	if (fxaaEnabled)
+	if (fxaaEnabled && !blurEnabled)
 	{
 		pContext->IASetInputLayout(0);
 		pVSFxaa.Bind(pContext);
