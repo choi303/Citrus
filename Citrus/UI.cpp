@@ -203,7 +203,8 @@ void UI::DeveloperUI(std::string adapter_name, const
 
 void UI::ToolBar(bool* gridMapEnabled, bool* 
     wireframeEnabled, bool* fogEnabled,
-    bool* depthBufferEnabled, bool* blurEnabled, bool* msaaEnabled, App* app, bool* fxaaEnabled)
+    bool* depthBufferEnabled, bool* blurEnabled, bool* msaaEnabled, App* app, bool* fxaaEnabled,
+    bool* backfaceCulling, bool* frontfaceCulling)
 {
     std::string title = "";
     if (ImGui::BeginMainMenuBar())
@@ -240,6 +241,43 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
                 {
                     *wireframeEnabled = true;
                 }
+            }
+
+            if (ImGui::BeginMenu("Culling"))
+            {
+                if (*backfaceCulling)
+                    title = "Back-face Culling: On";
+                else
+                    title = "Back-face Culling: Off";
+                if (ImGui::MenuItem(title.c_str()))
+                {
+                    if (*backfaceCulling)
+                    {
+                        *backfaceCulling = false;
+                    }
+                    else
+                    {
+                        *backfaceCulling = true;
+                    }
+                }
+
+                if (*frontfaceCulling)
+                    title = "Front-face Culling: On";
+                else
+                    title = "Front-face Culling: Off";
+                if (ImGui::MenuItem(title.c_str()))
+                {
+                    if (*frontfaceCulling)
+                    {
+                        *frontfaceCulling = false;
+                    }
+                    else
+                    {
+                        *frontfaceCulling = true;
+                    }
+                }
+
+                ImGui::EndMenu();
             }
 
             ImGui::EndMenu();

@@ -21,6 +21,8 @@ public:
 	static bool* GetBlurEnabled();
 	static bool* GetWireframeEnabled();
 	static bool* GetFogEnabled();
+	static bool* GetBackCulling();
+	static bool* GetFrontCulling();
 	static XMFLOAT3* GetWireColor();
 	static XMFLOAT4* GetFogColor();
 	static float* GetFogStart();
@@ -48,6 +50,8 @@ private:
 	std::unique_ptr<UI> ui;
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> st;
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> pRasterizer = nullptr;
+	Microsoft::WRL::ComPtr<ID3D11RasterizerState> pRasterizerBack = nullptr;
+	Microsoft::WRL::ComPtr<ID3D11RasterizerState> pRasterizerFront = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> pRasterizerWireframe = nullptr;
 	std::string directory;
 	bool is_rendered = false;

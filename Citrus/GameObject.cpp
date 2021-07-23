@@ -3,6 +3,8 @@
 static bool wireframeEnabled;
 static bool depthEnabled;
 static bool fogEnabled;
+static bool backfaceCulling;
+static bool frontfaceCulling;
 static float pos[3] = { 0,0,0 };
 static float rot[3] = { 0,0,0 };
 static float scale[3] = { 0.1f,0.1f,0.1f };
@@ -65,10 +67,24 @@ bool GameObject::init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std:
 	hr = pDevice->CreateRasterizerState(&pRasterizerDesc, &pRasterizer);
 	if (FAILED(hr)) { Error::Log(hr, "Failed to create pasteurizer state"); return false; }
 
+	//create pasteurizer 
+	CD3D11_RASTERIZER_DESC pRasterizerDescBack(D3D11_DEFAULT);
+	pRasterizerDesc.FillMode = D3D11_FILL_SOLID;
+	pRasterizerDesc.CullMode = D3D11_CULL_BACK;
+	hr = pDevice->CreateRasterizerState(&pRasterizerDescBack, &pRasterizerBack);
+	if (FAILED(hr)) { Error::Log(hr, "Failed to create pasteurizer state"); return false; }
+
+	//create pasteurizer 
+	CD3D11_RASTERIZER_DESC pRasterizerDescFront(D3D11_DEFAULT);
+	pRasterizerDesc.FillMode = D3D11_FILL_SOLID;
+	pRasterizerDesc.CullMode = D3D11_CULL_FRONT;
+	hr = pDevice->CreateRasterizerState(&pRasterizerDescFront, &pRasterizerFront);
+	if (FAILED(hr)) { Error::Log(hr, "Failed to create pasteurizer state"); return false; }
+
 	//create pasteurizer description 
 	CD3D11_RASTERIZER_DESC pRasterizerDescWireframe(D3D11_DEFAULT);
 	pRasterizerDescWireframe.FillMode = D3D11_FILL_WIREFRAME;
-	pRasterizerDescWireframe.CullMode = D3D11_CULL_NONE;
+		pRasterizerDescWireframe.CullMode = D3D11_CULL_NONE;
 	hr = pDevice->CreateRasterizerState(&pRasterizerDescWireframe, &pRasterizerWireframe);
 	if (FAILED(hr)) { Error::Log(hr, "Failed to create pasteurizer state"); return false; }
 
@@ -106,6 +122,16 @@ bool* GameObject::GetFogEnabled()
 {
 	//if fog filter is enabled than return true else return false
 	return &fogEnabled;
+}
+
+bool* GameObject::GetBackCulling()
+{
+	return &backfaceCulling;
+}
+
+bool* GameObject::GetFrontCulling()
+{
+	return &frontfaceCulling;
 }
 
 XMFLOAT3* GameObject::GetWireColor()
@@ -166,6 +192,10 @@ void GameObject::draw(Camera3D cam)
 {
 	//bind rasterizers
 	pContext->RSSetState(pRasterizer.Get());
+	if (backfaceCulling)
+		pContext->RSSetState(pRasterizerBack.Get());
+	else if (frontfaceCulling)
+		pContext->RSSetState(pRasterizerFront.Get());
 
 	//bind sampler
 	pContext->PSSetSamplers(0u, 1u, st.GetAddressOf());
