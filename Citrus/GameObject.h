@@ -30,6 +30,7 @@ public:
 	static bool SetDepthBufferEnabled(bool value);
 	static bool SetFogEnabled(bool value);
 	static bool SetWireframeEnabled(bool value);
+	static bool SetFrontCull(bool value);
 	static float SetFogStart(float value);
 	static float SetFogEnd(float value);
 	void draw(Camera3D cam);
@@ -49,6 +50,7 @@ private:
 	std::unique_ptr<CBuffer<matrices>> matrices_buffer;
 	std::unique_ptr<UI> ui;
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> st;
+	Microsoft::WRL::ComPtr<ID3D11SamplerState> ssam;
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> pRasterizer = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> pRasterizerBack = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> pRasterizerFront = nullptr;

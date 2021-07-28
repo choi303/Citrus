@@ -5,6 +5,7 @@ static bool depthEnabled;
 static bool fogEnabled;
 static bool backfaceCulling;
 static bool frontfaceCulling;
+static bool frontCull;
 static float pos[3] = { 0,0,0 };
 static float rot[3] = { 0,0,0 };
 static float scale[3] = { 0.1f,0.1f,0.1f };
@@ -16,8 +17,8 @@ bool GameObject::init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std:
 	this->width = width;
 	this->height = height;
 	//normal mapping vertex shader initialize
-	pVSNormal.Init(L"VSNormalMap.cso", pDevice);
-	pPSNormal.Init(L"PSNormalMap.cso", pDevice);
+	pVSNormal.Init(L"VSDirectionalLight.cso", pDevice);
+	pPSNormal.Init(L"PSDirectionalLight.cso", pDevice);
 	//gets data from normal mapping vertex shader with input layout
 	const std::vector<D3D11_INPUT_ELEMENT_DESC> ied_normal =
 	{
@@ -60,6 +61,17 @@ bool GameObject::init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std:
 	HRESULT hr = pDevice->CreateSamplerState(&sampler_desc, &st);
 	if (FAILED(hr)) { Error::Log(hr, "Failed to create sampler state"); }
 
+	D3D11_SAMPLER_DESC samplerDesc = CD3D11_SAMPLER_DESC{ CD3D11_DEFAULT{} };
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	hr = pDevice->CreateSamplerState(&samplerDesc, &ssam);
+	if (FAILED(hr)) { Error::Log(hr, "Failed to create sampler state"); }
+
 	//create pasteurizer 
 	CD3D11_RASTERIZER_DESC pRasterizerDesc(D3D11_DEFAULT);
 	pRasterizerDesc.FillMode = D3D11_FILL_SOLID;
@@ -76,8 +88,8 @@ bool GameObject::init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std:
 
 	//create pasteurizer 
 	CD3D11_RASTERIZER_DESC pRasterizerDescFront(D3D11_DEFAULT);
-	pRasterizerDesc.FillMode = D3D11_FILL_SOLID;
-	pRasterizerDesc.CullMode = D3D11_CULL_FRONT;
+	pRasterizerDescFront.FillMode = D3D11_FILL_SOLID;
+	pRasterizerDescFront.CullMode = D3D11_CULL_FRONT;
 	hr = pDevice->CreateRasterizerState(&pRasterizerDescFront, &pRasterizerFront);
 	if (FAILED(hr)) { Error::Log(hr, "Failed to create pasteurizer state"); return false; }
 
@@ -176,6 +188,11 @@ bool GameObject::SetWireframeEnabled(bool value)
 	return wireframeEnabled = value;
 }
 
+bool GameObject::SetFrontCull(bool value)
+{
+	return frontCull = value;
+}
+
 float GameObject::SetFogStart(float value)
 {
 	//set fog start to value
@@ -190,15 +207,19 @@ float GameObject::SetFogEnd(float value)
 
 void GameObject::draw(Camera3D cam)
 {
-	//bind rasterizers
-	pContext->RSSetState(pRasterizer.Get());
-	if (backfaceCulling)
-		pContext->RSSetState(pRasterizerBack.Get());
-	else if (frontfaceCulling)
-		pContext->RSSetState(pRasterizerFront.Get());
-
+	pContext->RSSetState(pRasterizerFront.Get());
+	if (!frontCull)
+	{
+		//bind rasterizers
+		pContext->RSSetState(pRasterizer.Get());
+		if (backfaceCulling)
+			pContext->RSSetState(pRasterizerBack.Get());
+		else if (frontfaceCulling)
+			pContext->RSSetState(pRasterizerFront.Get());
+	}
 	//bind sampler
 	pContext->PSSetSamplers(0u, 1u, st.GetAddressOf());
+	pContext->PSSetSamplers(1u, 1u, ssam.GetAddressOf());
 	//if model not has normal texture and just set shaders
 	if (!pModel.GetHasNormal())
 	{
@@ -225,7 +246,7 @@ void GameObject::draw(Camera3D cam)
 	if (depthEnabled)
 	{
 		cam.SetProjectionValues(70.0f, static_cast<float>(width) / static_cast<float>(height)
-			, 100.0f, 999999.0f * 999999.0f);
+			, 100.0f, 999999.0f * 999999.0f, false);
 		pDepthBuffer.Draw();
 	}
 

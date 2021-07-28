@@ -24,6 +24,14 @@ public:
 	static void ToolBar(bool* gridMapEnabled, bool* wireframeEnabled, bool* fogEnabled,
 		bool* depthBufferEnabled, bool* blurEnabled, bool* msaaEnabled, App* app, bool* fxaaEnabled,
 		bool* backfaceCulling, bool* frontfaceCulling);
+
+	static void SetCanRendered(bool value);
+
+	void DirectionalLigth(XMFLOAT4* diffuseColor,
+		XMFLOAT3* lightDirection, XMFLOAT4* ambientColor, float* ambientIntensity,
+		BOOL* normalMapEnabled, float* specularIntensity, float* diffuseIntensity,
+		BOOL* reflectionEnabled, float* reflectionIntensity, float* bias);
+
 	~UI() = default;
 };
 

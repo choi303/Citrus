@@ -129,7 +129,7 @@ bool Graphics::InitDxBase(HWND hwnd)
 
 	cam3D.SetPosition(0.0f, 0.0f, -2.0f);
 	//camera 3d
-	cam3D.SetProjectionValues(70.0f, static_cast<float>(width) / static_cast<float>(height), 1.0f, 99999.0f * 99999.0f);
+	cam3D.SetProjectionValues(70.0f, static_cast<float>(width) / static_cast<float>(height), 1.0f, 99999.0f * 99999.0f, false);
 
 	//imgui init
 	IMGUI_CHECKVERSION();
@@ -219,41 +219,29 @@ bool Graphics::InitScene()
 {
 	ds = std::make_unique<DepthStencil>(pDevice.Get(),
 		pContext.Get(), width, height, msaaQuality,
-		msaaEnabled);
+		msaaEnabled, DepthStencil::Usage::DepthStencil);
 	rt = std::make_unique<RenderTarget>(pDevice.Get(),
 		pContext.Get(), width, height, msaaQuality,
 		msaaEnabled);
 	quad = std::make_unique<FSQuad>(pDevice.Get(),
 		pContext.Get(), width, height);
+	pDirectLight = std::make_unique<DirectionalLight>(pDevice.Get(), pContext.Get(),
+		width, height);
 	gridMap.init(pDevice.Get(), pContext.Get());
-	pPointLight.Init(pDevice.Get(), pContext.Get());
 	pSkyBox.Init(pDevice.Get(), pContext.Get());
-	nanosuit.init(pDevice.Get(), pContext.Get(), "Models\\sponza\\sponza.obj", width, height, true);
 	object.init(pDevice.Get(), pContext.Get(),
-		"Models\\sphere_hq.obj", width, height, false);
-	sphereTex = std::make_unique<Texture>(pDevice.Get(), pContext.Get(), "Images\\bill.png");
-	envTex = std::make_unique<Texture>(pDevice.Get(), pContext.Get(), "Images\\SkyBox.png", 2);
+		"Models\\brick_wall\\brick_wall.obj", width, height, true);
+	object2.init(pDevice.Get(), pContext.Get(), "Models\\nano_textured\\nanosuit.obj", width, height, true);
+	object3.init(pDevice.Get(), pContext.Get(), "Models\\gobber\\GoblinX.obj", width, height, true);
 
 	return true;
 }
 
 void Graphics::BeginFrame() const noexcept
 {
-	float bgColor[] = { 0.0f, 0.0f, 0.1f, 1.0f };
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-	//check out app.cpp render frame func for desc
-	rt->BindAsTarget(pContext.Get(), ds->pDepthStencilView.Get());
-	ds->Clear(pContext.Get());
-	if (*GameObject::GetWireframeEnabled())
-	{
-		pContext->OMSetRenderTargets(1u, pRtv.GetAddressOf(), pDSV.Get());
-		float bgColor[] = { 0.0f, 0.0f, 0.1f, 1.0f };
-		pContext->ClearRenderTargetView(pRtv.Get(), bgColor);
-		pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH
-			| D3D11_CLEAR_STENCIL, 1.0f, 0);
-	}
 }
 
 void Graphics::EndFrame() const noexcept
@@ -268,27 +256,54 @@ void Graphics::EndFrame() const noexcept
 		pChain->Present(0u, 0u);
 }
 
-bool Graphics::SceneGraph()
+bool Graphics::SceneGraph(Camera3D cam3D)
 {
 	pCPU.Frame();
 	gridMap.draw(cam3D);
 	//set primitive topology
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	sphereTex->Bind(pContext.Get());
-	envTex->Bind(pContext.Get());
+	ds->BindTexture(pContext.Get(), 4);
+	//pPointLight.Draw(cam3D);
+	//pPointLight.BindCB();
+	pDirectLight->BindCB(pDirectLight->GetLightCamera());
 	object.draw(cam3D);
+	object2.draw(cam3D);
+	object3.draw(cam3D);
 	pSkyBox.Draw(cam3D);
-	pPointLight.BindCB();
-	pPointLight.Draw(cam3D);
-	nanosuit.draw(cam3D);
+	pContext->OMSetDepthStencilState(pDepthState.Get(), 0);
+	UI::SetCanRendered(false);
+	return true;
+}
+
+void Graphics::Render()
+{
+	UI::SetCanRendered(true);
+	ID3D11RenderTargetView* rtv[1] = { 0 };
+	pContext->OMSetRenderTargets(1, rtv, ds->pDepthStencilView.Get());
+	ds->Clear(pContext.Get());
+	GameObject::SetFrontCull(true);
+	SceneGraph(pDirectLight->GetLightCamera());
+	GameObject::SetFrontCull(false);
+	//check out app.cpp render frame func for desc
+	rt->BindAsTarget(pContext.Get(), ds->pDepthStencilView.Get());
+	//ds->Clear(pContext.Get());
+	//if (*GameObject::GetWireframeEnabled())
+	//{
+		pContext->OMSetRenderTargets(1u, pRtv.GetAddressOf(), pDSV.Get());
+		float bgColor[] = { 0.0f, 0.0f, 0.1f, 1.0f };
+		pContext->ClearRenderTargetView(pRtv.Get(), bgColor);
+		pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH
+			| D3D11_CLEAR_STENCIL, 1.0f, 0);
+	//}
+	
+	SceneGraph(cam3D);
 	//full screen pass
-	if (!*GameObject::GetWireframeEnabled())
-	{		
+	/*if (!*GameObject::GetWireframeEnabled())
+	{
 		pContext->OMSetRenderTargets(1u, pRtv.GetAddressOf(), nullptr);
 		rt->BindAsTexture(pContext.Get(), 0);
 		quad->draw(pContext.Get());
-	}
-	return true;
+	}*/
 }
 
 DXGI_ADAPTER_DESC Graphics::GetAdapterDesc() const

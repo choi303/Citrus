@@ -11,7 +11,7 @@ static XMFLOAT3 lightColor = XMFLOAT3(1.0f, 1.0f, 1.0f);
 static BOOL normalMappingEnabled = TRUE;
 static BOOL reflectionEnabled = FALSE;
 
-bool PointLight::Init(ID3D11Device* device, ID3D11DeviceContext* context)
+bool PointLight::Init(ID3D11Device* device, ID3D11DeviceContext* context, int width, int height)
 {
 	this->device = device;
 	this->context = context;
@@ -58,11 +58,18 @@ bool PointLight::Init(ID3D11Device* device, ID3D11DeviceContext* context)
 		reflectionEnabled = FALSE;
 	pointLightSetting.CloseFile();
 
+	lightCam.SetPosition(lightmodel.GetPos().x, lightmodel.GetPos().y, lightmodel.GetPos().z);
+	lightCam.SetRotation(lightmodel.GetRot().x, lightmodel.GetRot().y, lightmodel.GetRot().z);
+	//Light camera 3d
+	lightCam.SetProjectionValues(70.0f, static_cast<float>(width) / static_cast<float>(height), 100.0f, 9999.0f, false);
+
     return true;
 }
 
 void PointLight::Draw(Camera3D cam)
 {
+	lightCam.SetPosition(lightmodel.GetPos().x, lightmodel.GetPos().y, lightmodel.GetPos().z);
+	lightCam.SetRotation(lightmodel.GetRot().x, lightmodel.GetRot().y, lightmodel.GetRot().z);
 	il->Bind(context);	//input layout bind
 	vs.Bind(context);	//vertex shader bind
 	ps.Bind(context);	//pixel shader bind
@@ -152,4 +159,9 @@ BOOL PointLight::GetNormalMapEnabled()
 BOOL PointLight::GetReflectionEnabled()
 {
 	return reflectionEnabled;
+}
+
+Camera3D PointLight::GetLightCamera()
+{
+	return lightCam;
 }

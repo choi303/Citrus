@@ -91,12 +91,6 @@ void App::Update() noexcept
 		//add down position when pressed E
 		gfx.cam3D.AdjustPosition(0.0f, -camera_speed * deltaTime, 0.0f);
 	}
-	if (keyboard.KeyIsPressed('C'))
-	{
-		//set point light position to character pos when pressed C
-		gfx.pPointLight.SetObjectPosition(gfx.cam3D.GetPositionFloat3().x,
-			gfx.cam3D.GetPositionFloat3().y, gfx.cam3D.GetPositionFloat3().z);
-	}
 
 	//Set sky box position to camera position
 	//that is makes spherical sky box spherical sky box :D
@@ -110,10 +104,7 @@ void App::RenderFrame()
 	gfx.BeginFrame();
 	//Run FPS Counter func
 	FPSCounter();
-	if (!gfx.SceneGraph())
-	{
-		Error::Log("Something happened to run scene graph");
-	}
+	gfx.Render();
 	//Run end frame func
 	gfx.EndFrame();
 }
@@ -151,10 +142,10 @@ void App::SetSavedValues()
 {
 	//set camera saved values
 	cameraSetting.OpenFileRead("camera_settings.txt");
-	gfx.cam3D.SetPosition(float(std::atoi(cameraSetting.GetInfo(0).c_str())), float(std::atoi(cameraSetting.GetInfo(1).c_str())),
-		float(std::atoi(cameraSetting.GetInfo(2).c_str())));
-	gfx.cam3D.SetRotation(float(std::atoi(cameraSetting.GetInfo(3).c_str())), float(std::atoi(cameraSetting.GetInfo(4).c_str())),
-		float(std::atoi(cameraSetting.GetInfo(3).c_str())));
+	gfx.cam3D.SetPosition(std::stof(cameraSetting.GetInfo(0).c_str()), std::stof(cameraSetting.GetInfo(1).c_str()),
+		std::stof(cameraSetting.GetInfo(2).c_str()));
+	gfx.cam3D.SetRotation(std::stof(cameraSetting.GetInfo(3).c_str()), std::stof(cameraSetting.GetInfo(4).c_str()),
+		std::stof(cameraSetting.GetInfo(3).c_str()));
 	cameraSetting.CloseFile();
 
 	//set dev menu saved values
@@ -169,15 +160,15 @@ void App::SetSavedValues()
 	else
 		FSQuad::SetBlurEnabled(false);
 
-	FSQuad::SetBlurIntensity(float(std::atoi(devMenuSettings.GetInfo(2).c_str())));
+	FSQuad::SetBlurIntensity(std::stof(devMenuSettings.GetInfo(2).c_str()));
 
 	if (devMenuSettings.GetInfo(3) == "1")
 		GameObject::SetFogEnabled(true);
 	else
 		GameObject::SetFogEnabled(false);
 
-	GameObject::SetFogStart(static_cast<float>(std::atoi(devMenuSettings.GetInfo(4).c_str())));
-	GameObject::SetFogEnd(static_cast<float>(std::atoi(devMenuSettings.GetInfo(5).c_str())));
+	GameObject::SetFogStart(std::stof(devMenuSettings.GetInfo(4).c_str()));
+	GameObject::SetFogEnd(std::stof(devMenuSettings.GetInfo(5).c_str()));
 
 	if (devMenuSettings.GetInfo(6) == "1")
 		GameObject::SetWireframeEnabled(true);
@@ -207,7 +198,7 @@ void App::SetSavedValues()
 void App::SaveValues()
 {
 	//open point light txt, stores point light settings
-	gfx.pPointLight.pointLightSetting.OpenFileWrite("pointlight_settings.txt");
+	/*gfx.pPointLight.pointLightSetting.OpenFileWrite("pointlight_settings.txt");
 	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetAmbientIntensity()));
 	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetDiffuseIntensity()));
 	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetSpecularIntensity()));
@@ -218,31 +209,75 @@ void App::SaveValues()
 	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetNormalMapEnabled()));
 	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetReflectionEnabled()));
 	gfx.pPointLight.pointLightSetting.AddInfo(gfx.pPointLight.pPointLightSavedItems);
-	gfx.pPointLight.pointLightSetting.CloseFile();
+	gfx.pPointLight.pointLightSetting.CloseFile();*/
+
+	//Directional Light
+	gfx.pDirectLight->directLightSettings.OpenFileWrite("directional_light_settings.txt");
+	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+		gfx.pDirectLight->GetDirection().z));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+		gfx.pDirectLight->GetDirection().y));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+		gfx.pDirectLight->GetDirection().x));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+		gfx.pDirectLight->GetAmbientIntensity()));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+		gfx.pDirectLight->GetDiffuseIntensity()));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+		gfx.pDirectLight->GetReflectionIntensity()));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+		gfx.pDirectLight->GetSpecularIntensity()));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+		gfx.pDirectLight->GetBias()));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+		gfx.pDirectLight->GetNormalMapEnabled()));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+		gfx.pDirectLight->GetReflectionEnabled()));
+	gfx.pDirectLight->directLightSettings.AddInfo(
+		gfx.pDirectLight->pDirectLightSavedItems);
+	gfx.pDirectLight->directLightSettings.CloseFile();
+
 	//open camera txt, stores camera position and rotation data
 	cameraSetting.OpenFileWrite("camera_settings.txt");
-	pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetPositionFloat3().z));
-	pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetPositionFloat3().y));
-	pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetPositionFloat3().x));
-	pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetRotationFloat3().z));
-	pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetRotationFloat3().y));
-	pCameraSavedItems.push_back(std::to_string(gfx.cam3D.GetRotationFloat3().x));
+	pCameraSavedItems.push_back(std::to_string(
+		gfx.cam3D.GetPositionFloat3().z));
+	pCameraSavedItems.push_back(std::to_string(
+		gfx.cam3D.GetPositionFloat3().y));
+	pCameraSavedItems.push_back(std::to_string(
+		gfx.cam3D.GetPositionFloat3().x));
+	pCameraSavedItems.push_back(std::to_string(
+		gfx.cam3D.GetRotationFloat3().z));
+	pCameraSavedItems.push_back(std::to_string(
+		gfx.cam3D.GetRotationFloat3().y));
+	pCameraSavedItems.push_back(std::to_string(
+		gfx.cam3D.GetRotationFloat3().x));
 	cameraSetting.AddInfo(pCameraSavedItems);
 	cameraSetting.CloseFile();
 
 	//open dev menu txt, stores dev menu settings
 	devMenuSettings.OpenFileWrite("devmenu_settings.txt");
-	pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetDepthBufferEnabled()));
-	pDevMenuSavedItems.push_back(std::to_string(*FSQuad::GetBlurEnabled()));
-	pDevMenuSavedItems.push_back(std::to_string(*FSQuad::GetBlurIntensity()));
-	pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetFogEnabled()));
-	pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetFogStart()));
-	pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetFogEnd()));
-	pDevMenuSavedItems.push_back(std::to_string(*GameObject::GetWireframeEnabled()));
-	pDevMenuSavedItems.push_back(std::to_string(*GridMap::getRender()));
-	pDevMenuSavedItems.push_back(std::to_string(gfx.msaaQuality));
-	pDevMenuSavedItems.push_back(std::to_string(gfx.msaaEnabled));
-	pDevMenuSavedItems.push_back(std::to_string(*FSQuad::GetFxaaEnabled()));
+	pDevMenuSavedItems.push_back(std::to_string(
+		*GameObject::GetDepthBufferEnabled()));
+	pDevMenuSavedItems.push_back(std::to_string(
+		*FSQuad::GetBlurEnabled()));
+	pDevMenuSavedItems.push_back(std::to_string(
+		*FSQuad::GetBlurIntensity()));
+	pDevMenuSavedItems.push_back(std::to_string(
+		*GameObject::GetFogEnabled()));
+	pDevMenuSavedItems.push_back(std::to_string(
+		*GameObject::GetFogStart()));
+	pDevMenuSavedItems.push_back(std::to_string(
+		*GameObject::GetFogEnd()));
+	pDevMenuSavedItems.push_back(std::to_string(
+		*GameObject::GetWireframeEnabled()));
+	pDevMenuSavedItems.push_back(std::to_string(
+		*GridMap::getRender()));
+	pDevMenuSavedItems.push_back(std::to_string(
+		gfx.msaaQuality));
+	pDevMenuSavedItems.push_back(std::to_string(
+		gfx.msaaEnabled));
+	pDevMenuSavedItems.push_back(std::to_string(
+		*FSQuad::GetFxaaEnabled()));
 	devMenuSettings.AddInfo(pDevMenuSavedItems);
 	devMenuSettings.CloseFile();
 }
@@ -271,6 +306,7 @@ void App::FPSCounter()
 	WCHAR* adapter_name_wchar = gfx.GetAdapterDesc().Description;
 	auto adapter_name = std::wstring(adapter_name_wchar);
 	//dev menu creation
+	UI::SetCanRendered(true);
 	UI::DeveloperUI(std::string(adapter_name.begin(), adapter_name.end()),cpu_usage_string.c_str() ,fps.c_str(), &gfx.cam3D, GameObject::GetWireframeEnabled(),
 		GameObject::GetWireColor(), GameObject::GetFogEnabled(), GameObject::GetFogColor(), GameObject::GetFogStart(),
 		GameObject::GetFogEnd(), &gfx.vsync, GridMap::getRender(),
@@ -283,4 +319,5 @@ void App::FPSCounter()
 		GameObject::GetDepthBufferEnabled(),
 		FSQuad::GetBlurEnabled(), &gfx.msaaEnabled, this, FSQuad::GetFxaaEnabled(), GameObject::GetBackCulling(),
 		GameObject::GetFrontCulling());
+	UI::SetCanRendered(false);
 }

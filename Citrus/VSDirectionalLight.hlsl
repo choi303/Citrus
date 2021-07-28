@@ -10,6 +10,14 @@ cbuffer Matrices : register(b1)
     float3 camera_pos;
 }
 
+cbuffer shadowBuffer : register(b2)
+{
+    row_major matrix lightViewMatrix;
+    row_major matrix lightProjectionMatrix;
+    float3 lightPosition;
+    float pad;
+}
+
 struct VS_IN
 {
     float3 pos : Position;
@@ -28,34 +36,35 @@ struct VS_OUT
     float3 tan : Tangent;
     float3 binormal : Binormal;
     float3 viewDirection : ViewDirection;
+    float4 lightViewPosition : LightViewPosition;
 };
 
 VS_OUT main(VS_IN input)
 {
     VS_OUT vso;
-    float4 world_position;
-
-	//set pos to all matrices
+    float4 worldPosition;
     vso.pos = mul(float4(input.pos, 1.0f), world);
     vso.pos = mul(vso.pos, view);
     vso.pos = mul(vso.pos, proj);
-	//set output texture coordinates to input texture coordinates
     vso.tc = input.tc;
-	//calculating normal and normalize the normals
     vso.normal = mul(input.normal, (float3x3) world);
     vso.normal = normalize(vso.normal);
-    vso.worldPos = mul(float4(input.pos, 1.0f), world);//calculating world pos based world matrix for calculating vec to light
-    //set tangent value
-	vso.tan = mul(input.tan, (float3x3)world);
+    vso.tan = mul(input.tan, (float3x3) world);
     vso.tan = normalize(vso.tan);
 	//set bi normal value
     vso.binormal = mul(input.binormal, (float3x3) world);
     vso.binormal = normalize(vso.binormal);
-	//get world position from world matrix
-    world_position = mul(float4(input.pos, 1.0f), view);
-    world_position = mul(float4(input.pos, 1.0f), world);
-	//calculating view direction
-    vso.viewDirection = camera_pos.xyz - world_position.xyz;
+        // Calculate the position of the vertex in the world.
+    worldPosition = mul(float4(input.pos, 1.0f), world);
+
+    // Determine the viewing direction based on the position of the camera and the position of the vertex in the world.
+    vso.viewDirection = camera_pos.xyz - worldPosition.xyz;
+	
+    // Normalize the viewing direction vector.
     vso.viewDirection = normalize(vso.viewDirection);
+    
+    vso.lightViewPosition = mul(float4(input.pos, 1.0f), world);
+    vso.lightViewPosition = mul(vso.lightViewPosition, lightViewMatrix);
+    vso.lightViewPosition = mul(vso.lightViewPosition, lightProjectionMatrix);
     return vso;
 }

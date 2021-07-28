@@ -6,7 +6,7 @@ class Camera3D
 {
 public:
 	Camera3D();
-	void SetProjectionValues(float fovDegrees, float aspectRatio, float nearZ, float farZ);
+	void SetProjectionValues(float fovDegrees, float aspectRatio, float nearZ, float farZ, bool ortho);
 
 	const XMMATRIX& GetViewMatrix() const;
 	const XMMATRIX& GetProjectionMatrix() const;

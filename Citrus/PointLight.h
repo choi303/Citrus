@@ -33,7 +33,7 @@ class PointLight
 {
 public:
 	PointLight() = default;
-	bool Init(ID3D11Device* device, ID3D11DeviceContext* context);
+	bool Init(ID3D11Device* device, ID3D11DeviceContext* context, int width, int height);
 	void Draw(Camera3D cam);
 	void BindCB() const;
 	void BindCBSpec() const;
@@ -50,6 +50,7 @@ public:
 	void SetObjectPosition(const float x, const float y, const float z);
 	static BOOL GetNormalMapEnabled();
 	static BOOL GetReflectionEnabled();
+	Camera3D GetLightCamera();
 public:
 	mutable SaveSystem pointLightSetting;
 	mutable std::vector<std::string> pPointLightSavedItems;
@@ -57,6 +58,7 @@ private:
 	Model lightmodel;
 	VertexShader vs;
 	PixelShader ps;
+	Camera3D lightCam;
 	std::unique_ptr<InputLayout> il;
 	std::unique_ptr<Texture> tex;
 	std::unique_ptr<UI> ui;
