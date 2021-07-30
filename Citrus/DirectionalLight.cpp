@@ -73,6 +73,7 @@ void DirectionalLight::BindCB(Camera3D cam)
 	mUI.DirectionalLigth(&diffuseColor, &lightDirection, &ambientColor, &ambientIntensity, &normalMapEnabled,
 		&specularIntensityC, &diffuseIntensityC, &reflectionEnabled, &reflectionIntensity, &bias);
 	mLightCam.SetRotation(lightDirection.x, lightDirection.y, lightDirection.z);
+	mLightCam.SetPosition(0, 0, -500);
 }
 
 Camera3D DirectionalLight::GetLightCamera()

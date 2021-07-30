@@ -56,10 +56,8 @@ VS_OUT main(VS_IN input)
     vso.binormal = normalize(vso.binormal);
         // Calculate the position of the vertex in the world.
     worldPosition = mul(float4(input.pos, 1.0f), world);
-
     // Determine the viewing direction based on the position of the camera and the position of the vertex in the world.
     vso.viewDirection = camera_pos.xyz - worldPosition.xyz;
-	
     // Normalize the viewing direction vector.
     vso.viewDirection = normalize(vso.viewDirection);
     

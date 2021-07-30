@@ -83,7 +83,6 @@ float4 main(PS_IN input) : SV_Target
         
         if(lightDepthValue < depthValue) 
         {
-            
             lightIntensity = saturate(dot(input.normal, lightDir));
         
             if (lightIntensity > 0.0f)
@@ -124,7 +123,7 @@ float4 main(PS_IN input) : SV_Target
         lightIntensity = saturate(dot(input.normal, lightDir));
         if (lightIntensity > 0.0f)
         {
-            color += (diffuseColor * lightIntensity);
+            color += (diffuse * lightIntensity);
             color = saturate(color);
         }
     }

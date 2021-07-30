@@ -40,7 +40,7 @@ DepthStencil::DepthStencil(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
 
 	//create shader resource view to take depth texture
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-	srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+	srvDesc.Format = MapUsageColored(usage);
 	srvDesc.ViewDimension = D3D_SRV_DIMENSION_TEXTURE2DMS;
 	srvDesc.Texture2D.MipLevels = descDepth.MipLevels;
 	srvDesc.Texture2D.MostDetailedMip = 0;
