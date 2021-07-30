@@ -54,6 +54,8 @@ DirectionalLight::DirectionalLight(ID3D11Device* pDevice, ID3D11DeviceContext* p
 
 void DirectionalLight::BindCB(Camera3D cam)
 {
+	mLightCam.SetRotation(lightDirection.x, lightDirection.y, lightDirection.z);
+	mLightCam.SetPosition(0, 0, (cam.GetPositionFloat3().z + (-5000)));
 	mLightBuffer->data.diffuseColor = diffuseColor;
 	mLightBuffer->data.lightDirection = lightDirection;
 	mLightBuffer->data.ambientColor = ambientColor;
@@ -66,14 +68,12 @@ void DirectionalLight::BindCB(Camera3D cam)
 	mLightBuffer->data.biasC = bias;
 	mLightBuffer->MapData();
 	mLightBuffer->PSBind(mContext.Get(), 0, 1);
-	mShadowCBuffer->data.shadowView = cam.GetViewMatrix();
-	mShadowCBuffer->data.shadowProj = cam.GetProjectionMatrix();
+	mShadowCBuffer->data.shadowView = mLightCam.GetViewMatrix();
+	mShadowCBuffer->data.shadowProj = mLightCam.GetProjectionMatrix();
 	mShadowCBuffer->MapData();
 	mShadowCBuffer->VSBind(mContext.Get(), 2, 1);
 	mUI.DirectionalLigth(&diffuseColor, &lightDirection, &ambientColor, &ambientIntensity, &normalMapEnabled,
 		&specularIntensityC, &diffuseIntensityC, &reflectionEnabled, &reflectionIntensity, &bias);
-	mLightCam.SetRotation(lightDirection.x, lightDirection.y, lightDirection.z);
-	mLightCam.SetPosition(0, 0, -500);
 }
 
 Camera3D DirectionalLight::GetLightCamera()

@@ -33,6 +33,7 @@ public:
 	std::unique_ptr<DirectionalLight> pDirectLight;
 	GridMap gridMap;
 	std::unique_ptr<DepthStencil> ds;
+	std::unique_ptr<DepthStencil> dsShadow;
 	std::unique_ptr<RenderTarget> rt;
 	std::unique_ptr<FSQuad> quad;
 	bool vsync = true;

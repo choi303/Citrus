@@ -220,6 +220,9 @@ bool Graphics::InitScene()
 	ds = std::make_unique<DepthStencil>(pDevice.Get(),
 		pContext.Get(), width, height, msaaQuality,
 		msaaEnabled, DepthStencil::Usage::DepthStencil);
+	dsShadow = std::make_unique<DepthStencil>(pDevice.Get(),
+		pContext.Get(), width, height, msaaQuality,
+		msaaEnabled, DepthStencil::Usage::ShadowDepth);
 	rt = std::make_unique<RenderTarget>(pDevice.Get(),
 		pContext.Get(), width, height, msaaQuality,
 		msaaEnabled);
@@ -260,50 +263,44 @@ bool Graphics::SceneGraph(Camera3D cam3D)
 {
 	pCPU.Frame();
 	gridMap.draw(cam3D);
+	dsShadow->BindTexture(pContext.Get(), 4);
 	//set primitive topology
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	ds->BindTexture(pContext.Get(), 4);
-	//pPointLight.Draw(cam3D);
-	//pPointLight.BindCB();
-	pDirectLight->BindCB(pDirectLight->GetLightCamera());
+	pSkyBox.Draw(cam3D);
+	pDirectLight->BindCB(cam3D);
 	object.draw(cam3D);
 	object2.draw(cam3D);
 	object3.draw(cam3D);
-	pSkyBox.Draw(cam3D);
-	pContext->OMSetDepthStencilState(pDepthState.Get(), 0);
-	UI::SetCanRendered(false);
 	return true;
 }
 
 void Graphics::Render()
 {
-	UI::SetCanRendered(true);
 	ID3D11RenderTargetView* rtv[1] = { 0 };
-	pContext->OMSetRenderTargets(1, rtv, ds->pDepthStencilView.Get());
-	ds->Clear(pContext.Get());
+	pContext->OMSetRenderTargets(1, rtv, dsShadow->pDepthStencilView.Get());
+	dsShadow->Clear(pContext.Get());
 	GameObject::SetFrontCull(true);
 	SceneGraph(pDirectLight->GetLightCamera());
 	GameObject::SetFrontCull(false);
-	//check out app.cpp render frame func for desc
+	UI::SetCanRendered(true);
 	rt->BindAsTarget(pContext.Get(), ds->pDepthStencilView.Get());
-	//ds->Clear(pContext.Get());
-	//if (*GameObject::GetWireframeEnabled())
-	//{
+	ds->Clear(pContext.Get());
+	if (*GameObject::GetWireframeEnabled())
+	{
 		pContext->OMSetRenderTargets(1u, pRtv.GetAddressOf(), pDSV.Get());
 		float bgColor[] = { 0.0f, 0.0f, 0.1f, 1.0f };
 		pContext->ClearRenderTargetView(pRtv.Get(), bgColor);
 		pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH
 			| D3D11_CLEAR_STENCIL, 1.0f, 0);
-	//}
-	
+	}
 	SceneGraph(cam3D);
 	//full screen pass
-	/*if (!*GameObject::GetWireframeEnabled())
+	if (!*GameObject::GetWireframeEnabled())
 	{
 		pContext->OMSetRenderTargets(1u, pRtv.GetAddressOf(), nullptr);
 		rt->BindAsTexture(pContext.Get(), 0);
 		quad->draw(pContext.Get());
-	}*/
+	}
 }
 
 DXGI_ADAPTER_DESC Graphics::GetAdapterDesc() const

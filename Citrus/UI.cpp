@@ -439,7 +439,7 @@ void UI::DirectionalLigth(XMFLOAT4* diffuseColor,
             ImGuiWindowFlags_NoCollapse))
         {
             ImGui::DragFloat3("Light\nDirection",
-                direction, 0.01f, -2000.0f, 2000.0f);
+                direction, 0.0001f, -2000.0f, 2000.0f);
             ImGui::Checkbox("Normal Map\nEnabled", reinterpret_cast<bool*>(normalMapEnabled));
             ImGui::Checkbox("Reflection\nEnabled", reinterpret_cast<bool*>(reflectionEnabled));
             ImGui::ColorEdit4("Light\nColor", diffuseCol);
