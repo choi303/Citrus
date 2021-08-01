@@ -13,7 +13,8 @@ struct DirectLight
     bool reflectionEnabled;
     float reflectionIntensity;
     float biasC;
-    float pad[2];
+    BOOL pcfEnabled;
+    float pad[1];
 };
 
 struct shadowmap {
@@ -35,6 +36,7 @@ public:
     float GetAmbientIntensity() const noexcept;
     BOOL GetNormalMapEnabled() const noexcept;
     BOOL GetReflectionEnabled() const noexcept;
+    BOOL GetPCFEnabled() const noexcept;
     float GetSpecularIntensity() const noexcept;
     float GetDiffuseIntensity() const noexcept;
     float GetReflectionIntensity() const noexcept;
@@ -44,6 +46,7 @@ public:
     void SetAmbientIntensity(float value);
     void SetNormalMapEnabled(BOOL value);
     void SetReflectionEnabled(BOOL value);
+    void SetPCFEnabled(BOOL value);
     void SetSpecularIntensity(float value);
     void SetDiffuseIntensity(float value);
     void SetReflectionIntensity(float value);

@@ -10,6 +10,7 @@ static float specularIntensityC = 1.0f;
 static float diffuseIntensityC = 1.0f;
 static float reflectionIntensity = 1.0f;
 static float bias = 0.0001f;
+static BOOL pcfEnabled;
 static float pad;
 
 DirectionalLight::DirectionalLight(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height)
@@ -49,6 +50,10 @@ DirectionalLight::DirectionalLight(ID3D11Device* pDevice, ID3D11DeviceContext* p
 		SetReflectionEnabled(TRUE);
 	else
 		SetReflectionEnabled(FALSE);
+	if (directLightSettings.GetInfo(10) == "1")
+		SetPCFEnabled(TRUE);
+	else
+		SetPCFEnabled(FALSE);
 	directLightSettings.CloseFile();
 }
 
@@ -65,6 +70,7 @@ void DirectionalLight::BindCB(Camera3D cam)
 	mLightBuffer->data.specularIntensityC = specularIntensityC;
 	mLightBuffer->data.reflectionEnabled = reflectionEnabled;
 	mLightBuffer->data.reflectionIntensity = reflectionIntensity;
+	mLightBuffer->data.pcfEnabled = pcfEnabled;
 	mLightBuffer->data.biasC = bias;
 	mLightBuffer->MapData();
 	mLightBuffer->PSBind(mContext.Get(), 0, 1);
@@ -73,7 +79,7 @@ void DirectionalLight::BindCB(Camera3D cam)
 	mShadowCBuffer->MapData();
 	mShadowCBuffer->VSBind(mContext.Get(), 2, 1);
 	mUI.DirectionalLigth(&diffuseColor, &lightDirection, &ambientColor, &ambientIntensity, &normalMapEnabled,
-		&specularIntensityC, &diffuseIntensityC, &reflectionEnabled, &reflectionIntensity, &bias);
+		&specularIntensityC, &diffuseIntensityC, &reflectionEnabled, &reflectionIntensity, &bias, &pcfEnabled);
 }
 
 Camera3D DirectionalLight::GetLightCamera()
@@ -165,4 +171,14 @@ BOOL DirectionalLight::GetReflectionEnabled() const noexcept
 void DirectionalLight::SetReflectionEnabled(BOOL value)
 {
 	reflectionEnabled = value;
+}
+
+void DirectionalLight::SetPCFEnabled(BOOL value)
+{
+	pcfEnabled = value;
+}
+
+BOOL DirectionalLight::GetPCFEnabled() const noexcept
+{
+	return pcfEnabled;
 }

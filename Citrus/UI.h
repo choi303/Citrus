@@ -30,7 +30,7 @@ public:
 	void DirectionalLigth(XMFLOAT4* diffuseColor,
 		XMFLOAT3* lightDirection, XMFLOAT4* ambientColor, float* ambientIntensity,
 		BOOL* normalMapEnabled, float* specularIntensity, float* diffuseIntensity,
-		BOOL* reflectionEnabled, float* reflectionIntensity, float* bias);
+		BOOL* reflectionEnabled, float* reflectionIntensity, float* bias, BOOL* pcfEnabled);
 
 	~UI() = default;
 };

@@ -233,6 +233,8 @@ void App::SaveValues()
 		gfx.pDirectLight->GetNormalMapEnabled()));
 	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
 		gfx.pDirectLight->GetReflectionEnabled()));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+		gfx.pDirectLight->GetPCFEnabled()));
 	gfx.pDirectLight->directLightSettings.AddInfo(
 		gfx.pDirectLight->pDirectLightSavedItems);
 	gfx.pDirectLight->directLightSettings.CloseFile();

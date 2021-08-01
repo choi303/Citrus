@@ -416,7 +416,7 @@ void UI::SetCanRendered(bool value)
 void UI::DirectionalLigth(XMFLOAT4* diffuseColor,
     XMFLOAT3* lightDirection, XMFLOAT4* ambientColor, float* ambientIntensity,
     BOOL* normalMapEnabled, float* specularIntensity, float* diffuseIntensity,
-    BOOL* reflectionEnabled, float* reflectionIntensity, float* bias)
+    BOOL* reflectionEnabled, float* reflectionIntensity, float* bias, BOOL* pcfEnabled)
 {
     if (can_render)
     {
@@ -442,6 +442,7 @@ void UI::DirectionalLigth(XMFLOAT4* diffuseColor,
                 direction, 0.0001f, -2000.0f, 2000.0f);
             ImGui::Checkbox("Normal Map\nEnabled", reinterpret_cast<bool*>(normalMapEnabled));
             ImGui::Checkbox("Reflection\nEnabled", reinterpret_cast<bool*>(reflectionEnabled));
+            ImGui::Checkbox("PCF\nEnabled", reinterpret_cast<bool*>(pcfEnabled));
             ImGui::ColorEdit4("Light\nColor", diffuseCol);
             ImGui::ColorEdit4("Ambient\nColor", ambientCol);
             ImGui::DragFloat("Ambient\nIntensity", ambientIntensity, 0.01f, 0.0f, 50.0f);

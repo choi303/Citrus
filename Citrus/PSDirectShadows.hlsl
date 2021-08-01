@@ -10,7 +10,8 @@ cbuffer DirectLight : register(b0)
     bool reflectionEnabled;
     float reflectionIntensity;
     float biasC;
-    float pad[2];
+    bool pcfEnabled;
+    float pad[1];
 };
 
 struct PS_IN
@@ -48,6 +49,7 @@ float4 main(PS_IN input) : SV_Target
     float2 projectTexCoord;
     float depthValue;
     float lightDepthValue;
+    float shadow;
     float bias;
     
     uint width, height;
@@ -84,19 +86,23 @@ float4 main(PS_IN input) : SV_Target
         
         lightDepthValue = lightDepthValue - bias;
         
-        float shadow = 0.0;
-        depthMap.GetDimensions(width, height);
-        float2 texelSize = 1.0 / float2(width, height);
-        for (int x = -1; x <= 1; ++x)
-        {
-            for (int y = -1; y <= 1; ++y)
+        if(pcfEnabled)
+        {            
+            shadow = 0.0;
+            depthMap.GetDimensions(width, height);
+            float2 texelSize = 1.0 / float2(width, height);
+            for (int x = -1; x <= 1; ++x)
             {
-                float pcfDepth = depthMap.SampleCmpLevelZero(CMPSampler, projectTexCoord.xy + float2(x, y) * texelSize, lightDepthValue).r;
-                shadow += pcfDepth;
+                for (int y = -1; y <= 1; ++y)
+                {
+                    float pcfDepth = depthMap.SampleCmpLevelZero(CMPSampler, projectTexCoord.xy + float2(x, y) * texelSize, lightDepthValue).r;
+                    shadow += pcfDepth;
+                }
             }
+            
+            shadow /= 9.0f;
         }
         
-        shadow /= 9.0f;
         
         if (lightDepthValue < depthValue)
         {
@@ -105,6 +111,7 @@ float4 main(PS_IN input) : SV_Target
             if (lightIntensity > 0.0f)
             {
                 color += (diffuse * lightIntensity);
+                if(pcfEnabled)
                 color *= shadow;
                 color = saturate(color);
                 
