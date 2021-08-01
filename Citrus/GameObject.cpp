@@ -17,8 +17,8 @@ bool GameObject::init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std:
 	this->width = width;
 	this->height = height;
 	//normal mapping vertex shader initialize
-	pVSNormal.Init(L"VSDirectionalLight.cso", pDevice);
-	pPSNormal.Init(L"PSDirectionalLight.cso", pDevice);
+	pVSNormal.Init(L"VSDirectShadows.cso", pDevice);
+	pPSNormal.Init(L"PSDirectShadows.cso", pDevice);
 	//gets data from normal mapping vertex shader with input layout
 	const std::vector<D3D11_INPUT_ELEMENT_DESC> ied_normal =
 	{
@@ -61,11 +61,33 @@ bool GameObject::init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std:
 	HRESULT hr = pDevice->CreateSamplerState(&sampler_desc, &st);
 	if (FAILED(hr)) { Error::Log(hr, "Failed to create sampler state"); }
 
+	CD3D11_SAMPLER_DESC pcfDesc(D3D11_DEFAULT);
+	pcfDesc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
+	pcfDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	pcfDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	pcfDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	pcfDesc.ComparisonFunc = D3D11_COMPARISON_LESS;
+	pcfDesc.BorderColor[0] = 1.0f;
+	pcfDesc.BorderColor[1] = 1.0f;
+	pcfDesc.BorderColor[2] = 1.0f;
+	pcfDesc.BorderColor[3] = 1.0f;
+	hr = pDevice->CreateSamplerState(&pcfDesc, &pcfSam);
+	if (FAILED(hr)) { Error::Log(hr, "Failed to create sampler state"); }
+
 	D3D11_SAMPLER_DESC samplerDesc = CD3D11_SAMPLER_DESC{ CD3D11_DEFAULT{} };
-	samplerDesc.BorderColor[0] = 1.0f;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.MipLODBias = 0.0f;
+	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc.BorderColor[0] = 0;
+	samplerDesc.BorderColor[1] = 0;
+	samplerDesc.BorderColor[2] = 0;
+	samplerDesc.BorderColor[3] = 0;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 	hr = pDevice->CreateSamplerState(&samplerDesc, &ssam);
 	if (FAILED(hr)) { Error::Log(hr, "Failed to create sampler state"); }
 
@@ -217,6 +239,7 @@ void GameObject::draw(Camera3D cam)
 	//bind sampler
 	pContext->PSSetSamplers(0u, 1u, st.GetAddressOf());
 	pContext->PSSetSamplers(1u, 1u, ssam.GetAddressOf());
+	pContext->PSSetSamplers(2u, 1u, pcfSam.GetAddressOf());
 	//if model not has normal texture and just set shaders
 	if (!pModel.GetHasNormal())
 	{

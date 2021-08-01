@@ -51,6 +51,7 @@ private:
 	std::unique_ptr<UI> ui;
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> st;
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> ssam;
+	Microsoft::WRL::ComPtr<ID3D11SamplerState> pcfSam;
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> pRasterizer = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> pRasterizerBack = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> pRasterizerFront = nullptr;

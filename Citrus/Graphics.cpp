@@ -47,9 +47,10 @@ bool Graphics::InitDxBase(HWND hwnd)
 	sd.Flags = 0;
 
 	UINT debug_flag = 0;
-#ifndef _DEBUG
+#ifdef _DEBUG
 	debug_flag = D3D11_CREATE_DEVICE_DEBUG;
 #endif
+	
 	HRESULT hr;
 	hr = D3D11CreateDeviceAndSwapChain(
 		nullptr,
@@ -67,7 +68,23 @@ bool Graphics::InitDxBase(HWND hwnd)
 	);
 	if (FAILED(hr))
 	{
-		Error::Log(hr, "Failed to create device and swap chain."); return false;
+		hr = D3D11CreateDeviceAndSwapChain(
+			nullptr,
+			D3D_DRIVER_TYPE_REFERENCE,
+			nullptr,
+			debug_flag,
+			nullptr,
+			0,
+			D3D11_SDK_VERSION,
+			&sd,
+			&pChain,
+			&pDevice,
+			nullptr,
+			&pContext);
+		if (FAILED(hr))
+		{
+			Error::Log(hr, "");
+		}
 	}
 
 	//create back buffer

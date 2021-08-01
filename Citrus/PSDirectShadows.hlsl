@@ -32,6 +32,7 @@ Texture2D environment : register(t3);
 Texture2D depthMap : register(t4);
 SamplerState object_sampler : register(s0);
 SamplerState object_sampler_clamp : register(s1);
+SamplerComparisonState CMPSampler : register(s2);
 
 float4 main(PS_IN input) : SV_Target
 {
@@ -48,6 +49,8 @@ float4 main(PS_IN input) : SV_Target
     float depthValue;
     float lightDepthValue;
     float bias;
+    
+    uint width, height;
     
     lightDir = -lightDirection;
     
@@ -67,7 +70,7 @@ float4 main(PS_IN input) : SV_Target
     
     color = ambientColor * ambientIntensity;
     
-    if(normalMapEnabled)
+    if (normalMapEnabled)
         input.normal = bumpNormal;
     
     projectTexCoord.x = input.lightViewPosition.x / input.lightViewPosition.w / 2.0f + 0.5f;
@@ -81,13 +84,28 @@ float4 main(PS_IN input) : SV_Target
         
         lightDepthValue = lightDepthValue - bias;
         
-        if(lightDepthValue < depthValue) 
+        float shadow = 0.0;
+        depthMap.GetDimensions(width, height);
+        float2 texelSize = 1.0 / float2(width, height);
+        for (int x = -1; x <= 1; ++x)
+        {
+            for (int y = -1; y <= 1; ++y)
+            {
+                float pcfDepth = depthMap.SampleCmpLevelZero(CMPSampler, projectTexCoord.xy + float2(x, y) * texelSize, lightDepthValue).r;
+                shadow += pcfDepth;
+            }
+        }
+        
+        shadow /= 9.0f;
+        
+        if (lightDepthValue < depthValue)
         {
             lightIntensity = saturate(dot(input.normal, lightDir));
         
             if (lightIntensity > 0.0f)
             {
                 color += (diffuse * lightIntensity);
+                color *= shadow;
                 color = saturate(color);
                 
                 // Sample the pixel from the specular map texture.

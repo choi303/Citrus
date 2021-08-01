@@ -23,7 +23,7 @@ DirectionalLight::DirectionalLight(ID3D11Device* pDevice, ID3D11DeviceContext* p
 	mLightBuffer->Init(pDevice, pContext);
 	//Light camera 3d
 	mLightCam.SetPosition(lightDirection.x, lightDirection.y, lightDirection.z);
-	mLightCam.SetProjectionValues(70.0f, static_cast<float>(width) / static_cast<float>(height), 100.0f, 99999.0f, true);
+	mLightCam.SetProjectionValues(90.0f, static_cast<float>(width) / static_cast<float>(height), 0.01f, 999.0f, true);
 	mShadowCBuffer = std::make_unique<CBuffer<shadowmap>>();
 	mShadowCBuffer->Init(pDevice, pContext);
 
@@ -55,7 +55,7 @@ DirectionalLight::DirectionalLight(ID3D11Device* pDevice, ID3D11DeviceContext* p
 void DirectionalLight::BindCB(Camera3D cam)
 {
 	mLightCam.SetRotation(lightDirection.x, lightDirection.y, lightDirection.z);
-	mLightCam.SetPosition(0, 0, (cam.GetPositionFloat3().z + (-5000)));
+	mLightCam.SetPosition(0,0, (cam.GetPositionFloat3().z + (-500)));
 	mLightBuffer->data.diffuseColor = diffuseColor;
 	mLightBuffer->data.lightDirection = lightDirection;
 	mLightBuffer->data.ambientColor = ambientColor;
