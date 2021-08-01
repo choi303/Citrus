@@ -214,13 +214,25 @@ void UI::DeveloperUI(std::string adapter_name, const
 void UI::ToolBar(bool* gridMapEnabled, bool* 
     wireframeEnabled, bool* fogEnabled,
     bool* depthBufferEnabled, bool* blurEnabled, bool* msaaEnabled, App* app, bool* fxaaEnabled,
-    bool* backfaceCulling, bool* frontfaceCulling)
+    bool* backfaceCulling, bool* frontfaceCulling,
+    App* rApp)
 {
     if (can_render)
     {
         std::string title = "";
         if (ImGui::BeginMainMenuBar())
         {
+            if (ImGui::BeginMenu("File"))
+            {
+                if (ImGui::MenuItem("Save Scene Settings"))
+                {
+                    rApp->SaveValues();
+                    Error::InfoLog("Scene settings successfully saved.");
+                }
+
+                ImGui::EndMenu();
+            }
+
             if (ImGui::BeginMenu("Editor"))
             {
                 if (*gridMapEnabled)

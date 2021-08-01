@@ -23,7 +23,7 @@ public:
 
 	static void ToolBar(bool* gridMapEnabled, bool* wireframeEnabled, bool* fogEnabled,
 		bool* depthBufferEnabled, bool* blurEnabled, bool* msaaEnabled, App* app, bool* fxaaEnabled,
-		bool* backfaceCulling, bool* frontfaceCulling);
+		bool* backfaceCulling, bool* frontfaceCulling, App* rApp);
 
 	static void SetCanRendered(bool value);
 

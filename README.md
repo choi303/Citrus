@@ -1,6 +1,6 @@
 > ![citrus_logo11](https://user-images.githubusercontent.com/60492235/122637162-d3911e00-d0f5-11eb-8534-c1d7c1085e3b.png)
 # Citrus
-### 3D renderer using DirectX 11 - C++11! Citrus only working on Windows 7+ for now :)
+### Citrus is 3D renderer using Direct3D 11 - C++11! Citrus only working on Windows 7+ for now :)
 
 ![](https://img.shields.io/github/stars/choi303/Citrus.svg) ![](https://img.shields.io/github/forks/choi303/Citrus.svg) ![](https://img.shields.io/github/release/choi303/Citrus.svg) ![](https://img.shields.io/github/issues/choi303/Citrus.svg) 
 

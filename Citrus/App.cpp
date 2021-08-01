@@ -320,6 +320,6 @@ void App::FPSCounter()
 		GameObject::GetFogEnabled(), 
 		GameObject::GetDepthBufferEnabled(),
 		FSQuad::GetBlurEnabled(), &gfx.msaaEnabled, this, FSQuad::GetFxaaEnabled(), GameObject::GetBackCulling(),
-		GameObject::GetFrontCulling());
+		GameObject::GetFrontCulling(), this);
 	UI::SetCanRendered(false);
 }
