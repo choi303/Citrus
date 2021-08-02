@@ -452,6 +452,12 @@ void UI::DirectionalLigth(XMFLOAT4* diffuseColor,
         {
             ImGui::DragFloat3("Light\nDirection",
                 direction, 0.0001f, -2000.0f, 2000.0f);
+            if (ImGui::Button("Reset"))
+            {
+                direction[0] = 0.0f;
+                direction[1] = 0.0f;
+                direction[2] = 1.0f;
+            }
             ImGui::Checkbox("Normal Map\nEnabled", reinterpret_cast<bool*>(normalMapEnabled));
             ImGui::Checkbox("Reflection\nEnabled", reinterpret_cast<bool*>(reflectionEnabled));
             ImGui::Checkbox("PCF\nEnabled", reinterpret_cast<bool*>(pcfEnabled));

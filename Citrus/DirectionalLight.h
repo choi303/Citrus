@@ -20,8 +20,6 @@ struct DirectLight
 struct shadowmap {
     XMMATRIX shadowView;
     XMMATRIX shadowProj;
-    XMFLOAT3 lightPosition;
-    float pad;
 };
 
 class DirectionalLight

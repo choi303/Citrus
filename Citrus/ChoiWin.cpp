@@ -111,7 +111,7 @@ bool ChoiWin::InitializeWindow(std::string wndName, std::string className, HINST
             this
         );
         SetWindowLong(hwnd, GWL_STYLE,
-            GetWindowLong(hwnd, GWL_STYLE) & ~WS_MINIMIZEBOX);
+            GetWindowLong(hwnd, GWL_STYLE) & ~WS_MINIMIZEBOX & ~WS_SIZEBOX & ~WS_MAXIMIZEBOX);
 
         if (!hwnd)
         {

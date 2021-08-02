@@ -14,8 +14,6 @@ cbuffer shadowBuffer : register(b2)
 {
     row_major matrix lightViewMatrix;
     row_major matrix lightProjectionMatrix;
-    float3 lightPosition;
-    float pad;
 }
 
 struct VS_IN
