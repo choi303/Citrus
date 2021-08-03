@@ -249,10 +249,7 @@ bool Graphics::InitScene()
 		width, height);
 	gridMap.init(pDevice.Get(), pContext.Get());
 	pSkyBox.Init(pDevice.Get(), pContext.Get());
-	object.init(pDevice.Get(), pContext.Get(),
-		"Models\\brick_wall\\brick_wall.obj", width, height, true);
-	object2.init(pDevice.Get(), pContext.Get(), "Models\\nano_textured\\nanosuit.obj", width, height, true);
-	object3.init(pDevice.Get(), pContext.Get(), "Models\\gobber\\GoblinX.obj", width, height, true);
+	object2.init(pDevice.Get(), pContext.Get(), "Models\\sponza\\sponza.obj", width, height, true);
 
 	return true;
 }
@@ -285,9 +282,7 @@ bool Graphics::SceneGraph(Camera3D cam3D)
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	pSkyBox.Draw(cam3D);
 	pDirectLight->BindCB(cam3D);
-	object.draw(cam3D);
 	object2.draw(cam3D);
-	object3.draw(cam3D);
 	return true;
 }
 

@@ -59,8 +59,8 @@ DirectionalLight::DirectionalLight(ID3D11Device* pDevice, ID3D11DeviceContext* p
 
 void DirectionalLight::BindCB(Camera3D cam)
 {
-	mLightCam.SetRotation(lightDirection.x, lightDirection.y, lightDirection.z);
-	mLightCam.SetPosition(0,0, (cam.GetPositionFloat3().z + (-500)));
+	mLightCam.SetPosition(lightDirection.x, lightDirection.y, lightDirection.z + (-50));
+	mLightCam.SetRotation(lightDirection.x, lightDirection.y, lightDirection.z + (-50));
 	mLightBuffer->data.diffuseColor = diffuseColor;
 	mLightBuffer->data.lightDirection = lightDirection;
 	mLightBuffer->data.ambientColor = ambientColor;

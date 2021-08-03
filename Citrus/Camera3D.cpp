@@ -14,7 +14,7 @@ void Camera3D::SetProjectionValues(float fovDegrees, float aspectRatio, float ne
 	float fovRadians = (fovDegrees / 360.0f) * XM_2PI;
 	if (ortho)
 	{
-		this->projectionMatrix = XMMatrixOrthographicLH(20.0f, 20.0f, 0.1f, 6000.0f);
+		this->projectionMatrix = XMMatrixOrthographicOffCenterRH(-1500.0f, 1500.0f, -1500.0f, 1500.0f, 0.1f, 6000.0f);
 	}
 	else
 		this->projectionMatrix = XMMatrixPerspectiveFovLH(fovRadians, aspectRatio, nearZ, farZ);

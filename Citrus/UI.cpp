@@ -432,7 +432,7 @@ void UI::DirectionalLigth(XMFLOAT4* diffuseColor,
 {
     if (can_render)
     {
-        static float direction[3] = { 0,0,1 };
+        static float direction[3] = { 1.550,-1,0 };
         lightDirection->x = direction[0];
         lightDirection->y = direction[1];
         lightDirection->z = direction[2];
