@@ -215,7 +215,7 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
     wireframeEnabled, bool* fogEnabled,
     bool* depthBufferEnabled, bool* blurEnabled, bool* msaaEnabled, App* app, bool* fxaaEnabled,
     bool* backfaceCulling, bool* frontfaceCulling,
-    App* rApp)
+    App* rApp, BOOL* alphaClip)
 {
     if (can_render)
     {
@@ -264,6 +264,22 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
                     else
                     {
                         *wireframeEnabled = true;
+                    }
+                }
+
+                if (*alphaClip)
+                    title = "Alpha Clip: On";
+                else
+                    title = "Alpha Clip: Off";
+                if (ImGui::MenuItem(title.c_str()))
+                {
+                    if (*alphaClip)
+                    {
+                        *alphaClip = false;
+                    }
+                    else
+                    {
+                        *alphaClip = true;
                     }
                 }
 

@@ -11,6 +11,7 @@ static float diffuseIntensityC = 1.0f;
 static float reflectionIntensity = 1.0f;
 static float bias = 0.0001f;
 static BOOL pcfEnabled;
+static BOOL alphaClip;
 static float pad;
 
 DirectionalLight::DirectionalLight(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height)
@@ -54,6 +55,10 @@ DirectionalLight::DirectionalLight(ID3D11Device* pDevice, ID3D11DeviceContext* p
 		SetPCFEnabled(TRUE);
 	else
 		SetPCFEnabled(FALSE);
+	if (directLightSettings.GetInfo(11) == "1")
+		SetAlphaCEnabled(TRUE);
+	else
+		SetAlphaCEnabled(FALSE);
 	directLightSettings.CloseFile();
 }
 
@@ -72,6 +77,7 @@ void DirectionalLight::BindCB(Camera3D cam)
 	mLightBuffer->data.reflectionIntensity = reflectionIntensity;
 	mLightBuffer->data.pcfEnabled = pcfEnabled;
 	mLightBuffer->data.biasC = bias;
+	mLightBuffer->data.alphaClip = alphaClip;
 	mLightBuffer->MapData();
 	mLightBuffer->PSBind(mContext.Get(), 0, 1);
 	mShadowCBuffer->data.shadowView = mLightCam.GetViewMatrix();
@@ -181,4 +187,14 @@ void DirectionalLight::SetPCFEnabled(BOOL value)
 BOOL DirectionalLight::GetPCFEnabled() const noexcept
 {
 	return pcfEnabled;
+}
+
+BOOL* DirectionalLight::GetAlphaCEnabled()
+{
+	return &alphaClip;
+}
+
+void DirectionalLight::SetAlphaCEnabled(BOOL value)
+{
+	alphaClip = value;
 }

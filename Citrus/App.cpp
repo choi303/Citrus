@@ -235,6 +235,8 @@ void App::SaveValues()
 		gfx.pDirectLight->GetReflectionEnabled()));
 	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
 		gfx.pDirectLight->GetPCFEnabled()));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+		*gfx.pDirectLight->GetAlphaCEnabled()));
 	gfx.pDirectLight->directLightSettings.AddInfo(
 		gfx.pDirectLight->pDirectLightSavedItems);
 	gfx.pDirectLight->directLightSettings.CloseFile();
@@ -320,6 +322,6 @@ void App::FPSCounter()
 		GameObject::GetFogEnabled(), 
 		GameObject::GetDepthBufferEnabled(),
 		FSQuad::GetBlurEnabled(), &gfx.msaaEnabled, this, FSQuad::GetFxaaEnabled(), GameObject::GetBackCulling(),
-		GameObject::GetFrontCulling(), this);
+		GameObject::GetFrontCulling(), this, DirectionalLight::GetAlphaCEnabled());
 	UI::SetCanRendered(false);
 }

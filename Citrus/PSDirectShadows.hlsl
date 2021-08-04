@@ -11,7 +11,7 @@ cbuffer DirectLight : register(b0)
     float reflectionIntensity;
     float biasC;
     bool pcfEnabled;
-    float pad[1];
+    bool alphaClip;
 };
 
 struct PS_IN
@@ -67,6 +67,11 @@ float4 main(PS_IN input) : SV_Target
     bias = biasC;
     
     textureColor = diff.Sample(object_sampler, input.tc);
+    if(alphaClip)
+    {
+        if (textureColor.a < 0.5)
+            discard;
+    }
     
     float4 diffuse = diffuseColor * diffuseIntensityC;
     
