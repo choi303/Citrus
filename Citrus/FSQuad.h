@@ -43,6 +43,11 @@ public:
 	static float* GetBase();
 	static bool SetBlurEnabled(bool value);
 	static float SetBlurIntensity(float value);
+	static float SetArea(float value);
+	static float SetBase(float value);
+	static float SetRadius(float value);
+	static float SetTotalStrength(float value);
+	static float SetFallOff(float value);
 	static BOOL SetSSAOEnabled(BOOL value);
 private:
 	struct vertex

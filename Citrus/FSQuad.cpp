@@ -166,3 +166,28 @@ float* FSQuad::GetBase()
 {
 	return &base;
 }
+
+float FSQuad::SetArea(float value)
+{
+	return area = value;
+}
+
+float FSQuad::SetBase(float value)
+{
+	return base = value;
+}
+
+float FSQuad::SetRadius(float value)
+{
+	return radius = value;
+}
+
+float FSQuad::SetTotalStrength(float value)
+{
+	return totalStrength = value;
+}
+
+float FSQuad::SetFallOff(float value)
+{
+	return fallOff = value;
+}

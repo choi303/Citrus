@@ -206,6 +206,11 @@ void App::SetSavedValues()
 	else
 		FSQuad::SetSSAOEnabled(FALSE);
 
+	FSQuad::SetArea(std::stof(devMenuSettings.GetInfo(12).c_str()));
+	FSQuad::SetBase(std::stof(devMenuSettings.GetInfo(13).c_str()));
+	FSQuad::SetRadius(std::stof(devMenuSettings.GetInfo(14).c_str()));
+	FSQuad::SetTotalStrength(std::stof(devMenuSettings.GetInfo(15).c_str()));
+
 	//close dev menu file
 	devMenuSettings.CloseFile();
 }
@@ -299,6 +304,14 @@ void App::SaveValues()
 		*FSQuad::GetFxaaEnabled()));
 	pDevMenuSavedItems.push_back(std::to_string(
 		*FSQuad::GetSSAOEnabled()));
+	pDevMenuSavedItems.push_back(std::to_string(
+		*FSQuad::GetArea()));
+	pDevMenuSavedItems.push_back(std::to_string(
+		*FSQuad::GetBase()));
+	pDevMenuSavedItems.push_back(std::to_string(
+		*FSQuad::GetRadius()));
+	pDevMenuSavedItems.push_back(std::to_string(
+		*FSQuad::GetTotalStrength()));
 	devMenuSettings.AddInfo(pDevMenuSavedItems);
 	devMenuSettings.CloseFile();
 }

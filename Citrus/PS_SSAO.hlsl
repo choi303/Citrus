@@ -81,12 +81,12 @@ float4 main(PS_IN input) : SV_Target
         float3 ray = radiusDepth * reflect(sampleSphere[i], random);
         float3 hemiRay = position + sign(dot(ray, normal)) * ray;
     
-        float occDepth = depthMap.Sample(samClamp, saturate(hemiRay.xy)).r;
+        float occDepth = depthMap.Sample(samClamp, hemiRay.xy).r;
         float difference = depth - occDepth;
     
         occlusion += step(falloff, difference) * (1.0 - smoothstep(falloff, area, difference));
     }
   
     float ao = 1.0 - totalStrength * occlusion / samples;
-    return saturate(ao + base);
+    return saturate(ao + base) * tex.Sample(samLinear, input.texCoord);
 }
