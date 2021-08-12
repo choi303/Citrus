@@ -12,6 +12,8 @@ cbuffer DirectLight : register(b0)
     float biasC;
     bool pcfEnabled;
     bool alphaClip;
+    bool normals;
+    float pad[3];
 };
 
 struct PS_IN
@@ -31,6 +33,7 @@ Texture2D spec : register(t1);
 Texture2D normal : register(t2);
 Texture2D environment : register(t3);
 Texture2D depthMap : register(t4);
+Texture2D ssaoMap : register(t5);
 SamplerState object_sampler : register(s0);
 SamplerState object_sampler_clamp : register(s1);
 SamplerComparisonState CMPSampler : register(s2);
@@ -159,6 +162,12 @@ float4 main(PS_IN input) : SV_Target
     }
     
     color = color * textureColor;
+    
+    if(normals)
+    {
+        input.normal = normalize(input.normal);
+        return float4(input.normal, input.pos.z);
+    }
     
     return color;
 }

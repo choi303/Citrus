@@ -32,7 +32,11 @@ public:
 	GridMap gridMap;
 	std::unique_ptr<DepthStencil> ds;
 	std::unique_ptr<DepthStencil> dsShadow;
+	std::unique_ptr<DepthStencil> dsDepth;
+	std::unique_ptr<DepthStencil> dsNoise;
 	std::unique_ptr<RenderTarget> rt;
+	std::unique_ptr<RenderTarget> rtDepth;
+	std::unique_ptr<RenderTarget> rtNoise;
 	std::unique_ptr<FSQuad> quad;
 	bool vsync = true;
 	UINT msaaQuality = 1;

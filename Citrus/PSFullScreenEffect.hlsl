@@ -36,5 +36,5 @@ float4 main(PS_IN input) : SV_Target
         return acc / 9.0f;
     }
     
-    return tex.Sample(splr, input.uv).rgba;
+    return tex.Sample(splr, input.uv);
 }

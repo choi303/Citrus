@@ -91,6 +91,16 @@ void App::Update() noexcept
 		//add down position when pressed E
 		gfx.cam3D.AdjustPosition(0.0f, -camera_speed * deltaTime, 0.0f);
 	}
+	if (keyboard.KeyIsPressed('H'))
+	{
+		//set ui visiblity to false
+		UI::SetVisiblity(false);
+	}
+	if (keyboard.KeyIsPressed('V'))
+	{
+		//set ui visiblity to true
+		UI::SetVisiblity(true);
+	}
 
 	//Set sky box position to camera position
 	//that is makes spherical sky box spherical sky box :D
@@ -191,6 +201,11 @@ void App::SetSavedValues()
 	else
 		FSQuad::SetFxaaEnabled(false);
 
+	if (devMenuSettings.GetInfo(11) == "1")
+		FSQuad::SetSSAOEnabled(TRUE);
+	else
+		FSQuad::SetSSAOEnabled(FALSE);
+
 	//close dev menu file
 	devMenuSettings.CloseFile();
 }
@@ -282,6 +297,8 @@ void App::SaveValues()
 		gfx.msaaEnabled));
 	pDevMenuSavedItems.push_back(std::to_string(
 		*FSQuad::GetFxaaEnabled()));
+	pDevMenuSavedItems.push_back(std::to_string(
+		*FSQuad::GetSSAOEnabled()));
 	devMenuSettings.AddInfo(pDevMenuSavedItems);
 	devMenuSettings.CloseFile();
 }
@@ -315,13 +332,14 @@ void App::FPSCounter()
 		GameObject::GetWireColor(), GameObject::GetFogEnabled(), GameObject::GetFogColor(), GameObject::GetFogStart(),
 		GameObject::GetFogEnd(), &gfx.vsync, GridMap::getRender(),
 		GridMap::getColor(), &gfx, wnd.GetHWND(), this, &gfx.msaaEnabled, FSQuad::GetBlurEnabled(), 
-		FSQuad::GetBlurIntensity());
+		FSQuad::GetBlurIntensity(), FSQuad::GetSSAOEnabled(), FSQuad::GetTotalStrength(), FSQuad::GetBase(),
+		FSQuad::GetArea(), FSQuad::GetFallOff(), FSQuad::GetRadius());
 	//toolbar creation
 	UI::ToolBar(GridMap::getRender(),
 		GameObject::GetWireframeEnabled(),
 		GameObject::GetFogEnabled(), 
 		GameObject::GetDepthBufferEnabled(),
 		FSQuad::GetBlurEnabled(), &gfx.msaaEnabled, this, FSQuad::GetFxaaEnabled(), GameObject::GetBackCulling(),
-		GameObject::GetFrontCulling(), this, DirectionalLight::GetAlphaCEnabled());
+		GameObject::GetFrontCulling(), this, DirectionalLight::GetAlphaCEnabled(), FSQuad::GetSSAOEnabled());
 	UI::SetCanRendered(false);
 }

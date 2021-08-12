@@ -352,6 +352,12 @@
     <FxCompile Include="PSDirectShadows.hlsl">
       <Filter>Graphics\DirectX 11\Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="VS_SSAO.hlsl">
+      <Filter>Graphics\DirectX 11\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PS_SSAO.hlsl">
+      <Filter>Graphics\DirectX 11\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Citrus.rc">

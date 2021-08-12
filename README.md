@@ -43,6 +43,8 @@ You can reach all virtual key codes on [microsoft site](https://docs.microsoft.c
 - 'Left Shift' to 2x sprint
 - 'F' for to 1.5x sprint
 - 'Escape' to quit.
+- 'H' to hide UI.
+- 'V' to show UI.
 
 # Gallery
 Lighting looking

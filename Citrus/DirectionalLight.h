@@ -15,6 +15,8 @@ struct DirectLight
     float biasC;
     BOOL pcfEnabled;
     BOOL alphaClip;
+    BOOL normals;
+    float pad[3];
 };
 
 struct shadowmap {
@@ -47,6 +49,7 @@ public:
     void SetReflectionEnabled(BOOL value);
     void SetPCFEnabled(BOOL value);
     void SetAlphaCEnabled(BOOL value);
+    void SetNormalsEnabled(BOOL value);
     void SetSpecularIntensity(float value);
     void SetDiffuseIntensity(float value);
     void SetReflectionIntensity(float value);

@@ -3,6 +3,12 @@
 static bool blurEnabled;
 static float blurIntensity = 9.0f;
 static bool fxaaEnabled;
+static BOOL ssaoEnabled;
+static float totalStrength = 1.5;
+static float base = 0.223;
+static float area = 0.0000000000001;
+static float fallOff = 0.000000001;
+static float radius = 0.007;
 
 FSQuad::FSQuad(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height)
 {
@@ -13,6 +19,8 @@ FSQuad::FSQuad(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, 
 	pPSBlur.Init(L"PSFullScreenEffect.cso", pDevice);
 	pVSFxaa.Init(L"VSFXAA.cso", pDevice);
 	pPSFxaa.Init(L"PSFXAA.cso", pDevice);
+	pVSSsao.Init(L"VS_SSAO.cso", pDevice);
+	pPSSsao.Init(L"PS_SSAO.cso", pDevice);
 	//init and create input layout
 	const std::vector<D3D11_INPUT_ELEMENT_DESC> fs_ied
 		=
@@ -44,9 +52,11 @@ FSQuad::FSQuad(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, 
 	paramCBuffer->Init(pDevice, pContext);
 	fxaaCBuffer = std::make_unique<CBuffer<fxaa>>();
 	fxaaCBuffer->Init(pDevice, pContext);
+	ssaoCBuffer = std::make_unique<CBuffer<SSAOBuffer>>();
+	ssaoCBuffer->Init(pDevice, pContext);
 }
 
-void FSQuad::draw(ID3D11DeviceContext* pContext)
+void FSQuad::draw(ID3D11DeviceContext* pContext, Camera3D cam)
 {
 	//vertex and index buffer bind
 	pVertexBuffer->Bind(pContext);
@@ -62,6 +72,21 @@ void FSQuad::draw(ID3D11DeviceContext* pContext)
 		pContext->IASetInputLayout(0);
 		pVSFxaa.Bind(pContext);
 		pPSFxaa.Bind(pContext);
+	}
+	//bind ssao shaders
+	if (ssaoEnabled)
+	{
+		pContext->IASetInputLayout(0);
+		pVSSsao.Bind(pContext);
+		pPSSsao.Bind(pContext);
+		ssaoCBuffer->data.area = area;
+		ssaoCBuffer->data.totalStrength = totalStrength;
+		ssaoCBuffer->data.fallOff = fallOff;
+		ssaoCBuffer->data.base = base;
+		ssaoCBuffer->data.radius = radius;
+		ssaoCBuffer->data.proj = cam.GetProjectionMatrix();
+		ssaoCBuffer->MapData();
+		ssaoCBuffer->PSBind(pContext, 2, 1);
 	}
 	//param cbuffer values bind
 	paramCBuffer->data.blurEnabled = blurEnabled;
@@ -105,4 +130,39 @@ bool* FSQuad::GetFxaaEnabled()
 bool FSQuad::SetFxaaEnabled(bool value)
 {
 	return fxaaEnabled = value;
+}
+
+BOOL* FSQuad::GetSSAOEnabled()
+{
+	return &ssaoEnabled;
+}
+
+BOOL FSQuad::SetSSAOEnabled(BOOL value)
+{
+	return ssaoEnabled = value;
+}
+
+float* FSQuad::GetFallOff()
+{
+	return &fallOff;
+}
+
+float* FSQuad::GetTotalStrength()
+{
+	return &totalStrength;
+}
+
+float* FSQuad::GetArea()
+{
+	return &area;
+}
+
+float* FSQuad::GetRadius()
+{
+	return &radius;
+}
+
+float* FSQuad::GetBase()
+{
+	return &base;
 }

@@ -234,28 +234,56 @@ bool Graphics::InitDxBase(HWND hwnd)
 
 bool Graphics::InitScene()
 {
+	//Depth Stencil(s) initialize
 	ds = std::make_unique<DepthStencil>(pDevice.Get(),
 		pContext.Get(), width, height, msaaQuality,
 		msaaEnabled, DepthStencil::Usage::DepthStencil);
+
 	dsShadow = std::make_unique<DepthStencil>(pDevice.Get(),
 		pContext.Get(), width, height, msaaQuality,
 		msaaEnabled, DepthStencil::Usage::ShadowDepth);
+
+	dsDepth = std::make_unique<DepthStencil>(pDevice.Get(),
+		pContext.Get(), width, height, msaaQuality,
+		msaaEnabled, DepthStencil::Usage::ShadowDepth);
+
+	dsNoise = std::make_unique<DepthStencil>(pDevice.Get(),
+		pContext.Get(), width, height, msaaQuality,
+		msaaEnabled, DepthStencil::Usage::ShadowDepth);
+
+	//Render Taret(s) initialize
+	rtDepth = std::make_unique<RenderTarget>(pDevice.Get(),
+		pContext.Get(), width, height, msaaQuality,
+		msaaEnabled, RenderTarget::Usage::AO);
+
 	rt = std::make_unique<RenderTarget>(pDevice.Get(),
 		pContext.Get(), width, height, msaaQuality,
-		msaaEnabled);
+		msaaEnabled, RenderTarget::Usage::Default);
+
+	rtNoise = std::make_unique<RenderTarget>(pDevice.Get(),
+		pContext.Get(), width, height, msaaQuality,
+		msaaEnabled, RenderTarget::Usage::Noise);
+
+	//Full screen quad(s) initialize
 	quad = std::make_unique<FSQuad>(pDevice.Get(),
 		pContext.Get(), width, height);
+
+	//Light(s) initialize
 	pDirectLight = std::make_unique<DirectionalLight>(pDevice.Get(), pContext.Get(),
 		width, height);
-	gridMap.init(pDevice.Get(), pContext.Get());
-	pSkyBox.Init(pDevice.Get(), pContext.Get());
-	object2.init(pDevice.Get(), pContext.Get(), "Models\\sponza\\sponza.obj", width, height, true);
 
+	//Object(s) initialize
+	gridMap.init(pDevice.Get(), pContext.Get());
+
+	pSkyBox.Init(pDevice.Get(), pContext.Get());
+
+	object2.init(pDevice.Get(), pContext.Get(), "Models\\sponza\\sponza.obj", width, height, true);
 	return true;
 }
 
 void Graphics::BeginFrame() const noexcept
 {
+	//Imgui frame initialize
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
@@ -266,7 +294,6 @@ void Graphics::EndFrame() const noexcept
 	//imgui window init
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-	//check out app.cpp render frame func for desc
 	if (vsync)
 		pChain->Present(1u, 0u);
 	else
@@ -278,23 +305,42 @@ bool Graphics::SceneGraph(Camera3D cam3D)
 	pCPU.Frame();
 	gridMap.draw(cam3D);
 	dsShadow->BindTexture(pContext.Get(), 4);
+
 	//set primitive topology
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	//Drawing Objects
 	pSkyBox.Draw(cam3D);
 	pDirectLight->BindCB(cam3D);
 	object2.draw(cam3D);
+
 	return true;
 }
 
 void Graphics::Render()
 {
+	//depth pass from light view (shadow map)
 	ID3D11RenderTargetView* rtv[1] = { 0 };
 	pContext->OMSetRenderTargets(1, rtv, dsShadow->pDepthStencilView.Get());
 	dsShadow->Clear(pContext.Get());
 	GameObject::SetFrontCull(true);
 	SceneGraph(pDirectLight->GetLightCamera());
 	GameObject::SetFrontCull(false);
+
+	//depth pass
+	rtDepth->BindAsTarget(pContext.Get(), dsDepth->pDepthStencilView.Get());
+	dsDepth->Clear(pContext.Get());
+	GameObject::SetDepthBufferEnabled(TRUE);
+	SceneGraph(cam3D);
+	GameObject::SetDepthBufferEnabled(FALSE);
+
+	//random noise texture render
+	rtNoise->BindAsTarget(pContext.Get(), dsNoise->pDepthStencilView.Get());
+	dsNoise->Clear(pContext.Get());
+	SceneGraph(cam3D);
+
 	UI::SetCanRendered(true);
+
 	rt->BindAsTarget(pContext.Get(), ds->pDepthStencilView.Get());
 	ds->Clear(pContext.Get());
 	if (*GameObject::GetWireframeEnabled())
@@ -311,11 +357,14 @@ void Graphics::Render()
 	{
 		pContext->OMSetRenderTargets(1u, pRtv.GetAddressOf(), nullptr);
 		rt->BindAsTexture(pContext.Get(), 0);
-		quad->draw(pContext.Get());
+		rtDepth->BindAsTexture(pContext.Get(), 1);
+		rtNoise->BindAsTexture(pContext.Get(), 3);
+		quad->draw(pContext.Get(), cam3D);
 	}
 }
 
 DXGI_ADAPTER_DESC Graphics::GetAdapterDesc() const
 {
+	//return adapter description
 	return pAdapterDesc;
 }

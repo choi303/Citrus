@@ -12,7 +12,7 @@ static float reflectionIntensity = 1.0f;
 static float bias = 0.0001f;
 static BOOL pcfEnabled;
 static BOOL alphaClip;
-static float pad;
+static BOOL normals;
 
 DirectionalLight::DirectionalLight(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height)
 	:
@@ -78,6 +78,7 @@ void DirectionalLight::BindCB(Camera3D cam)
 	mLightBuffer->data.pcfEnabled = pcfEnabled;
 	mLightBuffer->data.biasC = bias;
 	mLightBuffer->data.alphaClip = alphaClip;
+	mLightBuffer->data.normals = normals;
 	mLightBuffer->MapData();
 	mLightBuffer->PSBind(mContext.Get(), 0, 1);
 	mShadowCBuffer->data.shadowView = mLightCam.GetViewMatrix();
@@ -197,4 +198,9 @@ BOOL* DirectionalLight::GetAlphaCEnabled()
 void DirectionalLight::SetAlphaCEnabled(BOOL value)
 {
 	alphaClip = value;
+}
+
+void DirectionalLight::SetNormalsEnabled(BOOL value)
+{
+	normals = value;
 }
