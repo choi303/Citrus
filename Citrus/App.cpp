@@ -346,7 +346,10 @@ void App::FPSCounter()
 		GameObject::GetFogEnd(), &gfx.vsync, GridMap::getRender(),
 		GridMap::getColor(), &gfx, wnd.GetHWND(), this, &gfx.msaaEnabled, FSQuad::GetBlurEnabled(), 
 		FSQuad::GetBlurIntensity(), FSQuad::GetSSAOEnabled(), FSQuad::GetTotalStrength(), FSQuad::GetBase(),
-		FSQuad::GetArea(), FSQuad::GetFallOff(), FSQuad::GetRadius());
+		FSQuad::GetArea(), FSQuad::GetFallOff(), FSQuad::GetRadius(), Particle::GetFxRendered(), Particle::GetDeviationX(),
+		Particle::GetDeviationY(), Particle::GetDeviationZ(), Particle::GetParticleVelocity(), Particle::GetParticleVelocityVariation(),
+		Particle::GetParticleSize(), Particle::GetAccumulatedTime(), Particle::GetCurrentParticleCount(), Particle::GetLifeTime(),
+		Particle::GetIsKilled());
 	//toolbar creation
 	UI::ToolBar(GridMap::getRender(),
 		GameObject::GetWireframeEnabled(),

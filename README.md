@@ -5,7 +5,6 @@
 ![](https://img.shields.io/github/stars/choi303/Citrus.svg) ![](https://img.shields.io/github/forks/choi303/Citrus.svg) ![](https://img.shields.io/github/release/choi303/Citrus.svg) ![](https://img.shields.io/github/issues/choi303/Citrus.svg) 
 
 ### To Do List
-- Particle System
 - Global Illumination
 - Volumetric Lighting
 - PBR Support
@@ -17,6 +16,7 @@
 - Environment Mapping
 - Shadow Mapping
 - Ambient Occlusion
+- Particle System
 - Filters (blur, depth, fog)
 - Anti Aliasing (msaa, fxaa)
 - GUI Support (Dear Imgui <3)

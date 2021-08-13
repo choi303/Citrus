@@ -141,6 +141,9 @@
     <ClCompile Include="DirectionalLight.cpp">
       <Filter>Graphics\DirectX 11\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Graphics\DirectX 11\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -278,6 +281,9 @@
     <ClInclude Include="DirectionalLight.h">
       <Filter>Graphics\DirectX 11\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Graphics\DirectX 11\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ColorPixel.hlsl">
@@ -356,6 +362,12 @@
       <Filter>Graphics\DirectX 11\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="PS_SSAO.hlsl">
+      <Filter>Graphics\DirectX 11\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VSParticle.hlsl">
+      <Filter>Graphics\DirectX 11\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PSParticle.hlsl">
       <Filter>Graphics\DirectX 11\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

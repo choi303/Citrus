@@ -7,6 +7,7 @@
 #include "RenderTarget.h"
 #include "FSQuad.h"
 #include "DirectionalLight.h"
+#include "Particle.h"
 
 class Graphics
 {
@@ -25,7 +26,8 @@ public:
 	DXGI_ADAPTER_DESC GetAdapterDesc() const;
 	Camera3D cam3D;
 	Timer timer;
-	GameObject object2;
+	GameObject pObject;
+	GameObject pObject2;
 	SkyBox pSkyBox;
 	CPUInfo pCPU;
 	std::unique_ptr<DirectionalLight> pDirectLight;
@@ -52,4 +54,5 @@ public:
 private:
 	int width;
 	int height;
+	Particle particle;
 };

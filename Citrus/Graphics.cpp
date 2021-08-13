@@ -146,7 +146,7 @@ bool Graphics::InitDxBase(HWND hwnd)
 
 	cam3D.SetPosition(0.0f, 0.0f, -2.0f);
 	//camera 3d
-	cam3D.SetProjectionValues(70.0f, static_cast<float>(width) / static_cast<float>(height), 1.0f, 99999.0f * 99999.0f, false);
+	cam3D.SetProjectionValues(70.0f, static_cast<float>(width) / static_cast<float>(height), 0.1f, 99999.0f * 99999.0f, false);
 
 	//imgui init
 	IMGUI_CHECKVERSION();
@@ -277,7 +277,16 @@ bool Graphics::InitScene()
 
 	pSkyBox.Init(pDevice.Get(), pContext.Get());
 
-	object2.init(pDevice.Get(), pContext.Get(), "Models\\sponza\\sponza.obj", width, height, true);
+	pObject.init(pDevice.Get(), pContext.Get(), "Models\\gobber\\GoblinX.obj", width, height, true);
+	pObject.GetMesh()->SetPos(0.0f, 5.0f, 0.0f);
+	pObject.GetMesh()->SetScale(2.0f, 2.0f, 2.0f);
+	pObject2.init(pDevice.Get(), pContext.Get(), "Models\\brick_wall\\brick_wall.obj", width, height, true);
+	pObject2.GetMesh()->SetRot(1.560f, 0.0f, 0.0f);
+	pObject2.GetMesh()->SetScale(100.0f, 100.0f, 100.0f);
+
+	//Particle(s) initialize
+	particle.Initialize(pDevice.Get(), "Images\\star.dds", pContext.Get());
+
 	return true;
 }
 
@@ -312,13 +321,18 @@ bool Graphics::SceneGraph(Camera3D cam3D)
 	//Drawing Objects
 	pSkyBox.Draw(cam3D);
 	pDirectLight->BindCB(cam3D);
-	object2.draw(cam3D);
+	pObject.draw(cam3D);
+	pObject2.draw(cam3D);
+	particle.Render(cam3D);
 
 	return true;
 }
 
 void Graphics::Render()
 {
+	//Particle(s) frame
+	particle.Frame(timer.GetMilisecondsElapsed());
+
 	//depth pass from light view (shadow map)
 	ID3D11RenderTargetView* rtv[1] = { 0 };
 	pContext->OMSetRenderTargets(1, rtv, dsShadow->pDepthStencilView.Get());

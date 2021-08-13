@@ -118,7 +118,9 @@ void UI::DeveloperUI(std::string adapter_name, const
     fogColor, float* fogStart, float* fogEnd, bool* vsync,
     bool* gridMapEnabled, XMFLOAT3* gridMapColor, Graphics* gfx, HWND hwnd, App* app, bool* msaaEnabled,
     bool* blurEnabled, float* blurIntensity, BOOL* ssaoEnabled, float* totalStrength, float* base,
-    float* area, float* fallOff, float* radius)
+    float* area, float* fallOff, float* radius, bool* mAnyParticlesRendered, float* mParticleDeviationX, float* mParticleDeviationY,
+    float* mParticleDeviationZ, float* mParticleVelocity, float* mParticleVelocityVariation, float* mParticleSize, float* mAccumulatedTime, int* mCurrentParticleCount, float* lifeTime,
+    bool* isKilled)
 {
     if (can_render)
     {
@@ -164,6 +166,27 @@ void UI::DeveloperUI(std::string adapter_name, const
             {
                 cam3d->SetRotation(0.0f, 0.0f, 0.0f);
             }
+            if (*mAnyParticlesRendered)
+            {
+                if (!*isKilled)
+                {
+                    ImGui::Text("");
+                    ImGui::Text("Particle Settings");
+                    ImGui::DragFloat("Deviation\nX", mParticleDeviationX, 0.001f, -100.0f, 100.0f);
+                    ImGui::DragFloat("Deviation\nY", mParticleDeviationY, 0.001f, -100.0f, 100.0f);
+                    ImGui::DragFloat("Deviation\nZ", mParticleDeviationZ, 0.001f, -100.0f, 100.0f);
+                    ImGui::DragFloat("Velocity", mParticleVelocity, 0.001f, -100.0f, 100.0f);
+                    ImGui::DragFloat("Variation\nVelocity", mParticleVelocityVariation, 0.001f, -100.0f, 100.0f);
+                    ImGui::DragFloat("Size", mParticleSize, 0.001f, -100.0f, 100.0f);
+                    ImGui::DragFloat("Life\Time", lifeTime, 0.01f, -100.0f, 100.0f);
+                    ImGui::Text("Accumulated\nTime: ");
+                    ImGui::SameLine();
+                    ImGui::Text(std::to_string(*mAccumulatedTime).c_str());
+                    ImGui::Text("Current particle count: ");
+                    ImGui::SameLine();
+                    ImGui::Text(std::to_string(*mCurrentParticleCount).c_str());
+                }
+            }
             if (*ssaoEnabled)
             {
                 ImGui::Text("");
@@ -175,10 +198,10 @@ void UI::DeveloperUI(std::string adapter_name, const
                 ImGui::DragFloat("Radius", radius, 0.0001f, -100.0f, 100.0f);
                 if (ImGui::Button("Reset"))
                 {
-                    *base = 0.223;
-                    *area = 0.0000000000001;
-                    *fallOff = 0.000000001;
-                    *radius = 0.014;
+                    *base = 0.223f;
+                    *area = 0.0000000000001f;
+                    *fallOff = 0.000000001f;
+                    *radius = 0.014f;
                 }
             }
             if (*msaaEnabled)
@@ -507,7 +530,7 @@ void UI::DirectionalLigth(XMFLOAT4* diffuseColor,
     {
         if (uiVisiblity)
         {
-            static float direction[3] = { 1.550,-1,0 };
+            static float direction[3] = { 0.3,-1,1.6 };
             lightDirection->x = direction[0];
             lightDirection->y = direction[1];
             lightDirection->z = direction[2];
