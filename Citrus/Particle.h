@@ -39,7 +39,7 @@ public:
 	int GetIndexCount();
 
 private:
-	bool LoadTexture(std::string rPath);
+	bool LoadTexture();
 	bool InitializeParticleSystem();
 	void ShutdownParticleSystem();
 	bool InitializeBuffers();
@@ -51,6 +51,7 @@ private:
 	void RenderBuffers(Camera3D cam);
 	
 public:
+	//get varibles (static)
 	static float* GetDeviationX();
 	static float* GetDeviationY();
 	static float* GetDeviationZ();
@@ -61,9 +62,24 @@ public:
 	static int* GetParticleMax();
 	static int* GetCurrentParticleCount();
 	static float* GetAccumulatedTime();
-	static bool* GetFxRendered();
 	static float* GetLifeTime();
 	static bool* GetIsKilled();
+	static bool* GetIsLifeTime();
+
+	//set varibles (static)
+	static float SetDeviationX(float value);
+	static float SetDeviationY(float value);
+	static float SetDeviationZ(float value);
+	static float SetParticleVelocity(float value);
+	static float SetParticleVelocityVariation(float value);
+	static float SetParticleSize(float value);
+	static float SetParticlesPerSecond(float value);
+	static int SetParticleMax(int value);
+	static int SetCurrentParticleCount(int value);
+	static float SetAccumulatedTime(float value);
+	static float SetLifeTime(float value);
+	static bool SetIsKilled(bool value);
+	static bool SetIsLifeTime(bool value);
 
 private:
 	std::unique_ptr<Texture> mTexture;
@@ -80,5 +96,6 @@ private:
 	wrl::ComPtr<ID3D11Device> mDevice;
 	wrl::ComPtr<ID3D11DeviceContext> mContext;
 	HRESULT hr;
+	std::string mPath;
 };
 

@@ -213,6 +213,23 @@ void App::SetSavedValues()
 
 	//close dev menu file
 	devMenuSettings.CloseFile();
+
+	//set fx menu saved values
+	fxMenuSettings.OpenFileRead("fx_menu_settings.txt");
+	Particle::SetDeviationX(std::stof(fxMenuSettings.GetInfo(0)));
+	Particle::SetDeviationY(std::stof(fxMenuSettings.GetInfo(1)));
+	Particle::SetDeviationZ(std::stof(fxMenuSettings.GetInfo(2)));
+	Particle::SetParticleVelocity(std::stof(fxMenuSettings.GetInfo(3)));
+	Particle::SetParticleVelocityVariation(std::stof(fxMenuSettings.GetInfo(4)));
+	Particle::SetParticleSize(std::stof(fxMenuSettings.GetInfo(5)));
+	Particle::SetParticleMax(std::atoi(fxMenuSettings.GetInfo(6).c_str()));
+	Particle::SetParticlesPerSecond(std::stof(fxMenuSettings.GetInfo(7)));
+	Particle::SetLifeTime(std::stof(fxMenuSettings.GetInfo(8)));
+	if (fxMenuSettings.GetInfo(9) == "1")
+		Particle::SetIsLifeTime(true);
+	else
+		Particle::SetIsLifeTime(false);
+	fxMenuSettings.CloseFile();
 }
 
 void App::SaveValues()
@@ -314,6 +331,21 @@ void App::SaveValues()
 		*FSQuad::GetTotalStrength()));
 	devMenuSettings.AddInfo(pDevMenuSavedItems);
 	devMenuSettings.CloseFile();
+
+	//open fx menu txt, stores fx menu settings
+	fxMenuSettings.OpenFileWrite("fx_menu_settings.txt");
+	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetDeviationX()));
+	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetDeviationY()));
+	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetDeviationZ()));
+	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetParticleVelocity()));
+	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetParticleVelocityVariation()));
+	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetParticleSize()));
+	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetParticleMax()));
+	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetParticlesPerSecond()));
+	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetLifeTime()));
+	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetIsLifeTime()));
+	fxMenuSettings.AddInfo(pFxMenuSavedItems);
+	fxMenuSettings.CloseFile();
 }
 
 void App::FPSCounter()
@@ -346,10 +378,7 @@ void App::FPSCounter()
 		GameObject::GetFogEnd(), &gfx.vsync, GridMap::getRender(),
 		GridMap::getColor(), &gfx, wnd.GetHWND(), this, &gfx.msaaEnabled, FSQuad::GetBlurEnabled(), 
 		FSQuad::GetBlurIntensity(), FSQuad::GetSSAOEnabled(), FSQuad::GetTotalStrength(), FSQuad::GetBase(),
-		FSQuad::GetArea(), FSQuad::GetFallOff(), FSQuad::GetRadius(), Particle::GetFxRendered(), Particle::GetDeviationX(),
-		Particle::GetDeviationY(), Particle::GetDeviationZ(), Particle::GetParticleVelocity(), Particle::GetParticleVelocityVariation(),
-		Particle::GetParticleSize(), Particle::GetAccumulatedTime(), Particle::GetCurrentParticleCount(), Particle::GetLifeTime(),
-		Particle::GetIsKilled());
+		FSQuad::GetArea(), FSQuad::GetFallOff(), FSQuad::GetRadius());
 	//toolbar creation
 	UI::ToolBar(GridMap::getRender(),
 		GameObject::GetWireframeEnabled(),

@@ -118,9 +118,7 @@ void UI::DeveloperUI(std::string adapter_name, const
     fogColor, float* fogStart, float* fogEnd, bool* vsync,
     bool* gridMapEnabled, XMFLOAT3* gridMapColor, Graphics* gfx, HWND hwnd, App* app, bool* msaaEnabled,
     bool* blurEnabled, float* blurIntensity, BOOL* ssaoEnabled, float* totalStrength, float* base,
-    float* area, float* fallOff, float* radius, bool* mAnyParticlesRendered, float* mParticleDeviationX, float* mParticleDeviationY,
-    float* mParticleDeviationZ, float* mParticleVelocity, float* mParticleVelocityVariation, float* mParticleSize, float* mAccumulatedTime, int* mCurrentParticleCount, float* lifeTime,
-    bool* isKilled)
+    float* area, float* fallOff, float* radius)
 {
     if (can_render)
     {
@@ -165,27 +163,6 @@ void UI::DeveloperUI(std::string adapter_name, const
                 45)))
             {
                 cam3d->SetRotation(0.0f, 0.0f, 0.0f);
-            }
-            if (*mAnyParticlesRendered)
-            {
-                if (!*isKilled)
-                {
-                    ImGui::Text("");
-                    ImGui::Text("Particle Settings");
-                    ImGui::DragFloat("Deviation\nX", mParticleDeviationX, 0.001f, -100.0f, 100.0f);
-                    ImGui::DragFloat("Deviation\nY", mParticleDeviationY, 0.001f, -100.0f, 100.0f);
-                    ImGui::DragFloat("Deviation\nZ", mParticleDeviationZ, 0.001f, -100.0f, 100.0f);
-                    ImGui::DragFloat("Velocity", mParticleVelocity, 0.001f, -100.0f, 100.0f);
-                    ImGui::DragFloat("Variation\nVelocity", mParticleVelocityVariation, 0.001f, -100.0f, 100.0f);
-                    ImGui::DragFloat("Size", mParticleSize, 0.001f, -100.0f, 100.0f);
-                    ImGui::DragFloat("Life\Time", lifeTime, 0.01f, -100.0f, 100.0f);
-                    ImGui::Text("Accumulated\nTime: ");
-                    ImGui::SameLine();
-                    ImGui::Text(std::to_string(*mAccumulatedTime).c_str());
-                    ImGui::Text("Current particle count: ");
-                    ImGui::SameLine();
-                    ImGui::Text(std::to_string(*mCurrentParticleCount).c_str());
-                }
             }
             if (*ssaoEnabled)
             {
@@ -519,6 +496,44 @@ void UI::SetVisiblity(bool value)
 bool UI::GetVisiblity() noexcept
 {
     return uiVisiblity;
+}
+
+void UI::ParticleUI(std::string uiTitle, float* mParticleDeviationX, float* mParticleDeviationY, float* mParticleDeviationZ, float* mParticleVelocity, float* mParticleVelocityVariation, float* mParticleSize, float* mAccumulatedTime, int* mCurrentParticleCount, float* lifeTime, bool* isKilled, bool* isLifetime)
+{
+    if (can_render)
+    {
+        if (uiVisiblity)
+        {
+            if (!*isKilled)
+            {
+                if (ImGui::Begin(uiTitle.c_str(), nullptr,
+                    ImGuiWindowFlags_NoMove |
+                    ImGuiWindowFlags_NoCollapse))
+                {
+                    ImGui::Text("Particle Info");
+                    ImGui::Text("Accumulated\nTime: ");
+                    ImGui::SameLine();
+                    ImGui::Text(std::to_string(*mAccumulatedTime).c_str());
+                    ImGui::Text("Current particle count: ");
+                    ImGui::SameLine();
+                    ImGui::Text(std::to_string(*mCurrentParticleCount).c_str());
+                    ImGui::Text("");
+                    ImGui::Text("Particle Settings");
+                    ImGui::DragFloat("Deviation\nX", mParticleDeviationX, 0.01f, -1000.0f, 1000.0f);
+                    ImGui::DragFloat("Deviation\nY", mParticleDeviationY, 0.01f, -1000.0f, 1000.0f);
+                    ImGui::DragFloat("Deviation\nZ", mParticleDeviationZ, 0.01f, -1000.0f, 1000.0f);
+                    ImGui::DragFloat("Velocity", mParticleVelocity, 0.01f, 0.0f, 1000.0f);
+                    ImGui::DragFloat("Variation\nVelocity", mParticleVelocityVariation, 0.001f, -100.0f, 100.0f);
+                    ImGui::DragFloat("Size", mParticleSize, 0.001f, -1000.0f, 1000.0f);
+                    if(*isLifetime)
+                    ImGui::DragFloat("Life\Time", lifeTime, 0.01f, -1000.0f, 1000.0f);
+                    ImGui::Checkbox("Life\nTime\nEnabled", isLifetime);
+                }
+
+                ImGui::End();
+            }
+        }
+    }
 }
 
 void UI::DirectionalLigth(XMFLOAT4* diffuseColor,

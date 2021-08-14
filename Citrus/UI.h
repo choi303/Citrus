@@ -20,8 +20,7 @@ public:
 		bool* wireframeEnabled, XMFLOAT3* wireColor, bool* fogEnabled, XMFLOAT4* fogColor, float* fogStart,
 		float* fogEnd, bool* vsync, bool* gridMapEnabled, XMFLOAT3* gridMapColor, Graphics* gfx, HWND hwnd, App* app, bool* msaaEnabled,
 		bool* blurEnabled, float* blurIntensity, BOOL* ssaoEnabled, float* totalStrength, float* base,
-		float* area, float* fallOff, float* radius, bool* mAnyParticlesRendered, float* mParticleDeviationX, float* mParticleDeviationY, float* mParticleDeviationZ,
-		float* mParticleVelocity, float* mParticleVelocityVariation, float* mParticleSize, float* mAccumulatedTime, int* mCurrentParticleCount, float* lifeTime, bool* isKilled);
+		float* area, float* fallOff, float* radius);
 
 	static void ToolBar(bool* gridMapEnabled, bool* wireframeEnabled, bool* fogEnabled,
 		bool* depthBufferEnabled, bool* blurEnabled, bool* msaaEnabled, App* app, bool* fxaaEnabled,
@@ -30,6 +29,10 @@ public:
 	static void SetCanRendered(bool value);
 	static void SetVisiblity(bool value);
 	static bool GetVisiblity() noexcept;
+
+	static void ParticleUI(std::string uiTitle, float* mParticleDeviationX, float* mParticleDeviationY, float* mParticleDeviationZ,
+		float* mParticleVelocity, float* mParticleVelocityVariation, float* mParticleSize, float* mAccumulatedTime,
+		int* mCurrentParticleCount, float* lifeTime, bool* isKilled, bool* isLifetime);
 
 	void DirectionalLigth(XMFLOAT4* diffuseColor,
 		XMFLOAT3* lightDirection, XMFLOAT4* ambientColor, float* ambientIntensity,

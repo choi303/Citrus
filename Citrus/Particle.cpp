@@ -6,10 +6,10 @@ static float mParticleSize, mParticlesPerSecond;
 static int mMaxParticles;
 static int mCurrentParticleCount;
 static float mAccumulatedTime;
-static bool mRendered;
 static float lifeTime = 10.0f;
 static float counter = 0.0f;
 static bool isKilled;
+static bool isLifetime = false;
 
 Particle::Particle()
 {
@@ -23,9 +23,10 @@ bool Particle::Initialize(ID3D11Device* pDevice, std::string rPath, ID3D11Device
 {
 	this->mDevice = pDevice;
 	this->mContext = pContext;
+	this->mPath = rPath;
 
 	//initalize particle texture
-	hr = LoadTexture(rPath);
+	hr = LoadTexture();
 	if (!hr)
 	{
 		return false;
@@ -66,14 +67,17 @@ bool Particle::Frame(float frameTime)
 		Error::Log("Particle crashed.");
 	}
 
-	counter += 0.01f;
-	if (counter >= lifeTime)
+	if (isLifetime)
 	{
-		isKilled = true;
-		KillParticles();
-		ShutdownBuffers();
-		mCurrentParticleCount = 0;
-		return true;
+		counter += 0.01f;
+		if (counter >= lifeTime)
+		{
+			isKilled = true;
+			KillParticles();
+			ShutdownBuffers();
+			mCurrentParticleCount = 0;
+			return true;
+		}
 	}
 	//release old particles.
 	KillParticles();
@@ -112,9 +116,9 @@ int Particle::GetIndexCount()
 	return mIndexCount;
 }
 
-bool Particle::LoadTexture(std::string rPath)
+bool Particle::LoadTexture()
 {
-	mTexture = std::make_unique<Texture>(mDevice.Get(), mContext.Get(), rPath, 0);
+	mTexture = std::make_unique<Texture>(mDevice.Get(), mContext.Get(), mPath, 0);
 
 	return true;
 }
@@ -483,29 +487,34 @@ void Particle::RenderBuffers(Camera3D cam)
 	unsigned int stride;
 	unsigned int offset;
 
-	// Set vertex buffer stride and offset.
+	//set vertex buffer stride and offset.
 	stride = sizeof(VertexType);
 	offset = 0;
 
-	// Set the vertex buffer to active in the input assembler so it can be rendered.
+	//bind vertex buffer
 	mContext->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
 
-	// Set the index buffer to active in the input assembler so it can be rendered.
+	//bind index buffer
 	mContext->IASetIndexBuffer(mIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
-	// Set the type of primitive that should be rendered from this vertex buffer.
+	//set primitive topology
 	mContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+	//bind texture
 	mTexture->Bind(mContext.Get());
+	//bind input layout
 	mLayout->Bind(mContext.Get());
+	//bind shaders
 	mVS.Bind(mContext.Get());
 	mPS.Bind(mContext.Get());
+	//bind constant buffer
 	fxCBuffer->data.world = XMMatrixIdentity() * XMMatrixTranslation(0.0f, 3.0f, 0.0f) * XMMatrixScaling(10.0f, 10.0f, 10.0f);
 	fxCBuffer->data.view = cam.GetViewMatrix();
 	fxCBuffer->data.proj = cam.GetProjectionMatrix();
 	fxCBuffer->MapData();
 	fxCBuffer->VSBind(mContext.Get(), 0, 1);
 	
+	//bind blend state
 	float blendFactor[4];
 	blendFactor[0] = 0.0f;
 	blendFactor[1] = 0.0f;
@@ -515,8 +524,13 @@ void Particle::RenderBuffers(Camera3D cam)
 	//turn on the alpha blending.
 	mContext->OMSetBlendState(mBlendOn.Get(), blendFactor, 0xffffffff);
 
+	//particle (fx) menu creation
+	UI::ParticleUI(mPath.substr(mPath.find_last_of("\\") + 1), &mParticleDeviationX, &mParticleDeviationY, &mParticleDeviationZ,
+		&mParticleVelocity, &mParticleVelocityVariation, &mParticleSize, &mAccumulatedTime, &mCurrentParticleCount, &lifeTime, &isKilled,
+		&isLifetime);
+	
+	//draw object
 	mContext->DrawIndexed(GetIndexCount(), 0, 0);
-	mRendered = true;
 
 	//turn pff the alpha blending
 	mContext->OMSetBlendState(mBlendOff.Get(), blendFactor, 0xffffffff);
@@ -572,11 +586,6 @@ float* Particle::GetAccumulatedTime()
 	return &mAccumulatedTime;
 }
 
-bool* Particle::GetFxRendered()
-{
-	return &mRendered;
-}
-
 float* Particle::GetLifeTime()
 {
 	return &lifeTime;
@@ -585,4 +594,74 @@ float* Particle::GetLifeTime()
 bool* Particle::GetIsKilled()
 {
 	return &isKilled;
+}
+
+bool* Particle::GetIsLifeTime()
+{
+	return &isLifetime;
+}
+
+float Particle::SetDeviationX(float value)
+{
+	return mParticleDeviationX = value;
+}
+
+float Particle::SetDeviationY(float value)
+{
+	return mParticleDeviationY = value;
+}
+
+float Particle::SetDeviationZ(float value)
+{
+	return mParticleDeviationZ = value;
+}
+
+float Particle::SetParticleVelocity(float value)
+{
+	return mParticleVelocity = value;
+}
+
+float Particle::SetParticleVelocityVariation(float value)
+{
+	return mParticleVelocityVariation = value;
+}
+
+float Particle::SetParticleSize(float value)
+{
+	return mParticleSize = value;
+}
+
+float Particle::SetParticlesPerSecond(float value)
+{
+	return mParticlesPerSecond = value;
+}
+
+int Particle::SetParticleMax(int value)
+{
+	return mMaxParticles = value;
+}
+
+int Particle::SetCurrentParticleCount(int value)
+{
+	return mCurrentParticleCount = value;
+}
+
+float Particle::SetAccumulatedTime(float value)
+{
+	return mAccumulatedTime = value;
+}
+
+float Particle::SetLifeTime(float value)
+{
+	return lifeTime = value;
+}
+
+bool Particle::SetIsKilled(bool value)
+{
+	return isKilled = value;
+}
+
+bool Particle::SetIsLifeTime(bool value)
+{
+	return isLifetime = value;
 }
