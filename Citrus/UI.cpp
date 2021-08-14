@@ -498,7 +498,8 @@ bool UI::GetVisiblity() noexcept
     return uiVisiblity;
 }
 
-void UI::ParticleUI(std::string uiTitle, float* mParticleDeviationX, float* mParticleDeviationY, float* mParticleDeviationZ, float* mParticleVelocity, float* mParticleVelocityVariation, float* mParticleSize, float* mAccumulatedTime, int* mCurrentParticleCount, float* lifeTime, bool* isKilled, bool* isLifetime)
+void UI::ParticleUI(std::string uiTitle, float* mParticleDeviationX, float* mParticleDeviationY, float* mParticleDeviationZ, float* mParticleVelocity, float* mParticleVelocityVariation, float* mParticleSize, float* mAccumulatedTime, int* mCurrentParticleCount, float* lifeTime, bool* isKilled, bool* isLifetime,
+    float* posX, float* posY, float* posZ)
 {
     if (can_render)
     {
@@ -519,6 +520,9 @@ void UI::ParticleUI(std::string uiTitle, float* mParticleDeviationX, float* mPar
                     ImGui::Text(std::to_string(*mCurrentParticleCount).c_str());
                     ImGui::Text("");
                     ImGui::Text("Particle Settings");
+                    ImGui::DragFloat("Position\nX", posX, 0.01f, -99999.0f, 99999.0f);
+                    ImGui::DragFloat("Position\nY", posY, 0.01f, -99999.0f, 99999.0f);
+                    ImGui::DragFloat("Position\nZ", posZ, 0.01f, -99999.0f, 99999.0f);
                     ImGui::DragFloat("Deviation\nX", mParticleDeviationX, 0.01f, -1000.0f, 1000.0f);
                     ImGui::DragFloat("Deviation\nY", mParticleDeviationY, 0.01f, -1000.0f, 1000.0f);
                     ImGui::DragFloat("Deviation\nZ", mParticleDeviationZ, 0.01f, -1000.0f, 1000.0f);

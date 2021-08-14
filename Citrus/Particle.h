@@ -65,6 +65,9 @@ public:
 	static float* GetLifeTime();
 	static bool* GetIsKilled();
 	static bool* GetIsLifeTime();
+	static float* GetPosX();
+	static float* GetPosY();
+	static float* GetPosZ();
 
 	//set varibles (static)
 	static float SetDeviationX(float value);
@@ -80,6 +83,9 @@ public:
 	static float SetLifeTime(float value);
 	static bool SetIsKilled(bool value);
 	static bool SetIsLifeTime(bool value);
+	static float SetPosX(float value);
+	static float SetPosY(float value);
+	static float SetPosZ(float value);
 
 private:
 	std::unique_ptr<Texture> mTexture;

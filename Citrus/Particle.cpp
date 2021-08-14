@@ -10,6 +10,9 @@ static float lifeTime = 10.0f;
 static float counter = 0.0f;
 static bool isKilled;
 static bool isLifetime = false;
+static float posX = 0.0f;
+static float posY = 0.0f;
+static float posZ = 0.0f;
 
 Particle::Particle()
 {
@@ -508,7 +511,7 @@ void Particle::RenderBuffers(Camera3D cam)
 	mVS.Bind(mContext.Get());
 	mPS.Bind(mContext.Get());
 	//bind constant buffer
-	fxCBuffer->data.world = XMMatrixIdentity() * XMMatrixTranslation(0.0f, 3.0f, 0.0f) * XMMatrixScaling(10.0f, 10.0f, 10.0f);
+	fxCBuffer->data.world = XMMatrixIdentity() * XMMatrixTranslation(posX, posY, posZ) * XMMatrixScaling(10.0f, 10.0f, 10.0f);
 	fxCBuffer->data.view = cam.GetViewMatrix();
 	fxCBuffer->data.proj = cam.GetProjectionMatrix();
 	fxCBuffer->MapData();
@@ -527,7 +530,7 @@ void Particle::RenderBuffers(Camera3D cam)
 	//particle (fx) menu creation
 	UI::ParticleUI(mPath.substr(mPath.find_last_of("\\") + 1), &mParticleDeviationX, &mParticleDeviationY, &mParticleDeviationZ,
 		&mParticleVelocity, &mParticleVelocityVariation, &mParticleSize, &mAccumulatedTime, &mCurrentParticleCount, &lifeTime, &isKilled,
-		&isLifetime);
+		&isLifetime, &posX, &posY, &posZ);
 	
 	//draw object
 	mContext->DrawIndexed(GetIndexCount(), 0, 0);
@@ -601,6 +604,21 @@ bool* Particle::GetIsLifeTime()
 	return &isLifetime;
 }
 
+float* Particle::GetPosX()
+{
+	return &posX;
+}
+
+float* Particle::GetPosY()
+{
+	return &posY;
+}
+
+float* Particle::GetPosZ()
+{
+	return &posZ;
+}
+
 float Particle::SetDeviationX(float value)
 {
 	return mParticleDeviationX = value;
@@ -664,4 +682,19 @@ bool Particle::SetIsKilled(bool value)
 bool Particle::SetIsLifeTime(bool value)
 {
 	return isLifetime = value;
+}
+
+float Particle::SetPosX(float value)
+{
+	return posX = value;
+}
+
+float Particle::SetPosY(float value)
+{
+	return posY = value;
+}
+
+float Particle::SetPosZ(float value)
+{
+	return posZ = value;
 }

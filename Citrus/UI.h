@@ -32,7 +32,8 @@ public:
 
 	static void ParticleUI(std::string uiTitle, float* mParticleDeviationX, float* mParticleDeviationY, float* mParticleDeviationZ,
 		float* mParticleVelocity, float* mParticleVelocityVariation, float* mParticleSize, float* mAccumulatedTime,
-		int* mCurrentParticleCount, float* lifeTime, bool* isKilled, bool* isLifetime);
+		int* mCurrentParticleCount, float* lifeTime, bool* isKilled, bool* isLifetime, float* posX, float* posY,
+		float* posZ);
 
 	void DirectionalLigth(XMFLOAT4* diffuseColor,
 		XMFLOAT3* lightDirection, XMFLOAT4* ambientColor, float* ambientIntensity,

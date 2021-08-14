@@ -229,6 +229,9 @@ void App::SetSavedValues()
 		Particle::SetIsLifeTime(true);
 	else
 		Particle::SetIsLifeTime(false);
+	Particle::SetPosX(std::stof(fxMenuSettings.GetInfo(10)));
+	Particle::SetPosY(std::stof(fxMenuSettings.GetInfo(11)));
+	Particle::SetPosZ(std::stof(fxMenuSettings.GetInfo(12)));
 	fxMenuSettings.CloseFile();
 }
 
@@ -344,6 +347,9 @@ void App::SaveValues()
 	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetParticlesPerSecond()));
 	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetLifeTime()));
 	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetIsLifeTime()));
+	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetPosX()));
+	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetPosY()));
+	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetPosZ()));
 	fxMenuSettings.AddInfo(pFxMenuSavedItems);
 	fxMenuSettings.CloseFile();
 }
