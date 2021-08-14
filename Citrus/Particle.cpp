@@ -503,6 +503,12 @@ void Particle::RenderBuffers(Camera3D cam)
 	//set primitive topology
 	mContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+	//Billboarding
+	XMFLOAT3 cameraPosition = cam.GetPositionFloat3();
+	XMFLOAT3 modelPosition = XMFLOAT3(posX, posY, posZ);
+	double angle = atan2(modelPosition.x - cameraPosition.x, modelPosition.z - cameraPosition.z) * (180.0 / XM_PI);
+	float rotation = static_cast<float>(angle) * 0.0174532925f;
+
 	//bind texture
 	mTexture->Bind(mContext.Get());
 	//bind input layout
@@ -511,7 +517,8 @@ void Particle::RenderBuffers(Camera3D cam)
 	mVS.Bind(mContext.Get());
 	mPS.Bind(mContext.Get());
 	//bind constant buffer
-	fxCBuffer->data.world = XMMatrixIdentity() * XMMatrixTranslation(posX, posY, posZ) * XMMatrixScaling(10.0f, 10.0f, 10.0f);
+	fxCBuffer->data.world = XMMatrixIdentity() * XMMatrixTranslation(modelPosition.x, modelPosition.y, modelPosition.z) * 
+		XMMatrixRotationY(rotation) * XMMatrixScaling(10.0f, 10.0f, 10.0f);
 	fxCBuffer->data.view = cam.GetViewMatrix();
 	fxCBuffer->data.proj = cam.GetProjectionMatrix();
 	fxCBuffer->MapData();
@@ -531,7 +538,7 @@ void Particle::RenderBuffers(Camera3D cam)
 	UI::ParticleUI(mPath.substr(mPath.find_last_of("\\") + 1), &mParticleDeviationX, &mParticleDeviationY, &mParticleDeviationZ,
 		&mParticleVelocity, &mParticleVelocityVariation, &mParticleSize, &mAccumulatedTime, &mCurrentParticleCount, &lifeTime, &isKilled,
 		&isLifetime, &posX, &posY, &posZ);
-	
+
 	//draw object
 	mContext->DrawIndexed(GetIndexCount(), 0, 0);
 

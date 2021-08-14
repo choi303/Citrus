@@ -88,5 +88,5 @@ float4 main(PS_IN input) : SV_Target
     }
   
     float ao = 1.0 - totalStrength * occlusion / samples;
-    return saturate(ao + base) * tex.Sample(samLinear, input.texCoord);
+    return saturate(ao + base);
 }
