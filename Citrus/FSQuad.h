@@ -20,7 +20,7 @@ struct SSAOBuffer
 	float area;
 	float fallOff;
 	float radius;
-	XMMATRIX proj;
+	float pad[3];
 };
 
 class FSQuad

@@ -8,6 +8,7 @@
 #include "FSQuad.h"
 #include "DirectionalLight.h"
 #include "Particle.h"
+#include "Fire.h"
 
 class Graphics
 {
@@ -54,5 +55,6 @@ public:
 private:
 	int width;
 	int height;
-	Particle particle;
+	Particle mParticle;
+	std::unique_ptr<Fire> mFire;
 };

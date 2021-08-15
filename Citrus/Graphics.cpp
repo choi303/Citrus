@@ -285,7 +285,8 @@ bool Graphics::InitScene()
 	pObject2.GetMesh()->SetScale(100.0f, 100.0f, 100.0f);
 
 	//Particle(s) initialize
-	particle.Initialize(pDevice.Get(), "Images\\star.dds", pContext.Get());
+	mParticle.Initialize(pDevice.Get(), "Images\\star.dds", pContext.Get());
+	mFire = std::make_unique<Fire>(pDevice.Get(), pContext.Get());
 
 	return true;
 }
@@ -323,7 +324,8 @@ bool Graphics::SceneGraph(Camera3D cam3D)
 	pDirectLight->BindCB(cam3D);
 	pObject.draw(cam3D);
 	pObject2.draw(cam3D);
-	particle.Render(cam3D);
+	mParticle.Render(cam3D);
+	mFire->Draw(cam3D, timer.GetMilisecondsElapsed());
 
 	return true;
 }
@@ -331,7 +333,7 @@ bool Graphics::SceneGraph(Camera3D cam3D)
 void Graphics::Render()
 {
 	//Particle(s) frame
-	particle.Frame(timer.GetMilisecondsElapsed());
+	mParticle.Frame(timer.GetMilisecondsElapsed());
 
 	//depth pass from light view (shadow map)
 	ID3D11RenderTargetView* rtv[1] = { 0 };

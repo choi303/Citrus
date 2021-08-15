@@ -17,7 +17,7 @@
 - Shadow Mapping
 - Ambient Occlusion
 - Particle System
-- Filters (blur, depth, fog)
+- Filters (blur, depth, fog, fire)
 - Anti Aliasing (msaa, fxaa)
 - GUI Support (Dear Imgui <3)
 - Save System

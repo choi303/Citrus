@@ -84,7 +84,6 @@ void FSQuad::draw(ID3D11DeviceContext* pContext, Camera3D cam)
 		ssaoCBuffer->data.fallOff = fallOff;
 		ssaoCBuffer->data.base = base;
 		ssaoCBuffer->data.radius = radius;
-		ssaoCBuffer->data.proj = cam.GetProjectionMatrix();
 		ssaoCBuffer->MapData();
 		ssaoCBuffer->PSBind(pContext, 2, 1);
 	}

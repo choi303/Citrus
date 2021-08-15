@@ -40,6 +40,11 @@ public:
 		BOOL* normalMapEnabled, float* specularIntensity, float* diffuseIntensity,
 		BOOL* reflectionEnabled, float* reflectionIntensity, float* bias, BOOL* pcfEnabled);
 
+	static void FireUI(float* posX, float* posY, float* posZ, float* sSpeedX, float* sSpeedY, float* sSpeedZ,
+		float* scalesX, float* scalesY, float* scalesZ, float* distortion1X, float* distortion1Y,
+		float* distortion2X, float* distortion2Y, float* distortion3X, float* distortion3Y,
+		float* distortionScale, float* distortionBias, float* scaleX, float* scaleY, float* scaleZ);
+
 	~UI() = default;
 };
 

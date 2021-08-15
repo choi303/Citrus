@@ -233,6 +233,30 @@ void App::SetSavedValues()
 	Particle::SetPosY(std::stof(fxMenuSettings.GetInfo(11)));
 	Particle::SetPosZ(std::stof(fxMenuSettings.GetInfo(12)));
 	fxMenuSettings.CloseFile();
+
+	//set fire menu saved values
+	fireMenuSettings.OpenFileRead("fire_menu_settings.txt");
+	Fire::SetPosX(std::stof(fireMenuSettings.GetInfo(0)));
+	Fire::SetPosY(std::stof(fireMenuSettings.GetInfo(1)));
+	Fire::SetPosZ(std::stof(fireMenuSettings.GetInfo(2)));
+	Fire::SetScaleX(std::stof(fireMenuSettings.GetInfo(3)));
+	Fire::SetScaleY(std::stof(fireMenuSettings.GetInfo(4)));
+	Fire::SetScaleZ(std::stof(fireMenuSettings.GetInfo(5)));
+	Fire::SetDistortion1X(std::stof(fireMenuSettings.GetInfo(6)));
+	Fire::SetDistortion1Y(std::stof(fireMenuSettings.GetInfo(7)));
+	Fire::SetDistortion2X(std::stof(fireMenuSettings.GetInfo(8)));
+	Fire::SetDistortion2Y(std::stof(fireMenuSettings.GetInfo(9)));
+	Fire::SetDistortion3X(std::stof(fireMenuSettings.GetInfo(10)));
+	Fire::SetDistortion3Y(std::stof(fireMenuSettings.GetInfo(11)));
+	Fire::SetScalesX(std::stof(fireMenuSettings.GetInfo(12)));
+	Fire::SetScalesY(std::stof(fireMenuSettings.GetInfo(13)));
+	Fire::SetScalesZ(std::stof(fireMenuSettings.GetInfo(14)));
+	Fire::SetSSpeedX(std::stof(fireMenuSettings.GetInfo(15)));
+	Fire::SetSSpeedY(std::stof(fireMenuSettings.GetInfo(16)));
+	Fire::SetSSpeedZ(std::stof(fireMenuSettings.GetInfo(17)));
+	Fire::SetDistortionScale(std::stof(fireMenuSettings.GetInfo(18)));
+	Fire::SetDistortionBias(std::stof(fireMenuSettings.GetInfo(19)));
+	fireMenuSettings.CloseFile();
 }
 
 void App::SaveValues()
@@ -352,6 +376,31 @@ void App::SaveValues()
 	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetPosZ()));
 	fxMenuSettings.AddInfo(pFxMenuSavedItems);
 	fxMenuSettings.CloseFile();
+
+	//open fire menu txt, stores fire menu settings
+	fireMenuSettings.OpenFileWrite("fire_menu_settings.txt");
+	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetPosX()));
+	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetPosY()));
+	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetPosZ()));
+	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetScaleX()));
+	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetScaleY()));
+	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetScaleZ()));
+	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetDistortion1X()));
+	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetDistortion1Y()));
+	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetDistortion2X()));
+	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetDistortion2Y()));
+	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetDistortion3X()));
+	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetDistortion3Y()));
+	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetScalesX()));
+	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetScalesY()));
+	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetScalesZ()));
+	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetSSpeedX()));
+	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetSSpeedY()));
+	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetSSpeedZ()));
+	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetDistortionScale()));
+	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetDistortionBias()));
+	fireMenuSettings.AddInfo(pFireMenuSavedItems);
+	fireMenuSettings.CloseFile();
 }
 
 void App::FPSCounter()

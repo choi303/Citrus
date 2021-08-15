@@ -591,3 +591,42 @@ void UI::DirectionalLigth(XMFLOAT4* diffuseColor,
         
     }
 }
+
+void UI::FireUI(float* posX, float* posY, float* posZ, float* sSpeedX, float* sSpeedY, float* sSpeedZ, float* scalesX, float* scalesY,
+    float* scalesZ, float* distortion1X, float* distortion1Y, float* distortion2X, float* distortion2Y, float* distortion3X,
+    float* distortion3Y, float* distortionScale, float* distortionBias, float* scaleX, float* scaleY, float* scaleZ)
+{
+    if (can_render)
+    {
+        if (uiVisiblity)
+        {
+            if (ImGui::Begin("Fire", nullptr,
+                ImGuiWindowFlags_NoMove |
+                ImGuiWindowFlags_NoCollapse))
+            {
+                ImGui::Text("Fire Settings");
+                ImGui::DragFloat("Position\nX", posX, 0.01f, -1000.0f, 1000.0f);
+                ImGui::DragFloat("Position\nY", posY, 0.01f, -1000.0f, 1000.0f);
+                ImGui::DragFloat("Position\nZ", posZ, 0.01f, -1000.0f, 1000.0f);
+                ImGui::DragFloat("Scale\nX", scaleX, 0.01f, -1000.0f, 1000.0f);
+                ImGui::DragFloat("Scale\nY", scaleY, 0.01f, -1000.0f, 1000.0f);
+                ImGui::DragFloat("Scale\nZ", scaleZ, 0.01f, -1000.0f, 1000.0f);
+                ImGui::DragFloat("Scroll\nSpeed\nX", sSpeedX, 0.01f, -1000.0f, 1000.0f);
+                ImGui::DragFloat("Scroll\nSpeed\nY", sSpeedY, 0.01f, -1000.0f, 1000.0f);
+                ImGui::DragFloat("Scroll\nSpeed\nZ", sSpeedZ, 0.01f, -1000.0f, 1000.0f);
+                ImGui::DragFloat("Scales\nX", scalesX, 0.01f, -1000.0f, 1000.0f);
+                ImGui::DragFloat("Scales\nY", scalesY, 0.01f, -1000.0f, 1000.0f);
+                ImGui::DragFloat("Scales\nZ", scalesZ, 0.01f, -1000.0f, 1000.0f);
+                ImGui::DragFloat("Distortion 1\nX", distortion1X, 0.01f, -1000.0f, 1000.0f);
+                ImGui::DragFloat("Distortion 1\nY", distortion1Y, 0.01f, -1000.0f, 1000.0f);
+                ImGui::DragFloat("Distortion 2\nX", distortion2X, 0.01f, -1000.0f, 1000.0f);
+                ImGui::DragFloat("Distortion 2\nY", distortion2Y, 0.01f, -1000.0f, 1000.0f);
+                ImGui::DragFloat("Distortion 3\nX", distortion3X, 0.01f, -1000.0f, 1000.0f);
+                ImGui::DragFloat("Distortion 3\nY", distortion3Y, 0.01f, -1000.0f, 1000.0f);
+                ImGui::DragFloat("Distortion\nScale", distortionScale, 0.01f, -1000.0f, 1000.0f);
+                ImGui::DragFloat("Distortion\nBias", distortionBias, 0.01f, -1000.0f, 1000.0f);
+            }
+            ImGui::End();
+        }
+    }
+}
