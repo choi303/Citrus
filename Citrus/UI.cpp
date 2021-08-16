@@ -419,7 +419,7 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
 #ifdef _DEBUG
                             ShellExecuteA(NULL, NULL, static_cast<LPCSTR>("..\\x64\\Debug\\Citrus.exe"), NULL, NULL, SW_SHOW);
 #else
-                            system("..\\x64\\Release\\Citrus.exe");
+                            ShellExecuteA(NULL, NULL, static_cast<LPCSTR>("..\\x64\\Release\\Citrus.exe"), NULL, NULL, SW_SHOW);
 #endif 
 
                             exit(0);
@@ -472,7 +472,7 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
             {
                 if (ImGui::MenuItem("Info"))
                 {
-                    Error::InfoLog("Citrus Graphics Renderer v0.1\nGitHub: https://github.com/choi303/Citrus");
+                    Error::InfoLog("Citrus Graphics Renderer v0.2\nGitHub: https://github.com/choi303/Citrus");
                 }
                 ImGui::EndMenu();
             }
@@ -549,7 +549,7 @@ void UI::DirectionalLigth(XMFLOAT4* diffuseColor,
     {
         if (uiVisiblity)
         {
-            static float direction[3] = { 0.3,-1,1.6 };
+            static float direction[3] = { 0.300f, -1.0f, 1.6f };
             lightDirection->x = direction[0];
             lightDirection->y = direction[1];
             lightDirection->z = direction[2];

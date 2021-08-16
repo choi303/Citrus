@@ -72,6 +72,13 @@ Fire::Fire(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 void Fire::Draw(Camera3D cam, float frameTime)
 {
+	//Billboarding
+	XMFLOAT3 cameraPos = cam.GetPositionFloat3();
+	XMFLOAT3 modelPosition = XMFLOAT3(posX, posY, posZ);
+	double angle = atan2(modelPosition.x - cameraPos.x,
+		modelPosition.z - cameraPos.z) * (180.0 / XM_PI);
+	float rot = static_cast<float>(angle) * 0.0174532925f;
+
 	//set vertex buffer
 	mVertexBuffer->Bind(mContext.Get());
 	//texture binds
@@ -84,7 +91,8 @@ void Fire::Draw(Camera3D cam, float frameTime)
 	mVS.Bind(mContext.Get());
 	mPS.Bind(mContext.Get());
 	//bind matrix constant buffer
-	mMatricesBuffer->data.world = XMMatrixIdentity() * XMMatrixTranslation(posX, posY, posZ) *
+	mMatricesBuffer->data.world = XMMatrixIdentity() * XMMatrixTranslation(modelPosition.x, modelPosition.y, modelPosition.z) *
+		XMMatrixRotationY(rot) *
 		XMMatrixScaling(scaleX, scaleY, scaleZ);
 	mMatricesBuffer->data.view = cam.GetViewMatrix();
 	mMatricesBuffer->data.proj = cam.GetProjectionMatrix();

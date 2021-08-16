@@ -7,7 +7,7 @@ Texture::Texture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const std
 {
 	//decide texture format
 	std::string extension = filepath.substr(filepath.find_last_of(".") + 1);
-	if (extension == "dds")
+	if (extension == "dds" || extension == "DDS")
 	{
 		HRESULT hr = E_FAIL;
 		DirectX::ScratchImage pScratch;
@@ -32,7 +32,7 @@ Texture::Texture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const std
 		hr = pDevice->CreateShaderResourceView(m_resource.Get(), &srvDesc, &m_view);
 		if (FAILED(hr)) { Error::Log(hr, "Failed to create shader resource view"); }
 	}
-	else if (extension == "tga")
+	else if (extension == "tga" || extension == "TGA")
 	{
 		HRESULT hr = E_FAIL;
 		DirectX::ScratchImage pScratch;

@@ -286,6 +286,7 @@ bool Graphics::InitScene()
 
 	//Particle(s) initialize
 	mParticle.Initialize(pDevice.Get(), "Images\\star.dds", pContext.Get());
+
 	mFire = std::make_unique<Fire>(pDevice.Get(), pContext.Get());
 
 	return true;
