@@ -8,6 +8,7 @@
 - Global Illumination
 - Volumetric Lighting
 - PBR Support
+- Bloom
 
 ### Current Features
 - Phong Lighting
@@ -26,17 +27,17 @@
 # Inputs
 As you can see in the [diagram](https://miro.com/app/board/o9J_lXORBkk=/), input can be found on update function of app class. You can change the inputs to whatever you want just change the char characters on update function.
 ```c++
-  if (keyboard.KeyIsPressed('W'))
-	{
-		//move forward when pressed W
-		gfx.cam3D.AdjustPosition(gfx.cam3D.GetForwardVector() * cameraSpeed * deltaTime);
-	}
+if (keyboard.KeyIsPressed('W'))
+{
+	//move forward when pressed W
+	gfx.cam3D.AdjustPosition(gfx.cam3D.GetForwardVector() * cameraSpeed * deltaTime);
+}
   //You can change 'W' to 'Up Arrow' button
-  if (keyboard.KeyIsPressed(VK_UP)) 
-	{
-		//move forward when pressed Up Arrow (VK_UP)
-		gfx.cam3D.AdjustPosition(gfx.cam3D.GetForwardVector() * cameraSpeed * deltaTime);
-        }
+if (keyboard.KeyIsPressed(VK_UP)) 
+{
+	//move forward when pressed Up Arrow (VK_UP)
+	gfx.cam3D.AdjustPosition(gfx.cam3D.GetForwardVector() * cameraSpeed * deltaTime);
+}
 ```
 You can reach all virtual key codes on [microsoft site](https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes).
 - 'W-A-S-D' for movement
@@ -47,6 +48,12 @@ You can reach all virtual key codes on [microsoft site](https://docs.microsoft.c
 - 'V' to show UI.
 
 # Gallery
+Street Art scene
+![Debug Screenshot 2021 08 15 - 22 23 08 30](https://user-images.githubusercontent.com/60492235/129593137-59d4f437-2c97-4544-9b32-e4b68a25aaa4.png)
+
+Street Art scene + 0.5x Blur
+![Debug Screenshot 2021 08 15 - 22 23 29 61](https://user-images.githubusercontent.com/60492235/129593885-b2d30eb0-2355-42ad-a00e-2f435d567dac.png)
+
 Lighting looking
 ![Debug Screenshot 2021 06 18 - 22 16 56 67](https://user-images.githubusercontent.com/60492235/122608333-b53f0a00-d084-11eb-8280-2dada26e5668.png)
 
