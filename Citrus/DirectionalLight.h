@@ -24,6 +24,11 @@ struct shadowmap {
     XMMATRIX shadowProj;
 };
 
+struct LightColor
+{
+    XMFLOAT4 color;
+};
+
 class DirectionalLight
 {
 public:
@@ -59,9 +64,14 @@ public:
     mutable SaveSystem directLightSettings;
 private:
     std::unique_ptr<CBuffer<DirectLight>> mLightBuffer;
+    std::unique_ptr<CBuffer<LightColor>> mLightColor;
     wrl::ComPtr<ID3D11Device> mDevice;
     wrl::ComPtr<ID3D11DeviceContext> mContext;
     std::unique_ptr<CBuffer<shadowmap>> mShadowCBuffer;
+    VertexShader pVS;
+    PixelShader pPS;
+    std::unique_ptr<InputLayout> pLayout;
+    Model pModel;
     Camera3D mLightCam;
     UI mUI;
     int mWidth;

@@ -327,7 +327,15 @@ bool Graphics::SceneGraph(Camera3D cam3D)
 	pObject2.draw(cam3D);
 	mParticle.Render(cam3D);
 	mFire->Draw(cam3D, timer.GetMilisecondsElapsed());
-
+	//full screen pass
+	if (!*GameObject::GetWireframeEnabled())
+	{
+		pContext->OMSetRenderTargets(1u, pRtv.GetAddressOf(), nullptr);
+		rt->BindAsTexture(pContext.Get(), 0);
+		rtDepth->BindAsTexture(pContext.Get(), 1);
+		rtNoise->BindAsTexture(pContext.Get(), 3);
+		quad->draw(pContext.Get(), cam3D);
+	}
 	return true;
 }
 
@@ -369,15 +377,6 @@ void Graphics::Render()
 			| D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
 	SceneGraph(cam3D);
-	//full screen pass
-	if (!*GameObject::GetWireframeEnabled())
-	{
-		pContext->OMSetRenderTargets(1u, pRtv.GetAddressOf(), nullptr);
-		rt->BindAsTexture(pContext.Get(), 0);
-		rtDepth->BindAsTexture(pContext.Get(), 1);
-		rtNoise->BindAsTexture(pContext.Get(), 3);
-		quad->draw(pContext.Get(), cam3D);
-	}
 }
 
 DXGI_ADAPTER_DESC Graphics::GetAdapterDesc() const

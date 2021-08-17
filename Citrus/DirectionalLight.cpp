@@ -60,10 +60,40 @@ DirectionalLight::DirectionalLight(ID3D11Device* pDevice, ID3D11DeviceContext* p
 	else
 		SetAlphaCEnabled(FALSE);
 	directLightSettings.CloseFile();
+	
+	//init cbuffer
+	mLightColor = std::make_unique<CBuffer<LightColor>>();
+	mLightColor->Init(pDevice, pContext);
+
+	//init shaders
+	pVS.Init(L"ColorVertex.cso", mDevice.Get());
+	pPS.Init(L"ColorPixel.cso", mDevice.Get());
+	//init and create input layout
+	const std::vector<D3D11_INPUT_ELEMENT_DESC> direct_ied
+		=
+	{
+		{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
+		D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"Color", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+		D3D11_INPUT_PER_VERTEX_DATA, 0},
+	};
+	pLayout = std::make_unique<InputLayout>(pDevice, direct_ied, &pVS);
+
+	pModel.InitNoMtl("Models\\sphere_hq.obj", pDevice, pContext);
 }
 
 void DirectionalLight::BindCB(Camera3D cam)
 {
+	pLayout->Bind(mContext.Get());
+	pVS.Bind(mContext.Get());
+	pPS.Bind(mContext.Get());
+	mLightColor->data.color = diffuseColor;
+	mLightColor->MapData();
+	mLightColor->PSBind(mContext.Get(), 4, 1);
+	pModel.SetScale(50.0f, 50.0f, 50.0f);
+	pModel.SetPos(50.0f, 100.0f, 0.0f);
+	pModel.SetRot(lightDirection.x, lightDirection.y, lightDirection.z);
+	pModel.Render(cam);
 	mLightCam.SetPosition(lightDirection.x, lightDirection.y, lightDirection.z + (-50));
 	mLightCam.SetRotation(lightDirection.x, lightDirection.y, lightDirection.z + (-50));
 	mLightBuffer->data.diffuseColor = diffuseColor;
