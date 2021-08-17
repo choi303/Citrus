@@ -91,7 +91,7 @@ void DirectionalLight::BindCB(Camera3D cam)
 	mLightColor->MapData();
 	mLightColor->PSBind(mContext.Get(), 4, 1);
 	pModel.SetScale(50.0f, 50.0f, 50.0f);
-	pModel.SetPos(50.0f, 100.0f, 0.0f);
+	pModel.SetPos(45.0f, 5.0f, -90.0f);
 	pModel.SetRot(lightDirection.x, lightDirection.y, lightDirection.z);
 	pModel.Render(cam);
 	mLightCam.SetPosition(lightDirection.x, lightDirection.y, lightDirection.z + (-50));

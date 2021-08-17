@@ -1,3 +1,8 @@
+cbuffer LightColor : register(b4)
+{
+    float4 color;
+};
+
 struct PS_IN
 {
     float4 pos : SV_Position;
@@ -6,6 +11,5 @@ struct PS_IN
 
 float4 main(PS_IN input) : SV_Target
 {
-    
-    return float4(input.color, 1.0f);
+    return color;
 }
