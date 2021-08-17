@@ -46,6 +46,7 @@ You can reach all virtual key codes on [microsoft site](https://docs.microsoft.c
 - 'Escape' to quit.
 - 'H' to hide UI.
 - 'V' to show UI.
+- Hold 'RMB' (Right Mouse Button) to turn camera.
 
 # Gallery
 Street Art scene
