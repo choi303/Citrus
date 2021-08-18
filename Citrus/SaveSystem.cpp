@@ -29,6 +29,7 @@ std::string SaveSystem::GetInfo(int line)
 	std::string data;
 	data = std::to_string(line); //set data value to line number
 	std::getline(pFile, data); 	//get data from reference line
+	data = data.substr(data.find_last_of(":") + 1);
 	return data; //return the data
 }
 

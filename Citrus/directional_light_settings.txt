@@ -1,28 +1,28 @@
-1.600000
--1.000000
-0.300000
-0.210000
-1.000000
-1.000000
-1.000000
-0.000800
-1
-1
-1
-1
-1
-2.000000
-1.600000
--1.000000
-0.300000
-0.210000
-1.000000
-1.000000
-1.000000
-0.000800
-1
-1
-1
-1
-1
-2.000000
+[Light Direction Z]:1.600000
+[Light Direction Y]:-1.000000
+[Light Direction X]:0.300000
+[Ambient Intensity]:0.120000
+[Diffuse Intensity]:1.000000
+[Reflection Intensity]:1.000000
+[Specular Intensity]:1.000000
+[Shadow Bias]:0.000500
+[Normal Map Enabled]:1
+[Reflection Enabled]:1
+[PCF Filter Enabled]:1
+[Alpha Clip Enabled]:0
+[Emessive Map Enabled]:1
+[Emessive Intensity]:2.000000
+[Light Direction Z]:1.600000
+[Light Direction Y]:-1.000000
+[Light Direction X]:0.300000
+[Ambient Intensity]:0.120000
+[Diffuse Intensity]:1.000000
+[Reflection Intensity]:1.000000
+[Specular Intensity]:1.000000
+[Shadow Bias]:0.000500
+[Normal Map Enabled]:1
+[Reflection Enabled]:1
+[PCF Filter Enabled]:1
+[Alpha Clip Enabled]:0
+[Emessive Map Enabled]:1
+[Emessive Intensity]:2.000000

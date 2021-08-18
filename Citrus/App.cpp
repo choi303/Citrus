@@ -277,33 +277,33 @@ void App::SaveValues()
 
 	//Directional Light
 	gfx.pDirectLight->directLightSettings.OpenFileWrite("directional_light_settings.txt");
-	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Light Direction Z]:" + std::to_string(
 		gfx.pDirectLight->GetDirection().z));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Light Direction Y]:" + std::to_string(
 		gfx.pDirectLight->GetDirection().y));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Light Direction X]:" + std::to_string(
 		gfx.pDirectLight->GetDirection().x));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Ambient Intensity]:" + std::to_string(
 		gfx.pDirectLight->GetAmbientIntensity()));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Diffuse Intensity]:" + std::to_string(
 		gfx.pDirectLight->GetDiffuseIntensity()));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Reflection Intensity]:" + std::to_string(
 		gfx.pDirectLight->GetReflectionIntensity()));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Specular Intensity]:" + std::to_string(
 		gfx.pDirectLight->GetSpecularIntensity()));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Shadow Bias]:" + std::to_string(
 		gfx.pDirectLight->GetBias()));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Normal Map Enabled]:" + std::to_string(
 		gfx.pDirectLight->GetNormalMapEnabled()));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Reflection Enabled]:" + std::to_string(
 		gfx.pDirectLight->GetReflectionEnabled()));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[PCF Filter Enabled]:" + std::to_string(
 		gfx.pDirectLight->GetPCFEnabled()));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Alpha Clip Enabled]:" + std::to_string(
 		*gfx.pDirectLight->GetAlphaCEnabled()));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Emessive Map Enabled]:" + std::to_string(
 		*gfx.pDirectLight->GetEmessiveEnabled()));
-	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Emessive Intensity]:" + std::to_string(
 		gfx.pDirectLight->GetEmessiveIntensity()));
 	gfx.pDirectLight->directLightSettings.AddInfo(
 		gfx.pDirectLight->pDirectLightSavedItems);
@@ -311,98 +311,98 @@ void App::SaveValues()
 
 	//open camera txt, stores camera position and rotation data
 	cameraSetting.OpenFileWrite("camera_settings.txt");
-	pCameraSavedItems.push_back(std::to_string(
+	pCameraSavedItems.push_back("[Camera Position Z]:" + std::to_string(
 		gfx.cam3D.GetPositionFloat3().z));
-	pCameraSavedItems.push_back(std::to_string(
+	pCameraSavedItems.push_back("[Camera Position Y]:" + std::to_string(
 		gfx.cam3D.GetPositionFloat3().y));
-	pCameraSavedItems.push_back(std::to_string(
+	pCameraSavedItems.push_back("[Camera Position X]:" + std::to_string(
 		gfx.cam3D.GetPositionFloat3().x));
-	pCameraSavedItems.push_back(std::to_string(
+	pCameraSavedItems.push_back("[Camera Rotation Z]:" + std::to_string(
 		gfx.cam3D.GetRotationFloat3().z));
-	pCameraSavedItems.push_back(std::to_string(
+	pCameraSavedItems.push_back("[Camera Rotation Y]:" + std::to_string(
 		gfx.cam3D.GetRotationFloat3().y));
-	pCameraSavedItems.push_back(std::to_string(
+	pCameraSavedItems.push_back("[Camera Rotation X]:" + std::to_string(
 		gfx.cam3D.GetRotationFloat3().x));
 	cameraSetting.AddInfo(pCameraSavedItems);
 	cameraSetting.CloseFile();
 
 	//open dev menu txt, stores dev menu settings
 	devMenuSettings.OpenFileWrite("devmenu_settings.txt");
-	pDevMenuSavedItems.push_back(std::to_string(
+	pDevMenuSavedItems.push_back("[Depth Buffer Enabled]:" + std::to_string(
 		*GameObject::GetDepthBufferEnabled()));
-	pDevMenuSavedItems.push_back(std::to_string(
+	pDevMenuSavedItems.push_back("[Blur Enabled]:" + std::to_string(
 		*FSQuad::GetBlurEnabled()));
-	pDevMenuSavedItems.push_back(std::to_string(
+	pDevMenuSavedItems.push_back("[Blur Intensity]:" + std::to_string(
 		*FSQuad::GetBlurIntensity()));
-	pDevMenuSavedItems.push_back(std::to_string(
+	pDevMenuSavedItems.push_back("[Fog Enabled]:" + std::to_string(
 		*GameObject::GetFogEnabled()));
-	pDevMenuSavedItems.push_back(std::to_string(
+	pDevMenuSavedItems.push_back("[Fog Start]:" + std::to_string(
 		*GameObject::GetFogStart()));
-	pDevMenuSavedItems.push_back(std::to_string(
+	pDevMenuSavedItems.push_back("[Fog End]:" + std::to_string(
 		*GameObject::GetFogEnd()));
-	pDevMenuSavedItems.push_back(std::to_string(
+	pDevMenuSavedItems.push_back("[Wireframe Enabled]:" + std::to_string(
 		*GameObject::GetWireframeEnabled()));
-	pDevMenuSavedItems.push_back(std::to_string(
+	pDevMenuSavedItems.push_back("[Grid Map Enabled]:" + std::to_string(
 		*GridMap::getRender()));
-	pDevMenuSavedItems.push_back(std::to_string(
+	pDevMenuSavedItems.push_back("[MSAA Quality]:" + std::to_string(
 		gfx.msaaQuality));
-	pDevMenuSavedItems.push_back(std::to_string(
+	pDevMenuSavedItems.push_back("[MSAA Enabled]:" + std::to_string(
 		gfx.msaaEnabled));
-	pDevMenuSavedItems.push_back(std::to_string(
+	pDevMenuSavedItems.push_back("[FXAA Enabled]:" + std::to_string(
 		*FSQuad::GetFxaaEnabled()));
-	pDevMenuSavedItems.push_back(std::to_string(
+	pDevMenuSavedItems.push_back("[SSAO Enabled]:" + std::to_string(
 		*FSQuad::GetSSAOEnabled()));
-	pDevMenuSavedItems.push_back(std::to_string(
+	pDevMenuSavedItems.push_back("[SSAO Area]:" + std::to_string(
 		*FSQuad::GetArea()));
-	pDevMenuSavedItems.push_back(std::to_string(
+	pDevMenuSavedItems.push_back("[SSAO Base]:" + std::to_string(
 		*FSQuad::GetBase()));
-	pDevMenuSavedItems.push_back(std::to_string(
+	pDevMenuSavedItems.push_back("[SSAO Radius]:" + std::to_string(
 		*FSQuad::GetRadius()));
-	pDevMenuSavedItems.push_back(std::to_string(
+	pDevMenuSavedItems.push_back("[SSAO Total Strength]:" + std::to_string(
 		*FSQuad::GetTotalStrength()));
 	devMenuSettings.AddInfo(pDevMenuSavedItems);
 	devMenuSettings.CloseFile();
 
 	//open fx menu txt, stores fx menu settings
 	fxMenuSettings.OpenFileWrite("fx_menu_settings.txt");
-	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetDeviationX()));
-	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetDeviationY()));
-	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetDeviationZ()));
-	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetParticleVelocity()));
-	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetParticleVelocityVariation()));
-	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetParticleSize()));
-	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetParticleMax()));
-	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetParticlesPerSecond()));
-	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetLifeTime()));
-	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetIsLifeTime()));
-	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetPosX()));
-	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetPosY()));
-	pFxMenuSavedItems.push_back(std::to_string(*Particle::GetPosZ()));
+	pFxMenuSavedItems.push_back("[Particle Deviation X]:" + std::to_string(*Particle::GetDeviationX()));
+	pFxMenuSavedItems.push_back("[Particle Deviation Y]:" + std::to_string(*Particle::GetDeviationY()));
+	pFxMenuSavedItems.push_back("[Particle Deviation Z]:" + std::to_string(*Particle::GetDeviationZ()));
+	pFxMenuSavedItems.push_back("[Particle Velocity]:" + std::to_string(*Particle::GetParticleVelocity()));
+	pFxMenuSavedItems.push_back("[Particle Velocity Variation]:" + std::to_string(*Particle::GetParticleVelocityVariation()));
+	pFxMenuSavedItems.push_back("[Particle Size]:" + std::to_string(*Particle::GetParticleSize()));
+	pFxMenuSavedItems.push_back("[Particle Max]:" + std::to_string(*Particle::GetParticleMax()));
+	pFxMenuSavedItems.push_back("[Particle Per Second]:" + std::to_string(*Particle::GetParticlesPerSecond()));
+	pFxMenuSavedItems.push_back("[Particle Life Time]:" + std::to_string(*Particle::GetLifeTime()));
+	pFxMenuSavedItems.push_back("[Particle Life Time Enabled]:" + std::to_string(*Particle::GetIsLifeTime()));
+	pFxMenuSavedItems.push_back("[Particle Position X]:" + std::to_string(*Particle::GetPosX()));
+	pFxMenuSavedItems.push_back("[Particle Position Y]:" + std::to_string(*Particle::GetPosY()));
+	pFxMenuSavedItems.push_back("[Particle Position Z]:" + std::to_string(*Particle::GetPosZ()));
 	fxMenuSettings.AddInfo(pFxMenuSavedItems);
 	fxMenuSettings.CloseFile();
 
 	//open fire menu txt, stores fire menu settings
 	fireMenuSettings.OpenFileWrite("fire_menu_settings.txt");
-	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetPosX()));
-	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetPosY()));
-	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetPosZ()));
-	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetScaleX()));
-	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetScaleY()));
-	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetScaleZ()));
-	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetDistortion1X()));
-	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetDistortion1Y()));
-	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetDistortion2X()));
-	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetDistortion2Y()));
-	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetDistortion3X()));
-	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetDistortion3Y()));
-	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetScalesX()));
-	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetScalesY()));
-	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetScalesZ()));
-	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetSSpeedX()));
-	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetSSpeedY()));
-	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetSSpeedZ()));
-	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetDistortionScale()));
-	pFireMenuSavedItems.push_back(std::to_string(*Fire::GetDistortionBias()));
+	pFireMenuSavedItems.push_back("[Fire Position X]:" + std::to_string(*Fire::GetPosX()));
+	pFireMenuSavedItems.push_back("[Fire Position Y]:" + std::to_string(*Fire::GetPosY()));
+	pFireMenuSavedItems.push_back("[Fire Position Z]:" + std::to_string(*Fire::GetPosZ()));
+	pFireMenuSavedItems.push_back("[Fire Scale X]:" + std::to_string(*Fire::GetScaleX()));
+	pFireMenuSavedItems.push_back("[Fire Scale Y]:" + std::to_string(*Fire::GetScaleY()));
+	pFireMenuSavedItems.push_back("[Fire Scale Z]:" + std::to_string(*Fire::GetScaleZ()));
+	pFireMenuSavedItems.push_back("[Fire Distortion 1 X]:" + std::to_string(*Fire::GetDistortion1X()));
+	pFireMenuSavedItems.push_back("[Fire Distortion 1 Y]:" + std::to_string(*Fire::GetDistortion1Y()));
+	pFireMenuSavedItems.push_back("[Fire Distortion 2 X]:" + std::to_string(*Fire::GetDistortion2X()));
+	pFireMenuSavedItems.push_back("[Fire Distortion 2 Y]:" + std::to_string(*Fire::GetDistortion2Y()));
+	pFireMenuSavedItems.push_back("[Fire Distortion 3 X]:" + std::to_string(*Fire::GetDistortion3X()));
+	pFireMenuSavedItems.push_back("[Fire Distortion 3 Y]:" + std::to_string(*Fire::GetDistortion3Y()));
+	pFireMenuSavedItems.push_back("[Fire Scales X]:" + std::to_string(*Fire::GetScalesX()));
+	pFireMenuSavedItems.push_back("[Fire Scales Y]:" + std::to_string(*Fire::GetScalesY()));
+	pFireMenuSavedItems.push_back("[Fire Scales Z]:" + std::to_string(*Fire::GetScalesZ()));
+	pFireMenuSavedItems.push_back("[Fire Speed X]:" + std::to_string(*Fire::GetSSpeedX()));
+	pFireMenuSavedItems.push_back("[Fire Speed Y]:" + std::to_string(*Fire::GetSSpeedY()));
+	pFireMenuSavedItems.push_back("[Fire Speed Z]:" + std::to_string(*Fire::GetSSpeedZ()));
+	pFireMenuSavedItems.push_back("[Fire Distortion Scale]:" + std::to_string(*Fire::GetDistortionScale()));
+	pFireMenuSavedItems.push_back("[Fire Distortion Bias]:" + std::to_string(*Fire::GetDistortionBias()));
 	fireMenuSettings.AddInfo(pFireMenuSavedItems);
 	fireMenuSettings.CloseFile();
 }
