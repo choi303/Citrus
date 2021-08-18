@@ -16,9 +16,12 @@ bool GameObject::init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std:
 	this->pContext = pContext;
 	this->width = width;
 	this->height = height;
-	//normal mapping vertex shader initialize
+	//normal mapping shaders initialize
 	pVSNormal.Init(L"VSDirectShadows.cso", pDevice);
 	pPSNormal.Init(L"PSDirectShadows.cso", pDevice);
+	//emssive mapping shaders initalize
+	pVSEmessive.Init(L"VSDirectShadowsEmessive.cso", pDevice);
+	pPSEmessive.Init(L"PSDirectShadowsEmessive.cso", pDevice);
 	//gets data from normal mapping vertex shader with input layout
 	const std::vector<D3D11_INPUT_ELEMENT_DESC> ied_normal =
 	{
@@ -253,6 +256,13 @@ void GameObject::draw(Camera3D cam)
 		pLayoutNormal->Bind(pContext);
 		pVSNormal.Bind(pContext);
 		pPSNormal.Bind(pContext);
+	}
+
+	//if model has a emessive map and set emssive shaders
+	if (pModel.GetHasEmessive())
+	{
+		pVSEmessive.Bind(pContext);
+		pPSEmessive.Bind(pContext);
 	}
 
 	//Classic Object UI Creation

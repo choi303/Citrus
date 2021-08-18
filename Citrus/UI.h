@@ -38,7 +38,8 @@ public:
 	void DirectionalLigth(XMFLOAT4* diffuseColor,
 		XMFLOAT3* lightDirection, XMFLOAT4* ambientColor, float* ambientIntensity,
 		BOOL* normalMapEnabled, float* specularIntensity, float* diffuseIntensity,
-		BOOL* reflectionEnabled, float* reflectionIntensity, float* bias, BOOL* pcfEnabled);
+		BOOL* reflectionEnabled, float* reflectionIntensity, float* bias, BOOL* pcfEnabled,
+		BOOL* emessiveEnabled, float* emessiveIntensity);
 
 	static void FireUI(float* posX, float* posY, float* posZ, float* sSpeedX, float* sSpeedY, float* sSpeedZ,
 		float* scalesX, float* scalesY, float* scalesZ, float* distortion1X, float* distortion1Y,

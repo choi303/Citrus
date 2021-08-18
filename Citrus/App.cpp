@@ -301,6 +301,10 @@ void App::SaveValues()
 		gfx.pDirectLight->GetPCFEnabled()));
 	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
 		*gfx.pDirectLight->GetAlphaCEnabled()));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+		*gfx.pDirectLight->GetEmessiveEnabled()));
+	gfx.pDirectLight->pDirectLightSavedItems.push_back(std::to_string(
+		gfx.pDirectLight->GetEmessiveIntensity()));
 	gfx.pDirectLight->directLightSettings.AddInfo(
 		gfx.pDirectLight->pDirectLightSavedItems);
 	gfx.pDirectLight->directLightSettings.CloseFile();

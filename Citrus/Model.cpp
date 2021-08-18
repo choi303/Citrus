@@ -108,6 +108,11 @@ bool Model::GetHasNormal() const
     return hasNormalmap;
 }
 
+bool Model::GetHasEmessive() const
+{
+    return hasEmessiveMap;
+}
+
 bool Model::LoadMesh(const std::string& file_path)
 {
     Assimp::Importer importer;
@@ -187,6 +192,13 @@ void Model::LoadNodes(aiNode* p_node, const aiScene* p_scene, const aiMaterial* 
             if (mtl.GetTexture(aiTextureType::aiTextureType_REFLECTION, 0, &textureName) == aiReturn_SUCCESS)
             {
                 textures.push_back(Texture(pDevice, pContext, texture_directory + textureName.C_Str(), 3));
+            }
+
+            if (mtl.GetTexture(aiTextureType::aiTextureType_EMISSIVE, 0, &textureName) == aiReturn_SUCCESS)
+            {
+                textures.push_back(Texture(pDevice,
+                    pContext, texture_directory + textureName.C_Str(), 5));
+                hasEmessiveMap = true;
             }
         }
         

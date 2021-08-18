@@ -8,12 +8,11 @@
 - Global Illumination
 - Volumetric Lighting
 - PBR Support
-- Bloom
 
 ### Current Features
 - Phong Lighting
 - 3D Model Loader
-- Normal Map & Specular Map support
+- Normal & Specular & Emessive Map support
 - Environment Mapping
 - Shadow Mapping
 - Ambient Occlusion

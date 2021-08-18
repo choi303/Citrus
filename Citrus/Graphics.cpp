@@ -277,9 +277,7 @@ bool Graphics::InitScene()
 
 	pSkyBox.Init(pDevice.Get(), pContext.Get());
 
-	pObject.init(pDevice.Get(), pContext.Get(), "Models\\gobber\\GoblinX.obj", width, height, true);
-	pObject.GetMesh()->SetPos(0.0f, 5.0f, 0.0f);
-	pObject.GetMesh()->SetScale(2.0f, 2.0f, 2.0f);
+	pObject.init(pDevice.Get(), pContext.Get(), "Models\\robo\\robo.obj", width, height, true);
 	pObject2.init(pDevice.Get(), pContext.Get(), "Models\\brick_wall\\brick_wall.obj", width, height, true);
 	pObject2.GetMesh()->SetRot(1.560f, 0.0f, 0.0f);
 	pObject2.GetMesh()->SetScale(100.0f, 100.0f, 100.0f);
@@ -313,6 +311,7 @@ void Graphics::EndFrame() const noexcept
 
 bool Graphics::SceneGraph(Camera3D cam3D)
 {
+	pContext->OMSetDepthStencilState(pDepthState.Get(), 0xFF);
 	pCPU.Frame();
 	gridMap.draw(cam3D);
 	dsShadow->BindTexture(pContext.Get(), 4);

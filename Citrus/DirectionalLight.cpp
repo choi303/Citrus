@@ -13,6 +13,8 @@ static float bias = 0.0001f;
 static BOOL pcfEnabled;
 static BOOL alphaClip;
 static BOOL normals;
+static BOOL emessiveEnabled;
+static float emessiveIntensity = 1.0f;
 
 DirectionalLight::DirectionalLight(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height)
 	:
@@ -59,6 +61,11 @@ DirectionalLight::DirectionalLight(ID3D11Device* pDevice, ID3D11DeviceContext* p
 		SetAlphaCEnabled(TRUE);
 	else
 		SetAlphaCEnabled(FALSE);
+	if (directLightSettings.GetInfo(12) == "1")
+		emessiveEnabled = TRUE;
+	else
+		emessiveEnabled = FALSE;
+	emessiveIntensity = std::stof(directLightSettings.GetInfo(13).c_str());
 	directLightSettings.CloseFile();
 	
 	//init cbuffer
@@ -109,6 +116,8 @@ void DirectionalLight::BindCB(Camera3D cam)
 	mLightBuffer->data.biasC = bias;
 	mLightBuffer->data.alphaClip = alphaClip;
 	mLightBuffer->data.normals = normals;
+	mLightBuffer->data.emessiveEnabled = emessiveEnabled;
+	mLightBuffer->data.emessiveIntensity = emessiveIntensity;
 	mLightBuffer->MapData();
 	mLightBuffer->PSBind(mContext.Get(), 0, 1);
 	mShadowCBuffer->data.shadowView = mLightCam.GetViewMatrix();
@@ -116,7 +125,8 @@ void DirectionalLight::BindCB(Camera3D cam)
 	mShadowCBuffer->MapData();
 	mShadowCBuffer->VSBind(mContext.Get(), 2, 1);
 	mUI.DirectionalLigth(&diffuseColor, &lightDirection, &ambientColor, &ambientIntensity, &normalMapEnabled,
-		&specularIntensityC, &diffuseIntensityC, &reflectionEnabled, &reflectionIntensity, &bias, &pcfEnabled);
+		&specularIntensityC, &diffuseIntensityC, &reflectionEnabled, &reflectionIntensity, &bias, &pcfEnabled,
+		&emessiveEnabled, &emessiveIntensity);
 }
 
 Camera3D DirectionalLight::GetLightCamera()
@@ -233,4 +243,14 @@ void DirectionalLight::SetAlphaCEnabled(BOOL value)
 void DirectionalLight::SetNormalsEnabled(BOOL value)
 {
 	normals = value;
+}
+
+BOOL* DirectionalLight::GetEmessiveEnabled()
+{
+	return &emessiveEnabled;
+}
+
+float DirectionalLight::GetEmessiveIntensity() const noexcept
+{
+	return emessiveIntensity;
 }

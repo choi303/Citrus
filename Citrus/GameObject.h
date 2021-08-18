@@ -40,8 +40,10 @@ private:
 	Model pModel;
 	VertexShader pVSNormal;
 	VertexShader pVS;
+	VertexShader pVSEmessive;
 	PixelShader pPS;
 	PixelShader pPSNormal;
+	PixelShader pPSEmessive;
 private:
 	ID3D11Device* pDevice;
 	ID3D11DeviceContext* pContext;

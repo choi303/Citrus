@@ -543,7 +543,8 @@ void UI::ParticleUI(std::string uiTitle, float* mParticleDeviationX, float* mPar
 void UI::DirectionalLigth(XMFLOAT4* diffuseColor,
     XMFLOAT3* lightDirection, XMFLOAT4* ambientColor, float* ambientIntensity,
     BOOL* normalMapEnabled, float* specularIntensity, float* diffuseIntensity,
-    BOOL* reflectionEnabled, float* reflectionIntensity, float* bias, BOOL* pcfEnabled)
+    BOOL* reflectionEnabled, float* reflectionIntensity, float* bias, BOOL* pcfEnabled,
+    BOOL* emessiveEnabled, float* emessiveIntensity)
 {
     if (can_render)
     {
@@ -578,12 +579,14 @@ void UI::DirectionalLigth(XMFLOAT4* diffuseColor,
                 ImGui::Checkbox("Normal Map\nEnabled", reinterpret_cast<bool*>(normalMapEnabled));
                 ImGui::Checkbox("Reflection\nEnabled", reinterpret_cast<bool*>(reflectionEnabled));
                 ImGui::Checkbox("PCF\nEnabled", reinterpret_cast<bool*>(pcfEnabled));
+                ImGui::Checkbox("Emessive\nEnabled", reinterpret_cast<bool*>(emessiveEnabled));
                 ImGui::ColorEdit4("Light\nColor", diffuseCol);
                 ImGui::ColorEdit4("Ambient\nColor", ambientCol);
                 ImGui::DragFloat("Ambient\nIntensity", ambientIntensity, 0.01f, 0.0f, 50.0f);
                 ImGui::DragFloat("Diffuse\nIntensity", diffuseIntensity, 0.01f, 0.0f, 2000.0f);
                 ImGui::DragFloat("Specular\nIntensity", specularIntensity, 0.01f, 0.0f, 2000.0f);
                 ImGui::DragFloat("Reflection\nIntensity", reflectionIntensity, 0.01f, 0.0f, 2000.0f);
+                ImGui::DragFloat("Emessive\nIntensity", emessiveIntensity, 0.01f, 0.0f, 2000.0f);
                 ImGui::DragFloat("Shadow\nBias", bias, 0.001f, -2000.0f, 2000.0f);
                 ImGui::End();
             }

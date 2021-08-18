@@ -16,7 +16,9 @@ struct DirectLight
     BOOL pcfEnabled;
     BOOL alphaClip;
     BOOL normals;
-    float pad[3];
+    BOOL emessiveEnabled;
+    float emessiveIntensity;
+    float pad[1];
 };
 
 struct shadowmap {
@@ -43,9 +45,11 @@ public:
     BOOL GetReflectionEnabled() const noexcept;
     BOOL GetPCFEnabled() const noexcept;
     static BOOL* GetAlphaCEnabled();
+    static BOOL* GetEmessiveEnabled();
     float GetSpecularIntensity() const noexcept;
     float GetDiffuseIntensity() const noexcept;
     float GetReflectionIntensity() const noexcept;
+    float GetEmessiveIntensity() const noexcept;
     float GetBias() const noexcept;
     void SetDireciton(XMFLOAT3 value);
     void SetDireciton(float x,float y,float z);

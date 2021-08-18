@@ -33,6 +33,7 @@ public:
 	XMFLOAT3 GetScale() const;
 	XMMATRIX GetWorld() const;
 	bool GetHasNormal() const;
+	bool GetHasEmessive() const;
 	~Model() = default;
 private:
 	std::vector<Mesh> meshes;
@@ -55,4 +56,5 @@ private:
 	aiString textureName;
 	std::string path;
 	bool hasNormalmap = false;
+	bool hasEmessiveMap = false;
 };
