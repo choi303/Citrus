@@ -32,7 +32,7 @@ DirectionalLight::DirectionalLight(ID3D11Device* pDevice, ID3D11DeviceContext* p
 	mShadowCBuffer->Init(pDevice, pContext);
 
 	//set directional light saved values
-	directLightSettings.OpenFileRead("directional_light_settings.txt");
+	directLightSettings.OpenFileRead("directional_light_settings.cfg");
 	SetDireciton(std::stof(directLightSettings.GetInfo(0)), std::stof(directLightSettings.GetInfo(1)),
 		std::stof(directLightSettings.GetInfo(2)));
 	SetAmbientIntensity(std::stof(

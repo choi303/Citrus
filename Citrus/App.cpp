@@ -151,7 +151,7 @@ bool App::ProcessMessages(HINSTANCE hInstance) noexcept
 void App::SetSavedValues()
 {
 	//set camera saved values
-	cameraSetting.OpenFileRead("camera_settings.txt");
+	cameraSetting.OpenFileRead("camera_settings.cfg");
 	gfx.cam3D.SetPosition(std::stof(cameraSetting.GetInfo(0).c_str()), std::stof(cameraSetting.GetInfo(1).c_str()),
 		std::stof(cameraSetting.GetInfo(2).c_str()));
 	gfx.cam3D.SetRotation(std::stof(cameraSetting.GetInfo(3).c_str()), std::stof(cameraSetting.GetInfo(4).c_str()),
@@ -159,7 +159,7 @@ void App::SetSavedValues()
 	cameraSetting.CloseFile();
 
 	//set dev menu saved values
-	devMenuSettings.OpenFileRead("devmenu_settings.txt");
+	devMenuSettings.OpenFileRead("devmenu_settings.cfg");
 	if (devMenuSettings.GetInfo(0) == "1")
 		GameObject::SetDepthBufferEnabled(true);
 	else
@@ -215,7 +215,7 @@ void App::SetSavedValues()
 	devMenuSettings.CloseFile();
 
 	//set fx menu saved values
-	fxMenuSettings.OpenFileRead("fx_menu_settings.txt");
+	fxMenuSettings.OpenFileRead("fx_menu_settings.cfg");
 	Particle::SetDeviationX(std::stof(fxMenuSettings.GetInfo(0)));
 	Particle::SetDeviationY(std::stof(fxMenuSettings.GetInfo(1)));
 	Particle::SetDeviationZ(std::stof(fxMenuSettings.GetInfo(2)));
@@ -235,7 +235,7 @@ void App::SetSavedValues()
 	fxMenuSettings.CloseFile();
 
 	//set fire menu saved values
-	fireMenuSettings.OpenFileRead("fire_menu_settings.txt");
+	fireMenuSettings.OpenFileRead("fire_menu_settings.cfg");
 	Fire::SetPosX(std::stof(fireMenuSettings.GetInfo(0)));
 	Fire::SetPosY(std::stof(fireMenuSettings.GetInfo(1)));
 	Fire::SetPosZ(std::stof(fireMenuSettings.GetInfo(2)));
@@ -261,22 +261,8 @@ void App::SetSavedValues()
 
 void App::SaveValues()
 {
-	//open point light txt, stores point light settings
-	/*gfx.pPointLight.pointLightSetting.OpenFileWrite("pointlight_settings.txt");
-	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetAmbientIntensity()));
-	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetDiffuseIntensity()));
-	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetSpecularIntensity()));
-	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetReflectionIntensity()));
-	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetObjectPositionX()));
-	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetObjectPositionY()));
-	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetObjectPositionZ()));
-	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetNormalMapEnabled()));
-	gfx.pPointLight.pPointLightSavedItems.push_back(std::to_string(gfx.pPointLight.GetReflectionEnabled()));
-	gfx.pPointLight.pointLightSetting.AddInfo(gfx.pPointLight.pPointLightSavedItems);
-	gfx.pPointLight.pointLightSetting.CloseFile();*/
-
 	//Directional Light
-	gfx.pDirectLight->directLightSettings.OpenFileWrite("directional_light_settings.txt");
+	gfx.pDirectLight->directLightSettings.OpenFileWrite("directional_light_settings.cfg");
 	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Light Direction Z]:" + std::to_string(
 		gfx.pDirectLight->GetDirection().z));
 	gfx.pDirectLight->pDirectLightSavedItems.push_back("[Light Direction Y]:" + std::to_string(
@@ -310,7 +296,7 @@ void App::SaveValues()
 	gfx.pDirectLight->directLightSettings.CloseFile();
 
 	//open camera txt, stores camera position and rotation data
-	cameraSetting.OpenFileWrite("camera_settings.txt");
+	cameraSetting.OpenFileWrite("camera_settings.cfg");
 	pCameraSavedItems.push_back("[Camera Position Z]:" + std::to_string(
 		gfx.cam3D.GetPositionFloat3().z));
 	pCameraSavedItems.push_back("[Camera Position Y]:" + std::to_string(
@@ -327,7 +313,7 @@ void App::SaveValues()
 	cameraSetting.CloseFile();
 
 	//open dev menu txt, stores dev menu settings
-	devMenuSettings.OpenFileWrite("devmenu_settings.txt");
+	devMenuSettings.OpenFileWrite("devmenu_settings.cfg");
 	pDevMenuSavedItems.push_back("[Depth Buffer Enabled]:" + std::to_string(
 		*GameObject::GetDepthBufferEnabled()));
 	pDevMenuSavedItems.push_back("[Blur Enabled]:" + std::to_string(
@@ -364,7 +350,7 @@ void App::SaveValues()
 	devMenuSettings.CloseFile();
 
 	//open fx menu txt, stores fx menu settings
-	fxMenuSettings.OpenFileWrite("fx_menu_settings.txt");
+	fxMenuSettings.OpenFileWrite("fx_menu_settings.cfg");
 	pFxMenuSavedItems.push_back("[Particle Deviation X]:" + std::to_string(*Particle::GetDeviationX()));
 	pFxMenuSavedItems.push_back("[Particle Deviation Y]:" + std::to_string(*Particle::GetDeviationY()));
 	pFxMenuSavedItems.push_back("[Particle Deviation Z]:" + std::to_string(*Particle::GetDeviationZ()));
@@ -382,7 +368,7 @@ void App::SaveValues()
 	fxMenuSettings.CloseFile();
 
 	//open fire menu txt, stores fire menu settings
-	fireMenuSettings.OpenFileWrite("fire_menu_settings.txt");
+	fireMenuSettings.OpenFileWrite("fire_menu_settings.cfg");
 	pFireMenuSavedItems.push_back("[Fire Position X]:" + std::to_string(*Fire::GetPosX()));
 	pFireMenuSavedItems.push_back("[Fire Position Y]:" + std::to_string(*Fire::GetPosY()));
 	pFireMenuSavedItems.push_back("[Fire Position Z]:" + std::to_string(*Fire::GetPosZ()));
