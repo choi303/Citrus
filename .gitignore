@@ -5,7 +5,6 @@
 *.slo
 *.lo
 *.o
-*.obj
 
 # Precompiled Headers
 *.gch
@@ -30,4 +29,23 @@
 *.exe
 *.out
 *.app
+*.cso
+*.tlog
+*.obj
+!Citrus/Models/brick_wall/*.obj
+*.sarif
+*.xml
+*.res
+*.log
+*.ipdb
+*.iobj
+*.recipe
+*.pdb
+*.idb
+*.ilk
+*.txt
+*.db
+*.suo
+*.ipch
+*.aps
 *.cso
