@@ -135,6 +135,9 @@ float4 main(PS_IN input) : SV_Target
                     color *= shadow;
                 color = saturate(color);
                 
+                //blinn phong thing
+                float3 halfwayDir = normalize(lightDir + input.viewDirection);
+                
                 // Sample the pixel from the specular map texture.
                 specularIntensity = spec.Sample(object_sampler, input.tc);
         
@@ -144,7 +147,7 @@ float4 main(PS_IN input) : SV_Target
                 reflection = normalize(2 * lightIntensity * input.normal - lightDir);
         
                 // Determine the amount of specular light based on the reflection vector, viewing direction, and specular power.
-                specular = specularIntensityC * pow(saturate(dot(reflection, input.viewDirection)), specularPower);
+                specular = specularIntensityC * pow(saturate(dot(reflection, halfwayDir)), specularPower);
         
                 // Use the specular map to determine the intensity of specular light at this pixel.
                 specular = (specular * specularIntensity);
@@ -157,10 +160,10 @@ float4 main(PS_IN input) : SV_Target
                     float4 reflectionColor = environment.Sample(object_sampler,
                         reflectionVector);
                     float4 reflectionFactor = reflectionColor * reflectionIntensity;
-                    color = saturate(color + (specular * reflectionFactor * 10.0f));
+                    specular *= reflectionFactor * 10.0f;
                 }
-                else
-                    color = saturate(color + specular);
+                
+                color = saturate((color * textureColor) + specular);
             }
         }
     }
@@ -174,8 +177,6 @@ float4 main(PS_IN input) : SV_Target
             color = saturate(color);
         }
     }
-    
-    color = color * textureColor;
     
     //if normals enabled then make normals looking render
     if (normals)

@@ -18,7 +18,7 @@ void SaveSystem::AddInfo(std::vector<std::string> elements)
 	if (pFile.is_open()) {
 		for (int i = 0; i < elements.size(); i++)
 		{
-			pFile << elements[i] + "\n";
+			pFile << elements[i] << std::endl;
 		}
 	}
 }

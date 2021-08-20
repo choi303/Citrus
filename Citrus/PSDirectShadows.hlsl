@@ -35,6 +35,7 @@ Texture2D spec : register(t1);
 Texture2D normal : register(t2);
 Texture2D environment : register(t3);
 Texture2D depthMap : register(t4);
+Texture2D emessiveMap : register(t5);
 SamplerState object_sampler : register(s0);
 SamplerState object_sampler_clamp : register(s1);
 SamplerComparisonState CMPSampler : register(s2);
@@ -58,45 +59,54 @@ float4 main(PS_IN input) : SV_Target
     
     uint width, height;
     
+    //lighdirection set
     lightDir = -lightDirection;
     
+    //normal map sample
     bumpMap = normal.Sample(object_sampler, input.tc);
     
+    //normal map calculation
     bumpMap = (bumpMap * 2.0f) - 1.0f;
-    
     bumpNormal = (bumpMap.x * input.tan) + (bumpMap.y * input.binormal) + (bumpMap.z * input.normal);
-    
     bumpNormal = normalize(bumpNormal);
-    
+    //bias set
     bias = biasC;
     
+    //diffuse texture sample
     textureColor = diff.Sample(object_sampler, input.tc);
-    if(alphaClip)
+    if (alphaClip)
     {
         if (textureColor.a < 0.5)
             discard;
     }
     
+    //diffuse set
     float4 diffuse = diffuseColor * diffuseIntensityC;
     
+    //set final color ambient light for default value
     color = ambientColor * ambientIntensity;
     
+    //if normal map enabled then apply to model
     if (normalMapEnabled)
         input.normal = bumpNormal;
     
+    //light view projection calculation
     projectTexCoord.x = input.lightViewPosition.x / input.lightViewPosition.w / 2.0f + 0.5f;
     projectTexCoord.y = -input.lightViewPosition.y / input.lightViewPosition.w / 2.0f + 0.5f;
     
+    //if model is in light view projection then make shadows calculation
     if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
     {
+        //shadow map sample
         depthValue = depthMap.Sample(object_sampler_clamp, projectTexCoord).r;
         
+        //light depth value calculation
         lightDepthValue = input.lightViewPosition.z / input.lightViewPosition.w;
-        
         lightDepthValue = lightDepthValue - bias;
         
-        if(pcfEnabled)
-        {            
+        //if pcf enabled then apply pcf filer
+        if (pcfEnabled)
+        {
             shadow = 0.0;
             depthMap.GetDimensions(width, height);
             float2 texelSize = 1.0 / float2(width, height);
@@ -104,14 +114,13 @@ float4 main(PS_IN input) : SV_Target
             {
                 for (int y = -1; y <= 1; ++y)
                 {
+                    //sample with CMPSampler for getting correct result of pcf
                     float pcfDepth = depthMap.SampleCmpLevelZero(CMPSampler, projectTexCoord.xy + float2(x, y) * texelSize, lightDepthValue).r;
                     shadow += pcfDepth;
                 }
             }
-            
             shadow /= 9.0f;
         }
-        
         
         if (lightDepthValue < depthValue)
         {
@@ -120,9 +129,12 @@ float4 main(PS_IN input) : SV_Target
             if (lightIntensity > 0.0f)
             {
                 color += (diffuse * lightIntensity);
-                if(pcfEnabled)
-                color *= shadow;
+                if (pcfEnabled)
+                    color *= shadow;
                 color = saturate(color);
+                
+                //blinn phong thing
+                float3 halfwayDir = normalize(lightDir + input.viewDirection);
                 
                 // Sample the pixel from the specular map texture.
                 specularIntensity = spec.Sample(object_sampler, input.tc);
@@ -133,11 +145,12 @@ float4 main(PS_IN input) : SV_Target
                 reflection = normalize(2 * lightIntensity * input.normal - lightDir);
         
                 // Determine the amount of specular light based on the reflection vector, viewing direction, and specular power.
-                specular = specularIntensityC * pow(saturate(dot(reflection, input.viewDirection)), specularPower);
+                specular = specularIntensityC * pow(saturate(dot(reflection, halfwayDir)), specularPower);
         
                 // Use the specular map to determine the intensity of specular light at this pixel.
                 specular = (specular * specularIntensity);
-        
+                
+                //if reflection enabled then sample enviorment color with specular color if is not then normally return color
                 if (reflectionEnabled)
                 {
                     float3 incident = -input.viewDirection;
@@ -145,30 +158,59 @@ float4 main(PS_IN input) : SV_Target
                     float4 reflectionColor = environment.Sample(object_sampler,
                         reflectionVector);
                     float4 reflectionFactor = reflectionColor * reflectionIntensity;
-                    color = saturate(color + (specular * reflectionFactor * 10.0f));
+                    specular *= reflectionFactor * 10.0f;
                 }
-                else
-                    color = saturate(color + specular);
+                
+                color = saturate((color * textureColor) + specular);
             }
         }
     }
     else
     {
+        //if model is not in light view projection then simply make default light
         lightIntensity = saturate(dot(input.normal, lightDir));
         if (lightIntensity > 0.0f)
         {
+            //blinn phong thing
+            float3 halfwayDir = normalize(lightDir + input.viewDirection);
+                
+            // Sample the pixel from the specular map texture.
+            specularIntensity = spec.Sample(object_sampler, input.tc);
+        
+            const float specularPower = pow(2.0f, specularIntensity.a * 4.0f); //specular power based texture (a) channel
+        
+            // Calculate the reflection vector based on the light intensity, normal vector, and light direction.
+            reflection = normalize(2 * lightIntensity * input.normal - lightDir);
+        
+            // Determine the amount of specular light based on the reflection vector, viewing direction, and specular power.
+            specular = specularIntensityC * pow(saturate(dot(reflection, halfwayDir)), specularPower);
+        
+            // Use the specular map to determine the intensity of specular light at this pixel.
+            specular = (specular * specularIntensity);
+                
+            //if reflection enabled then sample enviorment color with specular color if is not then normally return color
+            if (reflectionEnabled)
+            {
+                float3 incident = -input.viewDirection;
+                float2 reflectionVector = reflect(incident, input.normal);
+                float4 reflectionColor = environment.Sample(object_sampler,
+                        reflectionVector);
+                float4 reflectionFactor = reflectionColor * reflectionIntensity;
+                specular *= reflectionFactor * 10.0f;
+            }
+            
             color += (diffuse * lightIntensity);
-            color = saturate(color);
+            color = saturate((color * textureColor) + specular);
         }
     }
     
-    color = color * textureColor;
-    
-    if(normals)
+    //if normals enabled then make normals looking render
+    if (normals)
     {
         input.normal = normalize(input.normal);
         return float4(input.normal, input.pos.z);
     }
     
+    //return final color
     return color;
 }

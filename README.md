@@ -10,7 +10,7 @@
 - PBR Support
 
 ### Current Features
-- Phong Lighting
+- Blinn-Phong Lighting
 - 3D Model Loader
 - Normal & Specular & Emessive Map support
 - Environment Mapping

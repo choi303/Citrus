@@ -148,7 +148,7 @@ void UI::DeveloperUI(std::string adapter_name, const
             ImGui::Begin("Developer Menu", nullptr,
                 ImGuiWindowFlags_NoMove |
                 ImGuiWindowFlags_NoCollapse);
-            ImGui::Text("Citrus Graphics Renderer v0.1");
+            ImGui::Text("Citrus Graphics Renderer v0.2");
             ImGui::Text(fps.c_str());
             const std::string adapter = "GPU: " + adapter_name;
             ImGui::Text(adapter.c_str());
@@ -576,10 +576,10 @@ void UI::DirectionalLigth(XMFLOAT4* diffuseColor,
                     direction[1] = 0.0f;
                     direction[2] = 1.0f;
                 }
-                ImGui::Checkbox("Normal Map\nEnabled", reinterpret_cast<bool*>(normalMapEnabled));
-                ImGui::Checkbox("Reflection\nEnabled", reinterpret_cast<bool*>(reflectionEnabled));
-                ImGui::Checkbox("PCF\nEnabled", reinterpret_cast<bool*>(pcfEnabled));
-                ImGui::Checkbox("Emessive\nEnabled", reinterpret_cast<bool*>(emessiveEnabled));
+                ImGui::Checkbox("Normal Map Enabled", reinterpret_cast<bool*>(normalMapEnabled));
+                ImGui::Checkbox("Reflection Enabled", reinterpret_cast<bool*>(reflectionEnabled));
+                ImGui::Checkbox("PCF Enabled", reinterpret_cast<bool*>(pcfEnabled));
+                ImGui::Checkbox("Emessive Enabled", reinterpret_cast<bool*>(emessiveEnabled));
                 ImGui::ColorEdit4("Light\nColor", diffuseCol);
                 ImGui::ColorEdit4("Ambient\nColor", ambientCol);
                 ImGui::DragFloat("Ambient\nIntensity", ambientIntensity, 0.01f, 0.0f, 50.0f);
