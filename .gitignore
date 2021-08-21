@@ -49,3 +49,6 @@
 *.ipch
 *.aps
 *.cso
+*.db-shm
+*.db-wal
+*.opendb

@@ -151,6 +151,18 @@ bool Graphics::InitDxBase(HWND hwnd)
 	//imgui init
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+	ImGuiIO& io = ::ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
+	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
+
+	io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
+	io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
+	io.BackendFlags |= ImGuiBackendFlags_PlatformHasViewports;
+	io.BackendFlags |= ImGuiBackendFlags_HasMouseHoveredViewport; // We can set io.MouseHoveredViewport correctly (optional, not easy)
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(pDevice.Get(), pContext.Get());
 	//style of imgui windows
@@ -303,6 +315,14 @@ void Graphics::EndFrame() const noexcept
 	//imgui window init
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	ImGuiIO& io = ::ImGui::GetIO();
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	// Update and Render additional Platform Windows
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+	}
 	if (vsync)
 		pChain->Present(1u, 0u);
 	else
@@ -340,6 +360,9 @@ bool Graphics::SceneGraph(Camera3D cam3D)
 
 void Graphics::Render()
 {
+	//render docking window
+	RenderDockingWindow();
+
 	//Particle(s) frame
 	mParticle.Frame(timer.GetMilisecondsElapsed());
 
@@ -382,4 +405,22 @@ DXGI_ADAPTER_DESC Graphics::GetAdapterDesc() const
 {
 	//return adapter description
 	return pAdapterDesc;
+}
+
+void Graphics::RenderDockingWindow() noexcept
+{
+	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoScrollbar;
+
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x - 8.0f, viewport->Pos.y + 10.0f));
+	ImGui::SetNextWindowSize(ImVec2(viewport->Size.x + 15.0f, viewport->Size.y + 2.0f));
+	ImGui::SetNextWindowViewport(viewport->ID);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	ImGui::PopStyleVar(3);
+	ImGuiID dockSpaceId = ImGui::GetID("InvisibleWindowDockSpace");
+	ImGui::Begin("DockSpaceWindow", nullptr, windowFlags);
+	ImGui::DockSpace(dockSpaceId, ImVec2(width, height), ImGuiDockNodeFlags_PassthruCentralNode);
+	ImGui::End();
 }

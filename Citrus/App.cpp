@@ -112,9 +112,9 @@ void App::RenderFrame()
 	//Render Frame/sec (refresh rate)
 	//Draw test triangle all shaded
 	gfx.BeginFrame();
+	gfx.Render();
 	//Run FPS Counter func
 	FPSCounter();
-	gfx.Render();
 	//Run end frame func
 	gfx.EndFrame();
 }
@@ -126,7 +126,7 @@ bool App::ProcessMessages(HINSTANCE hInstance) noexcept
 	HWND hwnd = wnd.GetHWND();
 	ZeroMemory(&msg, sizeof(MSG));
 	//Get Message and dispatch theese messages
-	while (PeekMessage(&msg, hwnd, 0, 0, PM_REMOVE))
+	while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 	{
 		TranslateMessage(&msg);
 		DispatchMessageW(&msg);

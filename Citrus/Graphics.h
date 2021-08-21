@@ -55,6 +55,9 @@ public:
 private:
 	int width;
 	int height;
+	int viewportWidth, viewportHeight;
 	Particle mParticle;
 	std::unique_ptr<Fire> mFire;
+private:
+	void RenderDockingWindow() noexcept;
 };
