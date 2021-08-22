@@ -59,7 +59,7 @@ float4 main(PS_IN input) : SV_Target
         float3(0.0352, -0.0631, 0.5460), float3(-0.4776, 0.2847, -0.0271)
     };
   
-    float3 random = normalize(noiseMap.Sample(samClamp, input.texCoord * 8.0).rgb);
+    float3 random = noiseMap.Sample(samClamp, input.texCoord * 8.0).rgb;
   
     float depth = depthMap.Sample(samClamp, input.texCoord).r;
  

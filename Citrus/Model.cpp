@@ -5,7 +5,7 @@ bool Model::Init(const std::string& file_path, ID3D11Device* p_device, ID3D11Dev
     this->pDevice = p_device;
     this->pContext = p_context;
     this->path = file_path;
-    textures.push_back(Texture(pDevice, pContext, "Images\\SkyBox.png", 3));
+    textures.push_back(Texture(pDevice, pContext, "Images\\sunrise.dds", 3));
 
     if (!LoadMesh(file_path))
         Error::Log("Failed to load mesh.");

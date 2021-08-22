@@ -141,7 +141,7 @@ float4 main(PS_IN input) : SV_Target
                 // Sample the pixel from the specular map texture.
                 specularIntensity = spec.Sample(object_sampler, input.tc);
         
-                const float specularPower = pow(2.0f, specularIntensity.a * 4.0f); //specular power based texture (a) channel
+                const float specularPower = pow(1.0f, specularIntensity.a * 4.0f); //specular power based texture (a) channel
         
                 // Calculate the reflection vector based on the light intensity, normal vector, and light direction.
                 reflection = normalize(2 * lightIntensity * input.normal - lightDir);
@@ -155,7 +155,7 @@ float4 main(PS_IN input) : SV_Target
                 //if reflection enabled then sample enviorment color with specular color if is not then normally return color
                 if (reflectionEnabled)
                 {
-                    float3 incident = -input.viewDirection;
+                    float3 incident = input.viewDirection;
                     float2 reflectionVector = reflect(incident, input.normal);
                     float4 reflectionColor = environment.Sample(object_sampler,
                         reflectionVector);
