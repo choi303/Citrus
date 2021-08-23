@@ -12,6 +12,7 @@ public:
 		Default,
 		AO,
 		Noise,
+		HDR,
 	};
 public:
 	RenderTarget(ID3D11Device* pDevice, 

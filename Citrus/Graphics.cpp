@@ -263,7 +263,11 @@ bool Graphics::InitScene()
 		pContext.Get(), width, height, msaaQuality,
 		msaaEnabled, DepthStencil::Usage::ShadowDepth);
 
-	//Render Taret(s) initialize
+	dsHDR = std::make_unique<DepthStencil>(pDevice.Get(),
+		pContext.Get(), width, height, msaaQuality,
+		msaaEnabled, DepthStencil::Usage::ShadowDepth);
+
+	//Render Target(s) initialize
 	rtDepth = std::make_unique<RenderTarget>(pDevice.Get(),
 		pContext.Get(), width, height, msaaQuality,
 		msaaEnabled, RenderTarget::Usage::AO);
@@ -275,6 +279,10 @@ bool Graphics::InitScene()
 	rtNoise = std::make_unique<RenderTarget>(pDevice.Get(),
 		pContext.Get(), width, height, msaaQuality,
 		msaaEnabled, RenderTarget::Usage::Noise);
+
+	rtHDR = std::make_unique<RenderTarget>(pDevice.Get(),
+		pContext.Get(), width, height, msaaQuality,
+		msaaEnabled, RenderTarget::Usage::HDR);
 
 	//Full screen quad(s) initialize
 	quad = std::make_unique<FSQuad>(pDevice.Get(),
@@ -346,15 +354,6 @@ bool Graphics::SceneGraph(Camera3D cam3D)
 	pObject2.draw(cam3D);
 	mParticle.Render(cam3D);
 	mFire->Draw(cam3D, timer.GetMilisecondsElapsed());
-	//full screen pass
-	if (!*GameObject::GetWireframeEnabled())
-	{
-		pContext->OMSetRenderTargets(1u, pRtv.GetAddressOf(), nullptr);
-		rt->BindAsTexture(pContext.Get(), 0);
-		rtDepth->BindAsTexture(pContext.Get(), 1);
-		rtNoise->BindAsTexture(pContext.Get(), 3);
-		quad->draw(pContext.Get(), cam3D);
-	}
 	return true;
 }
 
@@ -386,6 +385,11 @@ void Graphics::Render()
 	dsNoise->Clear(pContext.Get());
 	SceneGraph(cam3D);
 
+	//high dynamic range render
+	rtHDR->BindAsTarget(pContext.Get(), dsHDR->pDepthStencilView.Get());
+	dsHDR->Clear(pContext.Get());
+	SceneGraph(cam3D);
+
 	UI::SetCanRendered(true);
 
 	rt->BindAsTarget(pContext.Get(), ds->pDepthStencilView.Get());
@@ -399,6 +403,17 @@ void Graphics::Render()
 			| D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
 	SceneGraph(cam3D);
+	
+	//full screen pass
+	if (!*GameObject::GetWireframeEnabled())
+	{
+		pContext->OMSetRenderTargets(1u, pRtv.GetAddressOf(), nullptr);
+		rt->BindAsTexture(pContext.Get(), 0);
+		rtDepth->BindAsTexture(pContext.Get(), 1);
+		rtHDR->BindAsTexture(pContext.Get(), 2);
+		rtNoise->BindAsTexture(pContext.Get(), 3);
+		quad->draw(pContext.Get(), cam3D);
+	}
 }
 
 DXGI_ADAPTER_DESC Graphics::GetAdapterDesc() const

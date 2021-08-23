@@ -1,11 +1,13 @@
 Texture2D tex : register(t0);
+Texture2D hdrTex : register(t2);
 SamplerState splr : register(s0);
 
 cbuffer param : register(b0)
 {
     bool blurEnabled;
     float blurIntensity;
-    float pad[2];
+    float exposure;
+    float gammaC;
 };
 
 struct PS_IN
@@ -36,5 +38,15 @@ float4 main(PS_IN input) : SV_Target
         return acc / 9.0f;
     }
     
-    return tex.Sample(splr, input.uv);
+    //hdr texture sample
+    float gamma = gammaC;
+    float3 hdrColor = hdrTex.Sample(splr, input.uv).rgb;
+    
+    //exposure tone mapping
+    float3 mapped = float3(1.0.xxx) - exp(-hdrColor * exposure);
+    
+    //gamma correction
+    mapped = pow(mapped, float3(1.0 / gamma, 1.0 / gamma, 1.0 / gamma));
+    
+    return float4(mapped, 1.0f);
 }

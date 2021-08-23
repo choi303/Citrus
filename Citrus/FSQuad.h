@@ -5,7 +5,8 @@ struct param
 {
 	BOOL blurEnabled;
 	float blurIntensity;
-	float pad[2];
+	float exposure;
+	float gamma;
 };
 
 struct fxaa
@@ -41,6 +42,8 @@ public:
 	static float* GetArea();
 	static float* GetRadius();
 	static float* GetBase();
+	static float* GetExposure();
+	static float* GetGamma();
 	static bool SetBlurEnabled(bool value);
 	static float SetBlurIntensity(float value);
 	static float SetArea(float value);
@@ -48,6 +51,8 @@ public:
 	static float SetRadius(float value);
 	static float SetTotalStrength(float value);
 	static float SetFallOff(float value);
+	static float SetExposure(float value);
+	static float SetGamma(float value);
 	static BOOL SetSSAOEnabled(BOOL value);
 private:
 	struct vertex

@@ -114,7 +114,7 @@ void UI::DeveloperUI(std::string adapter_name, const
     fogColor, float* fogStart, float* fogEnd, bool* vsync,
     bool* gridMapEnabled, XMFLOAT3* gridMapColor, Graphics* gfx, HWND hwnd, App* app, bool* msaaEnabled,
     bool* blurEnabled, float* blurIntensity, BOOL* ssaoEnabled, float* totalStrength, float* base,
-    float* area, float* fallOff, float* radius)
+    float* area, float* fallOff, float* radius, float* exposure, float* gamma)
 {
     if (can_render)
     {
@@ -158,6 +158,13 @@ void UI::DeveloperUI(std::string adapter_name, const
                     45)))
                 {
                     cam3d->SetRotation(0.0f, 0.0f, 0.0f);
+                }
+                ImGui::DragFloat("Expsoure", exposure, 0.01f, 0.01f, 100.0f);
+                ImGui::DragFloat("Gamma", gamma, 0.01f, 0.01f, 100.0f);
+                if (ImGui::Button("Reset"))
+                {
+                    *exposure = 1.690f;
+                    *gamma = 0.750f;
                 }
                 if (*ssaoEnabled)
                 {

@@ -9,6 +9,8 @@ static float base = 0.223;
 static float area = 0.0000000000001;
 static float fallOff = 0.000000001;
 static float radius = 0.007;
+static float exposure = 1.690f;
+static float gamma = 0.750f;
 
 FSQuad::FSQuad(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height)
 {
@@ -90,6 +92,8 @@ void FSQuad::draw(ID3D11DeviceContext* pContext, Camera3D cam)
 	//param cbuffer values bind
 	paramCBuffer->data.blurEnabled = blurEnabled;
 	paramCBuffer->data.blurIntensity = blurIntensity;
+	paramCBuffer->data.exposure = exposure;
+	paramCBuffer->data.gamma = gamma;
 	paramCBuffer->MapData();
 	paramCBuffer->PSBind(pContext, 0, 1);
 	//fxaa cbuffer values bind
@@ -189,4 +193,24 @@ float FSQuad::SetTotalStrength(float value)
 float FSQuad::SetFallOff(float value)
 {
 	return fallOff = value;
+}
+
+float* FSQuad::GetExposure()
+{
+	return &exposure;
+}
+
+float* FSQuad::GetGamma()
+{
+	return &gamma;
+}
+
+float FSQuad::SetExposure(float value)
+{
+	return exposure = value;
+}
+
+float FSQuad::SetGamma(float value)
+{
+	return gamma = value;
 }

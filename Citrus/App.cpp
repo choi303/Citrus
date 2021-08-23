@@ -210,6 +210,8 @@ void App::SetSavedValues()
 	FSQuad::SetBase(std::stof(devMenuSettings.GetInfo(13).c_str()));
 	FSQuad::SetRadius(std::stof(devMenuSettings.GetInfo(14).c_str()));
 	FSQuad::SetTotalStrength(std::stof(devMenuSettings.GetInfo(15).c_str()));
+	FSQuad::SetExposure(std::stof(devMenuSettings.GetInfo(16).c_str()));
+	FSQuad::SetGamma(std::stof(devMenuSettings.GetInfo(17).c_str()));
 
 	//close dev menu file
 	devMenuSettings.CloseFile();
@@ -346,6 +348,10 @@ void App::SaveValues()
 		*FSQuad::GetRadius()));
 	pDevMenuSavedItems.push_back("[SSAO Total Strength]:" + std::to_string(
 		*FSQuad::GetTotalStrength()));
+	pDevMenuSavedItems.push_back("[Exposure]:" + std::to_string(
+		*FSQuad::GetExposure()));
+	pDevMenuSavedItems.push_back("[Gamma]:" + std::to_string(
+		*FSQuad::GetGamma()));
 	devMenuSettings.AddInfo(pDevMenuSavedItems);
 	devMenuSettings.CloseFile();
 
@@ -423,7 +429,7 @@ void App::FPSCounter()
 		GameObject::GetFogEnd(), &gfx.vsync, GridMap::getRender(),
 		GridMap::getColor(), &gfx, wnd.GetHWND(), this, &gfx.msaaEnabled, FSQuad::GetBlurEnabled(), 
 		FSQuad::GetBlurIntensity(), FSQuad::GetSSAOEnabled(), FSQuad::GetTotalStrength(), FSQuad::GetBase(),
-		FSQuad::GetArea(), FSQuad::GetFallOff(), FSQuad::GetRadius());
+		FSQuad::GetArea(), FSQuad::GetFallOff(), FSQuad::GetRadius(), FSQuad::GetExposure(), FSQuad::GetGamma());
 	//toolbar creation
 	UI::ToolBar(GridMap::getRender(),
 		GameObject::GetWireframeEnabled(),

@@ -20,7 +20,7 @@ public:
 		bool* wireframeEnabled, XMFLOAT3* wireColor, bool* fogEnabled, XMFLOAT4* fogColor, float* fogStart,
 		float* fogEnd, bool* vsync, bool* gridMapEnabled, XMFLOAT3* gridMapColor, Graphics* gfx, HWND hwnd, App* app, bool* msaaEnabled,
 		bool* blurEnabled, float* blurIntensity, BOOL* ssaoEnabled, float* totalStrength, float* base,
-		float* area, float* fallOff, float* radius);
+		float* area, float* fallOff, float* radius, float* exposure, float* gamma);
 
 	static void ToolBar(bool* gridMapEnabled, bool* wireframeEnabled, bool* fogEnabled,
 		bool* depthBufferEnabled, bool* blurEnabled, bool* msaaEnabled, App* app, bool* fxaaEnabled,
