@@ -8,6 +8,8 @@ cbuffer param : register(b0)
     float blurIntensity;
     float exposure;
     float gammaC;
+    bool toneMappingEnabled;
+    float pad[3];
 };
 
 struct PS_IN
@@ -38,15 +40,21 @@ float4 main(PS_IN input) : SV_Target
         return acc / 9.0f;
     }
     
-    //hdr texture sample
-    float gamma = gammaC;
-    float3 hdrColor = hdrTex.Sample(splr, input.uv).rgb;
+    if(toneMappingEnabled)
+    {
+        //hdr texture sample
+        float gamma = gammaC;
+        float3 hdrColor = hdrTex.Sample(splr, input.uv).rgb;
     
-    //exposure tone mapping
-    float3 mapped = float3(1.0.xxx) - exp(-hdrColor * exposure);
+        //exposure tone mapping
+        float3 mapped = float3(1.0.xxx) - exp(-hdrColor * exposure);
     
-    //gamma correction
-    mapped = pow(mapped, float3(1.0 / gamma, 1.0 / gamma, 1.0 / gamma));
+        //gamma correction
+        mapped = pow(mapped, float3(1.0 / gamma, 1.0 / gamma, 1.0 / gamma));
+        
+        //return mapped data
+        return float4(mapped, 1.0f);
+    }
     
-    return float4(mapped, 1.0f);
+    return tex.Sample(splr, input.uv);
 }

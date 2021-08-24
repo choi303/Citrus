@@ -212,6 +212,10 @@ void App::SetSavedValues()
 	FSQuad::SetTotalStrength(std::stof(devMenuSettings.GetInfo(15).c_str()));
 	FSQuad::SetExposure(std::stof(devMenuSettings.GetInfo(16).c_str()));
 	FSQuad::SetGamma(std::stof(devMenuSettings.GetInfo(17).c_str()));
+	if (devMenuSettings.GetInfo(18) == "1")
+		FSQuad::SetToneMappingEnabled(TRUE);
+	else
+		FSQuad::SetToneMappingEnabled(FALSE);
 
 	//close dev menu file
 	devMenuSettings.CloseFile();
@@ -352,6 +356,8 @@ void App::SaveValues()
 		*FSQuad::GetExposure()));
 	pDevMenuSavedItems.push_back("[Gamma]:" + std::to_string(
 		*FSQuad::GetGamma()));
+	pDevMenuSavedItems.push_back("[Tone Mapping Enabled]:" + std::to_string(
+		*FSQuad::GetToneMappingEnabled()));
 	devMenuSettings.AddInfo(pDevMenuSavedItems);
 	devMenuSettings.CloseFile();
 
@@ -429,13 +435,15 @@ void App::FPSCounter()
 		GameObject::GetFogEnd(), &gfx.vsync, GridMap::getRender(),
 		GridMap::getColor(), &gfx, wnd.GetHWND(), this, &gfx.msaaEnabled, FSQuad::GetBlurEnabled(), 
 		FSQuad::GetBlurIntensity(), FSQuad::GetSSAOEnabled(), FSQuad::GetTotalStrength(), FSQuad::GetBase(),
-		FSQuad::GetArea(), FSQuad::GetFallOff(), FSQuad::GetRadius(), FSQuad::GetExposure(), FSQuad::GetGamma());
+		FSQuad::GetArea(), FSQuad::GetFallOff(), FSQuad::GetRadius(), FSQuad::GetExposure(), FSQuad::GetGamma(),
+		FSQuad::GetToneMappingEnabled());
 	//toolbar creation
 	UI::ToolBar(GridMap::getRender(),
 		GameObject::GetWireframeEnabled(),
 		GameObject::GetFogEnabled(), 
 		GameObject::GetDepthBufferEnabled(),
 		FSQuad::GetBlurEnabled(), &gfx.msaaEnabled, this, FSQuad::GetFxaaEnabled(), GameObject::GetBackCulling(),
-		GameObject::GetFrontCulling(), this, DirectionalLight::GetAlphaCEnabled(), FSQuad::GetSSAOEnabled());
+		GameObject::GetFrontCulling(), this, DirectionalLight::GetAlphaCEnabled(), FSQuad::GetSSAOEnabled(),
+		FSQuad::GetToneMappingEnabled());
 	UI::SetCanRendered(false);
 }

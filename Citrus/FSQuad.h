@@ -7,6 +7,8 @@ struct param
 	float blurIntensity;
 	float exposure;
 	float gamma;
+	BOOL toneMappingEnabled;
+	float pad[3];
 };
 
 struct fxaa
@@ -35,6 +37,7 @@ public:
 	static bool* GetBlurEnabled();
 	static bool* GetFxaaEnabled();
 	static BOOL* GetSSAOEnabled();
+	static BOOL* GetToneMappingEnabled();
 	static bool SetFxaaEnabled(bool value);
 	static float* GetBlurIntensity();
 	static float* GetFallOff();
@@ -45,6 +48,7 @@ public:
 	static float* GetExposure();
 	static float* GetGamma();
 	static bool SetBlurEnabled(bool value);
+	static BOOL SetToneMappingEnabled(BOOL value);
 	static float SetBlurIntensity(float value);
 	static float SetArea(float value);
 	static float SetBase(float value);

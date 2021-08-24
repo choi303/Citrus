@@ -114,7 +114,7 @@ void UI::DeveloperUI(std::string adapter_name, const
     fogColor, float* fogStart, float* fogEnd, bool* vsync,
     bool* gridMapEnabled, XMFLOAT3* gridMapColor, Graphics* gfx, HWND hwnd, App* app, bool* msaaEnabled,
     bool* blurEnabled, float* blurIntensity, BOOL* ssaoEnabled, float* totalStrength, float* base,
-    float* area, float* fallOff, float* radius, float* exposure, float* gamma)
+    float* area, float* fallOff, float* radius, float* exposure, float* gamma, BOOL* toneMappingEnabled)
 {
     if (can_render)
     {
@@ -159,12 +159,15 @@ void UI::DeveloperUI(std::string adapter_name, const
                 {
                     cam3d->SetRotation(0.0f, 0.0f, 0.0f);
                 }
-                ImGui::DragFloat("Expsoure", exposure, 0.01f, 0.01f, 100.0f);
-                ImGui::DragFloat("Gamma", gamma, 0.01f, 0.01f, 100.0f);
-                if (ImGui::Button("Reset"))
+                if (*toneMappingEnabled)
                 {
-                    *exposure = 1.690f;
-                    *gamma = 0.750f;
+                    ImGui::DragFloat("Expsoure", exposure, 0.01f, 0.01f, 100.0f);
+                    ImGui::DragFloat("Gamma", gamma, 0.01f, 0.01f, 100.0f);
+                    if (ImGui::Button("Reset"))
+                    {
+                        *exposure = 1.690f;
+                        *gamma = 0.750f;
+                    }
                 }
                 if (*ssaoEnabled)
                 {
@@ -246,7 +249,7 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
     wireframeEnabled, bool* fogEnabled,
     bool* depthBufferEnabled, bool* blurEnabled, bool* msaaEnabled, App* app, bool* fxaaEnabled,
     bool* backfaceCulling, bool* frontfaceCulling,
-    App* rApp, BOOL* alphaClip, BOOL* ssaoEnabled)
+    App* rApp, BOOL* alphaClip, BOOL* ssaoEnabled, BOOL* toneMappingEnabled)
 {
     if (can_render)
     {
@@ -463,6 +466,22 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
                         else
                         {
                             *ssaoEnabled = true;
+                        }
+                    }
+
+                    if (*toneMappingEnabled)
+                        title = "Tone Mapping: On";
+                    else
+                        title = "Tone Mapping: Off";
+                    if (ImGui::MenuItem(title.c_str()))
+                    {
+                        if (*toneMappingEnabled)
+                        {
+                            *toneMappingEnabled = false;
+                        }
+                        else
+                        {
+                            *toneMappingEnabled = true;
                         }
                     }
 
