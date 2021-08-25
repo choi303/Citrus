@@ -15,7 +15,7 @@ cbuffer DirectLight : register(b0)
     bool normals;
     bool emessiveEnabled;
     float emessiveIntensity;
-    float pad[1];
+    bool brightnessRender;
 };
 
 struct PS_IN
@@ -209,6 +209,23 @@ float4 main(PS_IN input) : SV_Target
     {
         input.normal = normalize(input.normal);
         return float4(input.normal, input.pos.z);
+    }
+    
+    //if brightnessRender is true then render brightness only
+    if (brightnessRender)
+    {
+        float4 brightColor;
+        float brightness = dot(color.rgb, float3(0.2126f, 0.7152f, 0.0722f));
+        if (brightness > 1.0f)
+        {
+            brightColor = float4(color.rgb, 1.0f);
+        }
+        else
+        {
+            brightColor = float4(0.0f, 0.0f, 0.0f, 1.0f);
+        }
+        
+        return brightColor;
     }
     
     //return final color

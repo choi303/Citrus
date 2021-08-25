@@ -267,6 +267,14 @@ bool Graphics::InitScene()
 		pContext.Get(), width, height, msaaQuality,
 		msaaEnabled, DepthStencil::Usage::ShadowDepth);
 
+	dsBrightness = std::make_unique<DepthStencil>(pDevice.Get(),
+		pContext.Get(), width, height, msaaQuality,
+		msaaEnabled, DepthStencil::Usage::ShadowDepth);
+
+	dsBloom = std::make_unique<DepthStencil>(pDevice.Get(),
+		pContext.Get(), width, height, msaaQuality,
+		msaaEnabled, DepthStencil::Usage::ShadowDepth);
+
 	//Render Target(s) initialize
 	rtDepth = std::make_unique<RenderTarget>(pDevice.Get(),
 		pContext.Get(), width, height, msaaQuality,
@@ -281,6 +289,14 @@ bool Graphics::InitScene()
 		msaaEnabled, RenderTarget::Usage::Noise);
 
 	rtHDR = std::make_unique<RenderTarget>(pDevice.Get(),
+		pContext.Get(), width, height, msaaQuality,
+		msaaEnabled, RenderTarget::Usage::HDR);
+
+	rtBrightness = std::make_unique<RenderTarget>(pDevice.Get(),
+		pContext.Get(), width, height, msaaQuality,
+		msaaEnabled, RenderTarget::Usage::HDR);
+
+	rtBloom = std::make_unique<RenderTarget>(pDevice.Get(),
 		pContext.Get(), width, height, msaaQuality,
 		msaaEnabled, RenderTarget::Usage::HDR);
 
@@ -354,6 +370,19 @@ bool Graphics::SceneGraph(Camera3D cam3D)
 	pObject2.draw(cam3D);
 	mParticle.Render(cam3D);
 	mFire->Draw(cam3D, timer.GetMilisecondsElapsed());
+
+	//full screen pass
+	if (!*GameObject::GetWireframeEnabled())
+	{
+		pContext->OMSetRenderTargets(1u, pRtv.GetAddressOf(), nullptr);
+		rt->BindAsTexture(pContext.Get(), 0);
+		rtDepth->BindAsTexture(pContext.Get(), 1);
+		rtHDR->BindAsTexture(pContext.Get(), 2);
+		rtNoise->BindAsTexture(pContext.Get(), 3);
+		rtBrightness->BindAsTexture(pContext.Get(), 4);
+		rtBloom->BindAsTexture(pContext.Get(), 5);
+		quad->draw(pContext.Get(), cam3D);
+	}
 	return true;
 }
 
@@ -390,6 +419,20 @@ void Graphics::Render()
 	dsHDR->Clear(pContext.Get());
 	SceneGraph(cam3D);
 
+	//brightness render
+	rtBrightness->BindAsTarget(pContext.Get(), dsBrightness->pDepthStencilView.Get());
+	dsBrightness->Clear(pContext.Get());
+	pDirectLight->SetBrightnessRenderEnabled(TRUE);
+	SceneGraph(cam3D);
+	pDirectLight->SetBrightnessRenderEnabled(FALSE);
+
+	//bloom render
+	rtBloom->BindAsTarget(pContext.Get(), dsBloom->pDepthStencilView.Get());
+	dsBloom->Clear(pContext.Get());
+	FSQuad::SetBloomRenderEnabled(true);
+	quad->draw(pContext.Get(), cam3D);
+	FSQuad::SetBloomRenderEnabled(false);
+
 	UI::SetCanRendered(true);
 
 	rt->BindAsTarget(pContext.Get(), ds->pDepthStencilView.Get());
@@ -403,17 +446,6 @@ void Graphics::Render()
 			| D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
 	SceneGraph(cam3D);
-	
-	//full screen pass
-	if (!*GameObject::GetWireframeEnabled())
-	{
-		pContext->OMSetRenderTargets(1u, pRtv.GetAddressOf(), nullptr);
-		rt->BindAsTexture(pContext.Get(), 0);
-		rtDepth->BindAsTexture(pContext.Get(), 1);
-		rtHDR->BindAsTexture(pContext.Get(), 2);
-		rtNoise->BindAsTexture(pContext.Get(), 3);
-		quad->draw(pContext.Get(), cam3D);
-	}
 }
 
 DXGI_ADAPTER_DESC Graphics::GetAdapterDesc() const

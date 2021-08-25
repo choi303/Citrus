@@ -38,10 +38,14 @@ public:
 	std::unique_ptr<DepthStencil> dsDepth;
 	std::unique_ptr<DepthStencil> dsNoise;
 	std::unique_ptr<DepthStencil> dsHDR;
+	std::unique_ptr<DepthStencil> dsBrightness;
+	std::unique_ptr<DepthStencil> dsBloom;
 	std::unique_ptr<RenderTarget> rt;
 	std::unique_ptr<RenderTarget> rtDepth;
 	std::unique_ptr<RenderTarget> rtHDR;
 	std::unique_ptr<RenderTarget> rtNoise;
+	std::unique_ptr<RenderTarget> rtBrightness;
+	std::unique_ptr<RenderTarget> rtBloom;
 	std::unique_ptr<FSQuad> quad;
 	bool vsync = true;
 	UINT msaaQuality = 1;

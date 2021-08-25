@@ -18,7 +18,7 @@ struct DirectLight
     BOOL normals;
     BOOL emessiveEnabled;
     float emessiveIntensity;
-    float pad[1];
+    BOOL brightnessRender;
 };
 
 struct shadowmap {
@@ -59,6 +59,7 @@ public:
     void SetPCFEnabled(BOOL value);
     void SetAlphaCEnabled(BOOL value);
     void SetNormalsEnabled(BOOL value);
+    void SetBrightnessRenderEnabled(BOOL value);
     void SetSpecularIntensity(float value);
     void SetDiffuseIntensity(float value);
     void SetReflectionIntensity(float value);

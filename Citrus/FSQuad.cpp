@@ -11,7 +11,10 @@ static float fallOff = 0.000000001;
 static float radius = 0.007;
 static float exposure = 1.690f;
 static float gamma = 0.750f;
+static float bloomIntensity = 1.0f;
 static BOOL toneMappingEnabled;
+static bool bloomRender;
+static BOOL bloomEnabled;
 
 FSQuad::FSQuad(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height)
 {
@@ -24,6 +27,8 @@ FSQuad::FSQuad(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, 
 	pPSFxaa.Init(L"PSFXAA.cso", pDevice);
 	pVSSsao.Init(L"VS_SSAO.cso", pDevice);
 	pPSSsao.Init(L"PS_SSAO.cso", pDevice);
+	pVSBloom.Init(L"VSBloom.cso", pDevice);
+	pPSBloom.Init(L"PSBloom.cso", pDevice);
 	//init and create input layout
 	const std::vector<D3D11_INPUT_ELEMENT_DESC> fs_ied
 		=
@@ -57,6 +62,8 @@ FSQuad::FSQuad(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, 
 	fxaaCBuffer->Init(pDevice, pContext);
 	ssaoCBuffer = std::make_unique<CBuffer<SSAOBuffer>>();
 	ssaoCBuffer->Init(pDevice, pContext);
+	bloomCBuffer = std::make_unique<CBuffer<bloomBuffer>>();
+	bloomCBuffer->Init(pDevice, pContext);
 }
 
 void FSQuad::draw(ID3D11DeviceContext* pContext, Camera3D cam)
@@ -96,12 +103,27 @@ void FSQuad::draw(ID3D11DeviceContext* pContext, Camera3D cam)
 	paramCBuffer->data.exposure = exposure;
 	paramCBuffer->data.gamma = gamma;
 	paramCBuffer->data.toneMappingEnabled = toneMappingEnabled;
+	paramCBuffer->data.bloomEnabled = bloomEnabled;
 	paramCBuffer->MapData();
 	paramCBuffer->PSBind(pContext, 0, 1);
 	//fxaa cbuffer values bind
 	fxaaCBuffer->data.rcpFrame = XMFLOAT4(1.0f / width, 1.0f / height, 0.0f, 0.0f);
 	fxaaCBuffer->MapData();
 	fxaaCBuffer->PSBind(pContext, 1, 1);
+	if (bloomRender)
+	{
+		//input layout bind
+		pLayout->Bind(pContext);
+
+		//shaders bind
+		pVSBloom.Bind(pContext);
+		pPSBloom.Bind(pContext);
+
+		//cbuffer bind
+		bloomCBuffer->data.bloomIntensity = bloomIntensity;
+		bloomCBuffer->MapData();
+		bloomCBuffer->PSBind(pContext, 0, 1);
+	}
 	//draw quad
 	pContext->DrawIndexed(pIndexBuffer->BufferSize(),
 		0, 0);
@@ -122,9 +144,19 @@ bool FSQuad::SetBlurEnabled(bool value)
 	return blurEnabled = value;
 }
 
+bool FSQuad::SetBloomRenderEnabled(bool value)
+{
+	return bloomRender = value;
+}
+
 BOOL FSQuad::SetToneMappingEnabled(BOOL value)
 {
 	return toneMappingEnabled = value;
+}
+
+BOOL FSQuad::SetBloomEnabled(BOOL value)
+{
+	return bloomEnabled = value;
 }
 
 float FSQuad::SetBlurIntensity(float value)
@@ -150,6 +182,11 @@ BOOL* FSQuad::GetSSAOEnabled()
 BOOL* FSQuad::GetToneMappingEnabled()
 {
 	return &toneMappingEnabled;
+}
+
+BOOL* FSQuad::GetBloomEnabled()
+{
+	return &bloomEnabled;
 }
 
 BOOL FSQuad::SetSSAOEnabled(BOOL value)
@@ -217,6 +254,11 @@ float* FSQuad::GetGamma()
 	return &gamma;
 }
 
+float* FSQuad::GetBloomIntensity()
+{
+	return &bloomIntensity;
+}
+
 float FSQuad::SetExposure(float value)
 {
 	return exposure = value;
@@ -225,4 +267,9 @@ float FSQuad::SetExposure(float value)
 float FSQuad::SetGamma(float value)
 {
 	return gamma = value;
+}
+
+float FSQuad::SetBloomIntensity(float value)
+{
+	return bloomIntensity = value;
 }

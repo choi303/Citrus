@@ -1,5 +1,7 @@
 Texture2D tex : register(t0);
 Texture2D hdrTex : register(t2);
+Texture2D brightnessColor : register(t4);
+Texture2D bloomTex : register(t5);
 SamplerState splr : register(s0);
 
 cbuffer param : register(b0)
@@ -9,7 +11,8 @@ cbuffer param : register(b0)
     float exposure;
     float gammaC;
     bool toneMappingEnabled;
-    float pad[3];
+    bool bloomEnabled;
+    float pad[2];
 };
 
 struct PS_IN
@@ -21,6 +24,7 @@ static int r = 3 * blurIntensity;
 
 float4 main(PS_IN input) : SV_Target
 {
+    float3 sceneColor = tex.Sample(splr, input.uv).rgb;
     if(blurEnabled)
     {
         uint width, height;
@@ -45,16 +49,21 @@ float4 main(PS_IN input) : SV_Target
         //hdr texture sample
         float gamma = gammaC;
         float3 hdrColor = hdrTex.Sample(splr, input.uv).rgb;
-    
-        //exposure tone mapping
-        float3 mapped = float3(1.0.xxx) - exp(-hdrColor * exposure);
-    
-        //gamma correction
-        mapped = pow(mapped, float3(1.0 / gamma, 1.0 / gamma, 1.0 / gamma));
+        float3 bloomColor = bloomTex.Sample(splr, input.uv).rgb;
+        //if bloom is enabled then add bloom color to hdr color
+        if(bloomEnabled)
+        hdrColor += bloomColor;
+        
+        //tone mapping
+        float3 result = float3(1.0.xxx) - exp(-hdrColor * exposure);
+        
+        //also gamma correct while  we're at it
+        result = pow(result, float3(1.0 / gamma.xxx));
         
         //return mapped data
-        return float4(mapped, 1.0f);
+        return float4(result, 1.0f);
     }
-    
-    return tex.Sample(splr, input.uv);
+
+    //return float4(sceneColor, 1.0f);
+    return bloomTex.Sample(splr, input.uv);
 }

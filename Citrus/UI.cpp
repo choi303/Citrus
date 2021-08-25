@@ -114,7 +114,8 @@ void UI::DeveloperUI(std::string adapter_name, const
     fogColor, float* fogStart, float* fogEnd, bool* vsync,
     bool* gridMapEnabled, XMFLOAT3* gridMapColor, Graphics* gfx, HWND hwnd, App* app, bool* msaaEnabled,
     bool* blurEnabled, float* blurIntensity, BOOL* ssaoEnabled, float* totalStrength, float* base,
-    float* area, float* fallOff, float* radius, float* exposure, float* gamma, BOOL* toneMappingEnabled)
+    float* area, float* fallOff, float* radius, float* exposure, float* gamma, BOOL* toneMappingEnabled,
+    float* bloomIntensity, BOOL* bloomEnabled)
 {
     if (can_render)
     {
@@ -168,6 +169,10 @@ void UI::DeveloperUI(std::string adapter_name, const
                         *exposure = 1.690f;
                         *gamma = 0.750f;
                     }
+                }
+                if (*bloomEnabled)
+                {
+                    ImGui::DragFloat("Bloom\nIntensity", bloomIntensity, 0.01f, -1000.0f, 1000.0f);
                 }
                 if (*ssaoEnabled)
                 {
@@ -249,7 +254,8 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
     wireframeEnabled, bool* fogEnabled,
     bool* depthBufferEnabled, bool* blurEnabled, bool* msaaEnabled, App* app, bool* fxaaEnabled,
     bool* backfaceCulling, bool* frontfaceCulling,
-    App* rApp, BOOL* alphaClip, BOOL* ssaoEnabled, BOOL* toneMappingEnabled)
+    App* rApp, BOOL* alphaClip, BOOL* ssaoEnabled, BOOL* toneMappingEnabled,
+    BOOL* bloomEnabled)
 {
     if (can_render)
     {
@@ -482,6 +488,22 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
                         else
                         {
                             *toneMappingEnabled = true;
+                        }
+                    }
+
+                    if (*bloomEnabled)
+                        title = "Bloom: On";
+                    else
+                        title = "Bloom: Off";
+                    if (ImGui::MenuItem(title.c_str()))
+                    {
+                        if (*bloomEnabled)
+                        {
+                            *bloomEnabled = false;
+                        }
+                        else
+                        {
+                            *bloomEnabled = true;
                         }
                     }
 

@@ -17,7 +17,7 @@
 - Shadow Mapping
 - Ambient Occlusion
 - Particle System
-- HDR Lighting (tone mapping)
+- HDR Lighting (tone mapping, bloom)
 - Filters (blur, depth, fog, fire)
 - Anti Aliasing (msaa, fxaa)
 - GUI Support (Dear Imgui <3)

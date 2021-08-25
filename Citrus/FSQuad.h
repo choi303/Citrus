@@ -1,33 +1,40 @@
 #pragma once
 #include "GfxBase.h"
 
-struct param
-{
-	BOOL blurEnabled;
-	float blurIntensity;
-	float exposure;
-	float gamma;
-	BOOL toneMappingEnabled;
-	float pad[3];
-};
-
-struct fxaa
-{
-	XMFLOAT4 rcpFrame;
-};
-
-struct SSAOBuffer
-{
-	float totalStrength;
-	float base;
-	float area;
-	float fallOff;
-	float radius;
-	float pad[3];
-};
-
 class FSQuad
 {
+private:
+	struct param
+	{
+		BOOL blurEnabled;
+		float blurIntensity;
+		float exposure;
+		float gamma;
+		BOOL toneMappingEnabled;
+		BOOL bloomEnabled;
+		float pad[2];
+	};
+
+	struct fxaa
+	{
+		XMFLOAT4 rcpFrame;
+	};
+
+	struct SSAOBuffer
+	{
+		float totalStrength;
+		float base;
+		float area;
+		float fallOff;
+		float radius;
+		float pad[3];
+	};
+
+	struct bloomBuffer
+	{
+		float bloomIntensity;
+		float pad[3];
+	};
 public:
 	FSQuad(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height);
 	FSQuad(FSQuad& rhs) {}
@@ -38,6 +45,7 @@ public:
 	static bool* GetFxaaEnabled();
 	static BOOL* GetSSAOEnabled();
 	static BOOL* GetToneMappingEnabled();
+	static BOOL* GetBloomEnabled();
 	static bool SetFxaaEnabled(bool value);
 	static float* GetBlurIntensity();
 	static float* GetFallOff();
@@ -47,8 +55,11 @@ public:
 	static float* GetBase();
 	static float* GetExposure();
 	static float* GetGamma();
+	static float* GetBloomIntensity();
 	static bool SetBlurEnabled(bool value);
+	static bool SetBloomRenderEnabled(bool value);
 	static BOOL SetToneMappingEnabled(BOOL value);
+	static BOOL SetBloomEnabled(BOOL value);
 	static float SetBlurIntensity(float value);
 	static float SetArea(float value);
 	static float SetBase(float value);
@@ -57,6 +68,7 @@ public:
 	static float SetFallOff(float value);
 	static float SetExposure(float value);
 	static float SetGamma(float value);
+	static float SetBloomIntensity(float value);
 	static BOOL SetSSAOEnabled(BOOL value);
 private:
 	struct vertex
@@ -70,12 +82,15 @@ private:
 	std::unique_ptr<CBuffer<param>> paramCBuffer;
 	std::unique_ptr<CBuffer<fxaa>> fxaaCBuffer;
 	std::unique_ptr<CBuffer<SSAOBuffer>> ssaoCBuffer;
+	std::unique_ptr<CBuffer<bloomBuffer>> bloomCBuffer;
 	VertexShader pVSBlur;
 	PixelShader pPSBlur;
 	VertexShader pVSFxaa;
 	PixelShader pPSFxaa;
 	VertexShader pVSSsao;
 	PixelShader pPSSsao;
+	VertexShader pVSBloom;
+	PixelShader pPSBloom;
 	int width;
 	int height;
 };

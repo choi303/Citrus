@@ -14,6 +14,7 @@ static BOOL pcfEnabled;
 static BOOL alphaClip;
 static BOOL normals;
 static BOOL emessiveEnabled;
+static BOOL brightnessRender;
 static float emessiveIntensity = 1.0f;
 
 DirectionalLight::DirectionalLight(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height)
@@ -118,6 +119,7 @@ void DirectionalLight::BindCB(Camera3D cam)
 	mLightBuffer->data.normals = normals;
 	mLightBuffer->data.emessiveEnabled = emessiveEnabled;
 	mLightBuffer->data.emessiveIntensity = emessiveIntensity;
+	mLightBuffer->data.brightnessRender = brightnessRender;
 	mLightBuffer->MapData();
 	mLightBuffer->PSBind(mContext.Get(), 0, 1);
 	mShadowCBuffer->data.shadowView = mLightCam.GetViewMatrix();
@@ -243,6 +245,11 @@ void DirectionalLight::SetAlphaCEnabled(BOOL value)
 void DirectionalLight::SetNormalsEnabled(BOOL value)
 {
 	normals = value;
+}
+
+void DirectionalLight::SetBrightnessRenderEnabled(BOOL value)
+{
+	brightnessRender = value;
 }
 
 BOOL* DirectionalLight::GetEmessiveEnabled()
