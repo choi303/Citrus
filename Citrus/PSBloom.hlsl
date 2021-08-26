@@ -32,8 +32,8 @@ float4 main(PS_IN input) : SV_Target
         }
         for (i = 1; i < samples; ++i)
         {
-            result += image.Sample(splr, input.uv + float2(0.0f, imageOffset.y * (i * bloomIntensity))).rgb * weight[i];
-            result += image.Sample(splr, input.uv - float2(0.0f, imageOffset.y * (i * bloomIntensity))).rgb * weight[i];
+            result += image.Sample(splr, input.uv + float2(0.0f, imageOffset.y * (i * 0.5f))).rgb * weight[i];
+            result += image.Sample(splr, input.uv - float2(0.0f, imageOffset.y * (i * 0.5f))).rgb * weight[i];
         }
     }
     //return blured result
