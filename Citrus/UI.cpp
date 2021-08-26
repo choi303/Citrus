@@ -172,7 +172,7 @@ void UI::DeveloperUI(std::string adapter_name, const
                 }
                 if (*bloomEnabled)
                 {
-                    ImGui::DragFloat("Bloom\nIntensity", bloomIntensity, 0.01f, -1000.0f, 1000.0f);
+                    ImGui::DragFloat("Bloom\nIntensity", bloomIntensity, 0.01f, 0.0f, 1000.0f);
                 }
                 if (*ssaoEnabled)
                 {

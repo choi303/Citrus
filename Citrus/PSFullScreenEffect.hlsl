@@ -64,6 +64,6 @@ float4 main(PS_IN input) : SV_Target
         return float4(result, 1.0f);
     }
 
-    //return float4(sceneColor, 1.0f);
-    return bloomTex.Sample(splr, input.uv);
+    //return scene color
+    return float4(sceneColor, 1.0f);
 }
