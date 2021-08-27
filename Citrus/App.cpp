@@ -455,6 +455,7 @@ void App::FPSCounter()
 		GameObject::GetDepthBufferEnabled(),
 		FSQuad::GetBlurEnabled(), &gfx.msaaEnabled, this, FSQuad::GetFxaaEnabled(), GameObject::GetBackCulling(),
 		GameObject::GetFrontCulling(), this, DirectionalLight::GetAlphaCEnabled(), FSQuad::GetSSAOEnabled(),
-		FSQuad::GetToneMappingEnabled(), FSQuad::GetBloomEnabled());
+		FSQuad::GetToneMappingEnabled(), FSQuad::GetBloomEnabled(), gfx.pGameObjects, gfx.pDevice.Get(),
+		gfx.pContext.Get(), width, height);
 	UI::SetCanRendered(false);
 }

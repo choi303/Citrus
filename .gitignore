@@ -51,3 +51,4 @@
 *.db-shm
 *.db-wal
 *.opendb
+*.enc

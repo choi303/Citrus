@@ -10,7 +10,7 @@ static float pos[3] = { 0,0,0 };
 static float rot[3] = { 0,0,0 };
 static float scale[3] = { 0.1f,0.1f,0.1f };
 
-bool GameObject::init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std::string filepath, int width, int height, bool hasMaterial)
+GameObject::GameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std::string filepath, int width, int height, bool hasMaterial)
 {
 	this->pDevice = pDevice;
 	this->pContext = pContext;
@@ -46,7 +46,7 @@ bool GameObject::init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std:
 	//create vertex shader i.l. and bind
 	pLayout = std::make_unique<InputLayout>(pDevice, ied, &pVS);
 	//model initialize
-	if(hasMaterial)
+	if (hasMaterial)
 		pModel.Init(filepath.c_str(), pDevice, pContext);
 	else
 		pModel.InitNoMtl(filepath.c_str(), pDevice, pContext);
@@ -99,28 +99,28 @@ bool GameObject::init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std:
 	pRasterizerDesc.FillMode = D3D11_FILL_SOLID;
 	pRasterizerDesc.CullMode = D3D11_CULL_NONE;
 	hr = pDevice->CreateRasterizerState(&pRasterizerDesc, &pRasterizer);
-	if (FAILED(hr)) { Error::Log(hr, "Failed to create pasteurizer state"); return false; }
+	if (FAILED(hr)) { Error::Log(hr, "Failed to create pasteurizer state"); }
 
 	//create pasteurizer 
 	CD3D11_RASTERIZER_DESC pRasterizerDescBack(D3D11_DEFAULT);
 	pRasterizerDesc.FillMode = D3D11_FILL_SOLID;
 	pRasterizerDesc.CullMode = D3D11_CULL_BACK;
 	hr = pDevice->CreateRasterizerState(&pRasterizerDescBack, &pRasterizerBack);
-	if (FAILED(hr)) { Error::Log(hr, "Failed to create pasteurizer state"); return false; }
+	if (FAILED(hr)) { Error::Log(hr, "Failed to create pasteurizer state"); }
 
 	//create pasteurizer 
 	CD3D11_RASTERIZER_DESC pRasterizerDescFront(D3D11_DEFAULT);
 	pRasterizerDescFront.FillMode = D3D11_FILL_SOLID;
 	pRasterizerDescFront.CullMode = D3D11_CULL_FRONT;
 	hr = pDevice->CreateRasterizerState(&pRasterizerDescFront, &pRasterizerFront);
-	if (FAILED(hr)) { Error::Log(hr, "Failed to create pasteurizer state"); return false; }
+	if (FAILED(hr)) { Error::Log(hr, "Failed to create pasteurizer state"); }
 
 	//create pasteurizer description 
 	CD3D11_RASTERIZER_DESC pRasterizerDescWireframe(D3D11_DEFAULT);
 	pRasterizerDescWireframe.FillMode = D3D11_FILL_WIREFRAME;
-		pRasterizerDescWireframe.CullMode = D3D11_CULL_NONE;
+	pRasterizerDescWireframe.CullMode = D3D11_CULL_NONE;
 	hr = pDevice->CreateRasterizerState(&pRasterizerDescWireframe, &pRasterizerWireframe);
-	if (FAILED(hr)) { Error::Log(hr, "Failed to create pasteurizer state"); return false; }
+	if (FAILED(hr)) { Error::Log(hr, "Failed to create pasteurizer state"); }
 
 	//matrices constant buffer initialize
 	matrices_buffer = std::make_unique<CBuffer<matrices>>();
@@ -130,8 +130,6 @@ bool GameObject::init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std:
 	pDepthBuffer.Init(pDevice, pContext);
 	pWireframe.Init(pDevice, pContext);
 	pFog.Init(pDevice, pContext);
-
-    return true;
 }
 
 bool GameObject::HasNormal() const

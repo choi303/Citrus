@@ -14,8 +14,8 @@ class GameObject
 {
 public:
 	GameObject() = default;
+	GameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std::string filepath, int width, int height, bool hasMaterial);
 	GameObject(const GameObject&) {}
-	bool init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std::string filepath, int width, int height, bool hasMaterial);
 	bool HasNormal() const;
 	static bool* GetDepthBufferEnabled();
 	static bool* GetBlurEnabled();

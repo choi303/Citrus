@@ -27,8 +27,7 @@ public:
 	DXGI_ADAPTER_DESC GetAdapterDesc() const;
 	Camera3D cam3D;
 	Timer timer;
-	GameObject pObject;
-	GameObject pObject2;
+	std::vector<GameObject*> pGameObjects;
 	SkyBox pSkyBox;
 	CPUInfo pCPU;
 	std::unique_ptr<DirectionalLight> pDirectLight;

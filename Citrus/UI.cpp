@@ -1,7 +1,9 @@
 ﻿#include "UI.h"
 #include <Pdh.h>
 #include "Graphics.h"
+#include "GameObject.h"
 #include "App.h"
+#include <shobjidl.h> 
 
 static bool applyVisiblity = false;
 static bool can_render = true;
@@ -18,29 +20,32 @@ void UI::ClassicUI(Model* model, std::string uiTitle, float
             pos[0] = model->GetPos().x;
             pos[1] = model->GetPos().y;
             pos[2] = model->GetPos().z;
-            ImGui::Begin(uiTitle.c_str());
-            ImGui::DragFloat3("Position\nX/Y/Z", pos, 0.01f,
-                -999999.0f, 999999.0f);
-            model->SetPos(pos[0], pos[1], pos[2]);
-            rot[0] = model->GetRot().x;
-            rot[1] = model->GetRot().y;
-            rot[2] = model->GetRot().z;
-            ImGui::DragFloat3("Rotation\nX/Y/Z", rot, 0.01f,
-                -999999999.0f, 999999999.0f);
-            model->SetRot(rot[0], rot[1], rot[2]);
-            scale[0] = model->GetScale().x;
-            scale[1] = model->GetScale().y;
-            scale[2] = model->GetScale().z;
-            ImGui::DragFloat3("Scale\nX/Y/Z", scale, 0.01f,
-                -999999999.0f, (999999999.0f));
-            model->SetScale(scale[0], scale[1], scale[2]);
-            if (ImGui::Button("Reset Position and Rotation", ImVec2
-            (200, 45)))
+            if (ImGui::Begin(uiTitle.c_str()))
             {
-                model->SetPos(0.0f, 0.0f, 0.0f);
-                model->SetRot(0.0f, 0.0f, 0.0f);
-                model->SetScale(1.0f, 1.0f, 1.0f);
+                ImGui::DragFloat3("Position\nX/Y/Z", pos, 0.01f,
+                    -999999.0f, 999999.0f);
+                model->SetPos(pos[0], pos[1], pos[2]);
+                rot[0] = model->GetRot().x;
+                rot[1] = model->GetRot().y;
+                rot[2] = model->GetRot().z;
+                ImGui::DragFloat3("Rotation\nX/Y/Z", rot, 0.01f,
+                    -999999999.0f, 999999999.0f);
+                model->SetRot(rot[0], rot[1], rot[2]);
+                scale[0] = model->GetScale().x;
+                scale[1] = model->GetScale().y;
+                scale[2] = model->GetScale().z;
+                ImGui::DragFloat3("Scale\nX/Y/Z", scale, 0.01f,
+                    -999999999.0f, (999999999.0f));
+                model->SetScale(scale[0], scale[1], scale[2]);
+                if (ImGui::Button("Reset Position and Rotation", ImVec2
+                (200, 45)))
+                {
+                    model->SetPos(0.0f, 0.0f, 0.0f);
+                    model->SetRot(0.0f, 0.0f, 0.0f);
+                    model->SetScale(1.0f, 1.0f, 1.0f);
+                }
             }
+            
             ImGui::End();
         }
     }
@@ -244,8 +249,9 @@ void UI::DeveloperUI(std::string adapter_name, const
                     ImGui::ColorPicker3("Wireframe\nColor", wireCol);
                 if (*gridMapEnabled)
                     ImGui::ColorPicker3("Grid Map\nColor", gridmapCol);
+                
+                ImGui::End();
             }
-            ImGui::End();
         }
     }
 }
@@ -255,17 +261,59 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
     bool* depthBufferEnabled, bool* blurEnabled, bool* msaaEnabled, App* app, bool* fxaaEnabled,
     bool* backfaceCulling, bool* frontfaceCulling,
     App* rApp, BOOL* alphaClip, BOOL* ssaoEnabled, BOOL* toneMappingEnabled,
-    BOOL* bloomEnabled)
+    BOOL* bloomEnabled, std::vector<GameObject*>& pGameObjects, ID3D11Device* pDevice,
+    ID3D11DeviceContext* pContext, int width, int height)
 {
     if (can_render)
     {
         if (uiVisiblity)
         {
             std::string title = "";
+            PWSTR pszFilePath = PWSTR("");
             if (ImGui::BeginMainMenuBar())
             {
                 if (ImGui::BeginMenu("File"))
                 {
+                    if (ImGui::MenuItem("Load Model (.obj)"))
+                    {
+                        HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
+                            COINIT_DISABLE_OLE1DDE);
+                        if (SUCCEEDED(hr))
+                        {
+                            IFileOpenDialog* pFileOpen;
+
+                            // Create the FileOpenDialog object.
+                            hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL,
+                                IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
+
+                            if (SUCCEEDED(hr))
+                            {
+                                COMDLG_FILTERSPEC ComDlgFS[1] = { L"Executable Files", L"*.obj;" };
+                                pFileOpen->SetFileTypes(1, ComDlgFS);
+                                pFileOpen->SetTitle(L"Select File (.obj)");
+                                // Show the Open dialog box.
+                                hr = pFileOpen->Show(NULL);
+
+                                // Get the file name from the dialog box.
+                                if (SUCCEEDED(hr))
+                                {
+                                    IShellItem* pItem;
+                                    hr = pFileOpen->GetResult(&pItem);
+                                    if (SUCCEEDED(hr))
+                                    {
+                                        hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+                                        pItem->Release();
+                                    }
+                                }
+                                pFileOpen->Release();
+                            }                   
+                        }
+                        std::wstring wPath = std::wstring(pszFilePath);
+                        std::string sPath = std::string(wPath.begin(), wPath.end());
+                        if(pszFilePath != PWSTR(""))
+                        pGameObjects.push_back(new GameObject(pDevice, pContext, sPath, width, height, true));
+                    }
+
                     if (ImGui::MenuItem("Save Scene Settings"))
                     {
                         rApp->SaveValues();
@@ -510,21 +558,20 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
                     ImGui::EndMenu();
                 }
 
-            }
-
-            if (ImGui::BeginMenu("About"))
-            {
-                if (ImGui::MenuItem("Info"))
+                if (ImGui::BeginMenu("About"))
                 {
-                    Error::InfoLog("Citrus Graphics Renderer v0.2\nGitHub: https://github.com/choi303/Citrus");
+                    if (ImGui::MenuItem("Info"))
+                    {
+                        Error::InfoLog("Citrus Graphics Renderer v0.2\nGitHub: https://github.com/choi303/Citrus");
+                    }
+                    ImGui::EndMenu();
                 }
-                ImGui::EndMenu();
-            }
 
+            }
+            
             ImGui::EndMainMenuBar();
         }
     }
-    
 }
 
 void UI::SetCanRendered(bool value)
@@ -574,9 +621,10 @@ void UI::ParticleUI(std::string uiTitle, float* mParticleDeviationX, float* mPar
                     if(*isLifetime)
                     ImGui::DragFloat("Life\Time", lifeTime, 0.01f, -1000.0f, 1000.0f);
                     ImGui::Checkbox("Life\nTime\nEnabled", isLifetime);
+                    
+                    ImGui::End();
                 }
 
-                ImGui::End();
             }
         }
     }
@@ -628,6 +676,7 @@ void UI::DirectionalLigth(XMFLOAT4* diffuseColor,
                 ImGui::DragFloat("Reflection\nIntensity", reflectionIntensity, 0.01f, 0.0f, 2000.0f);
                 ImGui::DragFloat("Emessive\nIntensity", emessiveIntensity, 0.01f, 0.0f, 2000.0f);
                 ImGui::DragFloat("Shadow\nBias", bias, 0.001f, -2000.0f, 2000.0f);
+                
                 ImGui::End();
             }
         }
@@ -666,8 +715,9 @@ void UI::FireUI(float* posX, float* posY, float* posZ, float* sSpeedX, float* sS
                 ImGui::DragFloat("Distortion 3\nY", distortion3Y, 0.01f, -1000.0f, 1000.0f);
                 ImGui::DragFloat("Distortion\nScale", distortionScale, 0.01f, -1000.0f, 1000.0f);
                 ImGui::DragFloat("Distortion\nBias", distortionBias, 0.01f, -1000.0f, 1000.0f);
+                
+                ImGui::End();
             }
-            ImGui::End();
         }
     }
 }

@@ -313,11 +313,10 @@ bool Graphics::InitScene()
 
 	pSkyBox.Init(pDevice.Get(), pContext.Get());
 
-	pObject.init(pDevice.Get(), pContext.Get(), "Models\\robo\\robo.obj", width, height, true);
-	pObject2.init(pDevice.Get(), pContext.Get(), "Models\\brick_wall\\brick_wall.obj", width, height, true);
-	pObject2.GetMesh()->SetRot(1.560f, 0.0f, 0.0f);
-	pObject2.GetMesh()->SetScale(100.0f, 100.0f, 100.0f);
-
+	pGameObjects.push_back(new GameObject(pDevice.Get(), pContext.Get(), "Models\\robo\\robo.obj", width, height, true));
+	pGameObjects.push_back(new GameObject(pDevice.Get(), pContext.Get(), "Models\\brick_wall\\brick_wall.obj", width, height, true));
+	pGameObjects[1]->GetMesh()->SetRot(1.560f, 0.0f, 0.0f);
+	pGameObjects[1]->GetMesh()->SetScale(100.0f, 100.0f, 100.0f);
 	//Particle(s) initialize
 	mParticle.Initialize(pDevice.Get(), "Images\\star.dds", pContext.Get());
 
@@ -366,8 +365,10 @@ bool Graphics::SceneGraph(Camera3D cam3D)
 	//Drawing Objects
 	pSkyBox.Draw(cam3D);
 	pDirectLight->BindCB(cam3D);
-	pObject.draw(cam3D);
-	pObject2.draw(cam3D);
+	for (int i = 0; i < pGameObjects.size(); i++)
+	{
+		pGameObjects[i]->draw(cam3D);
+	}
 	mParticle.Render(cam3D);
 	mFire->Draw(cam3D, timer.GetMilisecondsElapsed());
 
@@ -467,7 +468,10 @@ void Graphics::RenderDockingWindow() noexcept
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	ImGui::PopStyleVar(3);
 	ImGuiID dockSpaceId = ImGui::GetID("InvisibleWindowDockSpace");
-	ImGui::Begin("DockSpaceWindow", nullptr, windowFlags);
-	ImGui::DockSpace(dockSpaceId, ImVec2(width, height), ImGuiDockNodeFlags_PassthruCentralNode);
+	if (ImGui::Begin("DockSpaceWindow", nullptr, windowFlags))
+	{
+		ImGui::DockSpace(dockSpaceId, ImVec2(width, height), ImGuiDockNodeFlags_PassthruCentralNode);
+	}
+
 	ImGui::End();
 }
