@@ -10,43 +10,52 @@ static bool can_render = true;
 static bool uiVisiblity = true;
 
 //Classic UI
-void UI::ClassicUI(Model* model, std::string uiTitle, float
-    pos[3], float rot[3], float scale[3]) const
+void UI::ClassicUI(GameObject* gameObject, std::string uiTitle, float
+    pos[3], float rot[3], float scale[3], bool& isDestroyed) const
 {
     if (can_render)
     {
         if (uiVisiblity)
         {
-            pos[0] = model->GetPos().x;
-            pos[1] = model->GetPos().y;
-            pos[2] = model->GetPos().z;
-            if (ImGui::Begin(uiTitle.c_str()))
+            if (!isDestroyed)
             {
-                ImGui::DragFloat3("Position\nX/Y/Z", pos, 0.01f,
-                    -999999.0f, 999999.0f);
-                model->SetPos(pos[0], pos[1], pos[2]);
-                rot[0] = model->GetRot().x;
-                rot[1] = model->GetRot().y;
-                rot[2] = model->GetRot().z;
-                ImGui::DragFloat3("Rotation\nX/Y/Z", rot, 0.01f,
-                    -999999999.0f, 999999999.0f);
-                model->SetRot(rot[0], rot[1], rot[2]);
-                scale[0] = model->GetScale().x;
-                scale[1] = model->GetScale().y;
-                scale[2] = model->GetScale().z;
-                ImGui::DragFloat3("Scale\nX/Y/Z", scale, 0.01f,
-                    -999999999.0f, (999999999.0f));
-                model->SetScale(scale[0], scale[1], scale[2]);
-                if (ImGui::Button("Reset Position and Rotation", ImVec2
-                (200, 45)))
+                pos[0] = gameObject->GetMesh()->GetPos().x;
+                pos[1] = gameObject->GetMesh()->GetPos().y;
+                pos[2] = gameObject->GetMesh()->GetPos().z;
+                if (ImGui::Begin(uiTitle.c_str()))
                 {
-                    model->SetPos(0.0f, 0.0f, 0.0f);
-                    model->SetRot(0.0f, 0.0f, 0.0f);
-                    model->SetScale(1.0f, 1.0f, 1.0f);
+                    ImGui::DragFloat3("Position\nX/Y/Z", pos, 0.01f,
+                        -999999.0f, 999999.0f);
+                    gameObject->GetMesh()->SetPos(pos[0], pos[1], pos[2]);
+                    rot[0] = gameObject->GetMesh()->GetRot().x;
+                    rot[1] = gameObject->GetMesh()->GetRot().y;
+                    rot[2] = gameObject->GetMesh()->GetRot().z;
+                    ImGui::DragFloat3("Rotation\nX/Y/Z", rot, 0.01f,
+                        -999999999.0f, 999999999.0f);
+                    gameObject->GetMesh()->SetRot(rot[0], rot[1], rot[2]);
+                    scale[0] = gameObject->GetMesh()->GetScale().x;
+                    scale[1] = gameObject->GetMesh()->GetScale().y;
+                    scale[2] = gameObject->GetMesh()->GetScale().z;
+                    ImGui::DragFloat3("Scale\nX/Y/Z", scale, 0.01f,
+                        -999999999.0f, (999999999.0f));
+                    gameObject->GetMesh()->SetScale(scale[0], scale[1], scale[2]);
+                    if (ImGui::Button("Reset Position and Rotation", ImVec2
+                    (200, 45)))
+                    {
+                        gameObject->GetMesh()->SetPos(0.0f, 0.0f, 0.0f);
+                        gameObject->GetMesh()->SetRot(0.0f, 0.0f, 0.0f);
+                        gameObject->GetMesh()->SetScale(1.0f, 1.0f, 1.0f);
+                    }
+                    if (ImGui::Button("Destroy", ImVec2
+                    (200, 45)))
+                    {
+                        gameObject->Destroy();
+                        isDestroyed = true;
+                    }
                 }
+                
+                ImGui::End();
             }
-            
-            ImGui::End();
         }
     }
 }

@@ -38,3 +38,8 @@ void SaveSystem::CloseFile()
 	//close the file
 	pFile.close();
 }
+
+std::fstream& SaveSystem::GetFile() noexcept
+{
+	return pFile;
+}

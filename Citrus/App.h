@@ -29,5 +29,9 @@ private:
 	mutable std::vector<std::string> pFxMenuSavedItems;
 	mutable SaveSystem fireMenuSettings;
 	mutable std::vector<std::string> pFireMenuSavedItems;
+	mutable SaveSystem settings;
+	mutable std::vector<std::string> pSettings;
+	mutable SaveSystem paths;
+	mutable std::vector<std::string> pPaths;
 };
 

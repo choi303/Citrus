@@ -33,22 +33,28 @@ public:
 	static bool SetFrontCull(bool value);
 	static float SetFogStart(float value);
 	static float SetFogEnd(float value);
+	std::string GetName() const;
+	bool& GetIsDestroyed() const;
 	void draw(Camera3D cam);
+	void Destroy() const noexcept;
 	Model* GetMesh();
-	~GameObject() = default;
+	~GameObject()=default;
 private:
 	Model pModel;
 	VertexShader pVSNormal;
 	VertexShader pVS;
 	VertexShader pVSEmessive;
+	VertexShader pVSLit;
 	PixelShader pPS;
 	PixelShader pPSNormal;
 	PixelShader pPSEmessive;
+	PixelShader pPSLit;
 private:
 	ID3D11Device* pDevice;
 	ID3D11DeviceContext* pContext;
 	std::unique_ptr<InputLayout> pLayoutNormal;
 	std::unique_ptr<InputLayout> pLayout;
+	std::unique_ptr<InputLayout> pLayoutLit;
 	std::unique_ptr<CBuffer<matrices>> matrices_buffer;
 	std::unique_ptr<UI> ui;
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> st;
@@ -59,7 +65,8 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> pRasterizerFront = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> pRasterizerWireframe = nullptr;
 	std::string directory;
-	bool is_rendered = false;
+	bool isRendered = false;
+	mutable bool isDestroyed = false;
 	DepthBuffer pDepthBuffer;
 	Wireframe pWireframe;
 	Fog pFog;

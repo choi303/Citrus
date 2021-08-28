@@ -28,8 +28,6 @@ struct PS_IN
     float4 lightViewPosition : LightViewPosition;
 };
 
-Texture2D diff : register(t0);
-Texture2D spec : register(t1);
 Texture2D environment : register(t3);
 Texture2D depthMap : register(t4);
 SamplerState object_sampler : register(s0);
@@ -42,7 +40,6 @@ float4 main(PS_IN input) : SV_Target
     float3 lightDir;
     float lightIntensity;
     float4 color;
-    float4 specularIntensity;
     float3 reflection;
     float4 specular;
     float2 projectTexCoord;
@@ -60,12 +57,7 @@ float4 main(PS_IN input) : SV_Target
     bias = biasC;
     
     //diffuse texture sample
-    textureColor = diff.Sample(object_sampler, input.tc);
-    if (alphaClip)
-    {
-        if (textureColor.a < 0.5)
-            discard;
-    }
+    textureColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
     
     //diffuse set
     float4 diffuse = diffuseColor * diffuseIntensityC;
@@ -119,19 +111,8 @@ float4 main(PS_IN input) : SV_Target
                 //blinn phong thing
                 float3 halfwayDir = normalize(lightDir + input.viewDirection);
                 
-                // Sample the pixel from the specular map texture.
-                specularIntensity = spec.Sample(object_sampler, input.tc);
-        
-                const float specularPower = pow(2.0f, specularIntensity.a * 4.0f); //specular power based texture (a) channel
-        
-                // Calculate the reflection vector based on the light intensity, normal vector, and light direction.
                 reflection = normalize(2 * lightIntensity * input.normal - lightDir);
-        
-                // Determine the amount of specular light based on the reflection vector, viewing direction, and specular power.
-                specular = specularIntensityC * pow(saturate(dot(reflection, halfwayDir)), specularPower);
-        
-                // Use the specular map to determine the intensity of specular light at this pixel.
-                specular = (specular * specularIntensity);
+                specular = (pow(saturate(dot(reflection, input.viewDirection)), 35.0f)) * specularIntensityC;
                 
                 //if reflection enabled then sample enviorment color with specular color if is not then normally return color
                 if (reflectionEnabled)
@@ -157,19 +138,8 @@ float4 main(PS_IN input) : SV_Target
             //blinn phong thing
             float3 halfwayDir = normalize(lightDir + input.viewDirection);
                 
-            // Sample the pixel from the specular map texture.
-            specularIntensity = spec.Sample(object_sampler, input.tc);
-        
-            const float specularPower = pow(1.0f, specularIntensity.a * 4.0f); //specular power based texture (a) channel
-        
-            // Calculate the reflection vector based on the light intensity, normal vector, and light direction.
             reflection = normalize(2 * lightIntensity * input.normal - lightDir);
-        
-            // Determine the amount of specular light based on the reflection vector, viewing direction, and specular power.
-            specular = specularIntensityC * pow(saturate(dot(reflection, halfwayDir)), specularPower);
-        
-            // Use the specular map to determine the intensity of specular light at this pixel.
-            specular = (specular * specularIntensity);
+            specular = (pow(saturate(dot(reflection, input.viewDirection)), 35.0f)) * specularIntensityC;
                 
             //if reflection enabled then sample enviorment color with specular color if is not then normally return color
             if (reflectionEnabled)

@@ -394,6 +394,12 @@
     <FxCompile Include="PSBloom.hlsl">
       <Filter>Graphics\DirectX 11\Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="VSLit.hlsl">
+      <Filter>Graphics\DirectX 11\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PSLit.hlsl">
+      <Filter>Graphics\DirectX 11\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Citrus.rc">

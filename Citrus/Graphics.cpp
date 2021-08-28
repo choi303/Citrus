@@ -313,10 +313,6 @@ bool Graphics::InitScene()
 
 	pSkyBox.Init(pDevice.Get(), pContext.Get());
 
-	pGameObjects.push_back(new GameObject(pDevice.Get(), pContext.Get(), "Models\\robo\\robo.obj", width, height, true));
-	pGameObjects.push_back(new GameObject(pDevice.Get(), pContext.Get(), "Models\\brick_wall\\brick_wall.obj", width, height, true));
-	pGameObjects[1]->GetMesh()->SetRot(1.560f, 0.0f, 0.0f);
-	pGameObjects[1]->GetMesh()->SetScale(100.0f, 100.0f, 100.0f);
 	//Particle(s) initialize
 	mParticle.Initialize(pDevice.Get(), "Images\\star.dds", pContext.Get());
 

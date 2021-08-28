@@ -6,8 +6,6 @@ void App::Init(const std::string wndName, const std::string className, const HIN
 	this->width = width;
 	this->height = height;
 	timer.Start();
-	//set saved values
-	SetSavedValues();
 	//Overloaded initialize window
 	if (!wnd.InitializeWindow(wndName, className, hInstance, width, height))
 	{
@@ -18,6 +16,7 @@ void App::Init(const std::string wndName, const std::string className, const HIN
 	{
 		Error::Log("Failed to initialize graphics");
 	}
+	//set saved values
 	SetSavedValues();
 }
 
@@ -270,6 +269,32 @@ void App::SetSavedValues()
 	Fire::SetDistortionScale(std::stof(fireMenuSettings.GetInfo(18)));
 	Fire::SetDistortionBias(std::stof(fireMenuSettings.GetInfo(19)));
 	fireMenuSettings.CloseFile();
+
+	//set path saved values
+	paths.OpenFileRead("paths.cfg");
+	if (paths.GetInfo(0) == "")
+	{
+		gfx.pGameObjects.push_back(new GameObject(gfx.pDevice.Get(), gfx.pContext.Get(), "Models\\suzanne.obj", width, height, true));
+	}
+	else
+	{
+		gfx.pGameObjects.push_back(new GameObject(gfx.pDevice.Get(), gfx.pContext.Get(), paths.GetInfo(0).c_str(),
+			width, height, true));
+	}
+	paths.CloseFile();
+
+	//set gamobject saved values
+	settings.OpenFileRead("settings.cfg");
+	for (int i = 0; i < gfx.pGameObjects.size(); i++)
+	{
+		gfx.pGameObjects[i]->GetMesh()->SetPos(std::stof(settings.GetInfo(0).c_str()), std::stof(settings.GetInfo(1).c_str()),
+			std::stof(settings.GetInfo(2).c_str()));
+		gfx.pGameObjects[i]->GetMesh()->SetRot(std::stof(settings.GetInfo(3).c_str()), std::stof(settings.GetInfo(4).c_str()),
+			std::stof(settings.GetInfo(5).c_str()));
+		gfx.pGameObjects[i]->GetMesh()->SetScale(std::stof(settings.GetInfo(6).c_str()), std::stof(settings.GetInfo(7).c_str()),
+			std::stof(settings.GetInfo(8).c_str()));
+	}
+	settings.CloseFile();
 }
 
 void App::SaveValues()
@@ -414,6 +439,52 @@ void App::SaveValues()
 	pFireMenuSavedItems.push_back("[Fire Distortion Bias]:" + std::to_string(*Fire::GetDistortionBias()));
 	fireMenuSettings.AddInfo(pFireMenuSavedItems);
 	fireMenuSettings.CloseFile();
+
+	//Paths
+	paths.OpenFileWrite("paths.cfg");
+	for (int i = 0; i < gfx.pGameObjects.size(); i++)
+	{
+		if (!gfx.pGameObjects[i]->GetIsDestroyed())
+		pPaths.push_back(gfx.pGameObjects[i]->GetMesh()->GetPath());
+	}
+	paths.AddInfo(pPaths);
+	paths.CloseFile();
+
+	//GameObject settings
+	paths.OpenFileRead("paths.cfg");
+	if (paths.GetInfo(0) == "")
+	{
+		pSettings.push_back("[Position X]:0.0");
+		pSettings.push_back("[Position Y]:0.0");
+		pSettings.push_back("[Position Z]:0.0");
+		pSettings.push_back("[Rotation X]:0.0");
+		pSettings.push_back("[Rotation Y]:0.0");
+		pSettings.push_back("[Rotation Z]:0.0");
+		pSettings.push_back("[Scale X]:1.0");
+		pSettings.push_back("[Scale Y]:1.0");
+		pSettings.push_back("[Scale Z]:1.0");
+		pSettings.push_back("[Path]:Models\\suzanne.obj");
+	}
+	paths.CloseFile();
+	settings.OpenFileWrite("settings.cfg");
+	for (int i = 0; i < gfx.pGameObjects.size(); i++)
+	{
+		if (!gfx.pGameObjects[i]->GetIsDestroyed())
+		{
+			pSettings.push_back("[Position X]:" + std::to_string(gfx.pGameObjects[i]->GetMesh()->GetPos().z));
+			pSettings.push_back("[Position Y]:" + std::to_string(gfx.pGameObjects[i]->GetMesh()->GetPos().y));
+			pSettings.push_back("[Position Z]:" + std::to_string(gfx.pGameObjects[i]->GetMesh()->GetPos().x));
+			pSettings.push_back("[Rotation X]:" + std::to_string(gfx.pGameObjects[i]->GetMesh()->GetRot().z));
+			pSettings.push_back("[Rotation Y]:" + std::to_string(gfx.pGameObjects[i]->GetMesh()->GetRot().y));
+			pSettings.push_back("[Rotation Z]:" + std::to_string(gfx.pGameObjects[i]->GetMesh()->GetRot().x));
+			pSettings.push_back("[Scale X]:" + std::to_string(gfx.pGameObjects[i]->GetMesh()->GetScale().z));
+			pSettings.push_back("[Scale Y]:" + std::to_string(gfx.pGameObjects[i]->GetMesh()->GetScale().y));
+			pSettings.push_back("[Scale Z]:" + std::to_string(gfx.pGameObjects[i]->GetMesh()->GetScale().x));
+			pSettings.push_back("[Path]:" + gfx.pGameObjects[i]->GetMesh()->GetPath());
+		}
+	}
+	settings.AddInfo(pSettings);
+	settings.CloseFile();
 }
 
 void App::FPSCounter()

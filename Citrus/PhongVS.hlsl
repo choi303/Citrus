@@ -10,6 +10,12 @@ cbuffer Matrices : register(b1)
     float3 camera_pos;
 }
 
+cbuffer shadowBuffer : register(b2)
+{
+    row_major matrix lightViewMatrix;
+    row_major matrix lightProjectionMatrix;
+}
+
 struct VS_IN
 {
     float3 pos : Position;
@@ -24,24 +30,28 @@ struct VS_OUT
     float3 normal : Normal;
     float3 worldPos : WorldPos;
     float3 viewDirection : ViewDirection;
+    float4 lightViewPosition : LightViewPosition;
 };
 
 VS_OUT main(VS_IN input)
 {
     VS_OUT vso;
-    float4 world_position;
-    
+    float4 worldPosition;
     vso.pos = mul(float4(input.pos, 1.0f), world);
     vso.pos = mul(vso.pos, view);
     vso.pos = mul(vso.pos, proj);
     vso.tc = input.tc;
-    vso.normal =  mul(input.normal, (float3x3)world);
-    vso.worldPos = (float3) mul(float4(input.pos, 1.0f), world);
-    //get world position from world matrix
-    world_position = mul(float4(input.pos, 1.0f), view);
-    world_position = mul(float4(input.pos, 1.0f), world);
-	//calculating view direction
-    vso.viewDirection = camera_pos.xyz - world_position.xyz;
+    vso.normal = mul(input.normal, (float3x3) world);
+    vso.normal = normalize(vso.normal);
+    //calculate the position of the vertex in the world.
+    worldPosition = mul(float4(input.pos, 1.0f), world);
+    //determine the viewing direction based on the position of the camera and the position of the vertex in the world.
+    vso.viewDirection = camera_pos.xyz - worldPosition.xyz;
+    //normalize the viewing direction vector.
     vso.viewDirection = normalize(vso.viewDirection);
+    
+    vso.lightViewPosition = mul(float4(input.pos, 1.0f), world);
+    vso.lightViewPosition = mul(vso.lightViewPosition, lightViewMatrix);
+    vso.lightViewPosition = mul(vso.lightViewPosition, lightProjectionMatrix);
     return vso;
 }

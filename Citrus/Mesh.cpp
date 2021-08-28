@@ -50,3 +50,9 @@ void Mesh::DrawMesh(ID3D11DeviceContext* p_context) const
    //draw mesh
    p_context->DrawIndexed(ib->BufferSize(), 0u, 0u);
 }
+
+void Mesh::Destroy() const noexcept
+{
+    vb->~VertexBuffer();
+    ib->~IndexBuffer();
+}

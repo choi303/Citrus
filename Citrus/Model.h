@@ -34,6 +34,9 @@ public:
 	XMMATRIX GetWorld() const;
 	bool GetHasNormal() const;
 	bool GetHasEmessive() const;
+	bool GetHasTexture() const;
+	const std::string& GetPath() const;
+	void Destroy() const;
 	~Model() = default;
 private:
 	std::vector<Mesh> meshes;
@@ -46,7 +49,8 @@ private:
 	ID3D11Device* pDevice = nullptr;
 	ID3D11DeviceContext* pContext = nullptr;
 	CBuffer<transformation>* cbVertexshader = nullptr;
-	aiMesh* mesh;
+	aiMesh* pMesh;
+	const aiScene* pScene;
 private:
 	XMFLOAT3 pos = XMFLOAT3{ 0,0,0 };
 	XMFLOAT3 rot = XMFLOAT3{ 0,0,0 };
@@ -57,4 +61,5 @@ private:
 	std::string path;
 	bool hasNormalmap = false;
 	bool hasEmessiveMap = false;
+	bool hasTexture = false;
 };

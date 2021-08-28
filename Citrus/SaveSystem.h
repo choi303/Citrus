@@ -12,6 +12,7 @@ public:
 	void AddInfo(std::vector<std::string> elements);
 	std::string GetInfo(int line);
 	void CloseFile();
+	std::fstream& GetFile() noexcept;
 	~SaveSystem() {}
 private:
 	std::fstream pFile;

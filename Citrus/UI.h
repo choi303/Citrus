@@ -11,7 +11,8 @@ class UI
 public:
 	UI() = default;
 
-	void ClassicUI(Model* model, std::string uiTitle, float pos[3], float rot[3], float scale[3]) const;
+	void ClassicUI(GameObject* gameObject, std::string uiTitle, float pos[3], float rot[3], float scale[3],
+		bool& isDestroyed) const;
 	
 	void PointLight(Model* model, const std::string uiTitle, float pos[3], float rot[3], float scale[3], float* Intensity,
 		float* ambientIntensity, BOOL* normalMappingEnabled, float* specularIntensity, BOOL* reflectionEnabled, float* reflectionIntensity, XMFLOAT3* lightColor) const;

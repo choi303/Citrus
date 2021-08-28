@@ -36,6 +36,8 @@ GameObject::GameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std
 	//create vertex shader
 	pVS.Init(L"PhongVS.cso", pDevice);
 	pPS.Init(L"PhongPSSpec.cso", pDevice);
+	pVSLit.Init(L"VSLit.cso", pDevice);
+	pPSLit.Init(L"PSLit.cso", pDevice);
 	//gets data form vertex shader with input layout
 	const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 	{
@@ -45,6 +47,7 @@ GameObject::GameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std
 	};
 	//create vertex shader i.l. and bind
 	pLayout = std::make_unique<InputLayout>(pDevice, ied, &pVS);
+	pLayoutLit = std::make_unique<InputLayout>(pDevice, ied, &pVSLit);
 	//model initialize
 	if (hasMaterial)
 		pModel.Init(filepath.c_str(), pDevice, pContext);
@@ -225,6 +228,16 @@ float GameObject::SetFogEnd(float value)
 	return Fog::SetFogEnd(value);
 }
 
+std::string GameObject::GetName() const
+{
+	return directory.substr(directory.find_last_of("\\") + 1);
+}
+
+bool& GameObject::GetIsDestroyed() const
+{
+	return isDestroyed;
+}
+
 void GameObject::draw(Camera3D cam)
 {
 	pContext->RSSetState(pRasterizerFront.Get());
@@ -241,6 +254,13 @@ void GameObject::draw(Camera3D cam)
 	pContext->PSSetSamplers(0u, 1u, st.GetAddressOf());
 	pContext->PSSetSamplers(1u, 1u, ssam.GetAddressOf());
 	pContext->PSSetSamplers(2u, 1u, pcfSam.GetAddressOf());
+	//if model has not any textures then bind no texture shaders
+	if (!pModel.GetHasTexture())
+	{
+		pLayout->Bind(pContext);
+		pVS.Bind(pContext);
+		pPS.Bind(pContext);
+	}
 	//if model not has normal texture and just set shaders
 	if (!pModel.GetHasNormal())
 	{
@@ -264,8 +284,9 @@ void GameObject::draw(Camera3D cam)
 	}
 
 	//Classic Object UI Creation
-	ui->ClassicUI(&pModel, directory.substr(directory.find_last_of("\\") + 1), pos, rot, scale);
-	if (is_rendered)
+	ui->ClassicUI(this, directory.substr(directory.find_last_of("\\") + 1), pos, rot, scale,
+		isDestroyed);
+	if (isRendered)
 	matrices_buffer->data.camera_pos = cam.GetPositionFloat3();
 	matrices_buffer->MapData();
 	matrices_buffer->VSBind(pContext, 1u, 1u);
@@ -293,7 +314,13 @@ void GameObject::draw(Camera3D cam)
 
 	//Render Model
 	pModel.Render(cam);
-	is_rendered = true;
+	isRendered = true;
+}
+
+void GameObject::Destroy() const noexcept
+{
+	pModel.Destroy();
+	isDestroyed = true;
 }
 
 Model* GameObject::GetMesh()

@@ -8,8 +8,8 @@ template<class T>
 class CBuffer
 {
 public:
-	CBuffer() {}
-	~CBuffer() {}
+	CBuffer() {};
+	~CBuffer() {};
 private:
 	wrl::ComPtr<ID3D11Buffer> cb;
 	wrl::ComPtr<ID3D11DeviceContext> pContext;

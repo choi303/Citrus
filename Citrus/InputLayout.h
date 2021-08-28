@@ -19,7 +19,7 @@ public:
 			vs->GetBytecode()->GetBufferPointer(),
 			vs->GetBytecode()->GetBufferSize(),
 			&pil);
-		if (FAILED(hr)) { Error::Log(hr, "Failed to create input layout :("); }
+		if (FAILED(hr)) { Error::Log(hr, "Failed to create input layout."); }
 	}
 	~InputLayout() = default;
 
