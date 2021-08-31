@@ -169,12 +169,41 @@ float4 main(PS_IN input) : SV_Target
     }
     else
     {
-        //if model is not in light view projection then simply make default light
         lightIntensity = saturate(dot(input.normal, lightDir));
+        
         if (lightIntensity > 0.0f)
         {
             color += (diffuse * lightIntensity);
-            color = saturate(color);
+                
+                //blinn phong thing
+            float3 halfwayDir = normalize(lightDir + input.viewDirection);
+                
+                // Sample the pixel from the specular map texture.
+            specularIntensity = spec.Sample(object_sampler, input.tc);
+        
+            const float specularPower = pow(1.0f, specularIntensity.a * 4.0f); //specular power based texture (a) channel
+        
+                // Calculate the reflection vector based on the light intensity, normal vector, and light direction.
+            reflection = normalize(2 * lightIntensity * input.normal - lightDir);
+        
+                // Determine the amount of specular light based on the reflection vector, viewing direction, and specular power.
+            specular = specularIntensityC * pow(saturate(dot(reflection, halfwayDir)), specularPower);
+        
+                // Use the specular map to determine the intensity of specular light at this pixel.
+            specular = (specular * specularIntensity);
+                
+                //if reflection enabled then sample enviorment color with specular color if is not then normally return color
+            if (reflectionEnabled)
+            {
+                float3 incident = input.viewDirection;
+                float2 reflectionVector = reflect(incident, input.normal);
+                float4 reflectionColor = environment.Sample(object_sampler,
+                        reflectionVector);
+                float4 reflectionFactor = reflectionColor * reflectionIntensity;
+                specular *= reflectionFactor * 10.0f;
+            }
+                
+            color = saturate((color * textureColor) + specular);
         }
     }
     
