@@ -221,8 +221,8 @@ void UI::DeveloperUI(std::string adapter_name, const
                             }
                         }
     
-                        ImGui::EndCombo();
                     }
+                    ImGui::EndCombo();
                     if (applyVisiblity)
                     {
                         if (ImGui::Button("Apply"))
@@ -259,8 +259,9 @@ void UI::DeveloperUI(std::string adapter_name, const
                 if (*gridMapEnabled)
                     ImGui::ColorPicker3("Grid Map\nColor", gridmapCol);
                 
-                ImGui::End();
             }
+            
+            ImGui::End();
         }
     }
 }
@@ -271,7 +272,7 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
     bool* backfaceCulling, bool* frontfaceCulling,
     App* rApp, BOOL* alphaClip, BOOL* ssaoEnabled, BOOL* toneMappingEnabled,
     BOOL* bloomEnabled, std::vector<GameObject*>& pGameObjects, ID3D11Device* pDevice,
-    ID3D11DeviceContext* pContext, int width, int height)
+    ID3D11DeviceContext* pContext, int width, int height, BOOL* autoExposureEnabled)
 {
     if (can_render)
     {
@@ -561,6 +562,22 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
                         else
                         {
                             *bloomEnabled = true;
+                        }
+                    }
+
+                    if (*autoExposureEnabled)
+                        title = "Auto Exposure: On";
+                    else
+                        title = "Auto Exposure: Off";
+                    if (ImGui::MenuItem(title.c_str()))
+                    {
+                        if (*autoExposureEnabled)
+                        {
+                            *autoExposureEnabled = false;
+                        }
+                        else
+                        {
+                            *autoExposureEnabled = true;
                         }
                     }
 

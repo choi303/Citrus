@@ -13,6 +13,7 @@ static float exposure = 1.690f;
 static float gamma = 0.750f;
 static float bloomIntensity = 1.0f;
 static BOOL toneMappingEnabled;
+static BOOL autoExposureEnabled;
 static bool bloomRender;
 static BOOL bloomEnabled;
 
@@ -104,6 +105,7 @@ void FSQuad::draw(ID3D11DeviceContext* pContext, Camera3D cam)
 	paramCBuffer->data.gamma = gamma;
 	paramCBuffer->data.toneMappingEnabled = toneMappingEnabled;
 	paramCBuffer->data.bloomEnabled = bloomEnabled;
+	paramCBuffer->data.autoExposureEnabled = autoExposureEnabled;
 	paramCBuffer->MapData();
 	paramCBuffer->PSBind(pContext, 0, 1);
 	//fxaa cbuffer values bind
@@ -134,6 +136,11 @@ bool* FSQuad::GetBlurEnabled()
 	return &blurEnabled;
 }
 
+BOOL* FSQuad::GetAutoExposureEnabled()
+{
+	return &autoExposureEnabled;
+}
+
 float* FSQuad::GetBlurIntensity()
 {
 	return &blurIntensity;
@@ -157,6 +164,11 @@ BOOL FSQuad::SetToneMappingEnabled(BOOL value)
 BOOL FSQuad::SetBloomEnabled(BOOL value)
 {
 	return bloomEnabled = value;
+}
+
+BOOL FSQuad::SetAutoExposureEnabled(BOOL value)
+{
+	return autoExposureEnabled = value;
 }
 
 float FSQuad::SetBlurIntensity(float value)

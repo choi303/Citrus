@@ -29,7 +29,7 @@ public:
 		bool* depthBufferEnabled, bool* blurEnabled, bool* msaaEnabled, App* app, bool* fxaaEnabled,
 		bool* backfaceCulling, bool* frontfaceCulling, App* rApp, BOOL* alphaClip, BOOL* ssaoEnabled,
 		BOOL* toneMappingEnabled, BOOL* bloomEnabled, std::vector<GameObject*>& pGameObjects, 
-		ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height);
+		ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height, BOOL* autoExposureEnabled);
 
 	static void SetCanRendered(bool value);
 	static void SetVisiblity(bool value);

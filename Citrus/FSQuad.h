@@ -12,7 +12,8 @@ private:
 		float gamma;
 		BOOL toneMappingEnabled;
 		BOOL bloomEnabled;
-		float pad[2];
+		BOOL autoExposureEnabled;
+		float pad;
 	};
 
 	struct fxaa
@@ -42,6 +43,7 @@ public:
 
 	void draw(ID3D11DeviceContext* pContext, Camera3D cam);
 	static bool* GetBlurEnabled();
+	static BOOL* GetAutoExposureEnabled();
 	static bool* GetFxaaEnabled();
 	static BOOL* GetSSAOEnabled();
 	static BOOL* GetToneMappingEnabled();
@@ -60,6 +62,7 @@ public:
 	static bool SetBloomRenderEnabled(bool value);
 	static BOOL SetToneMappingEnabled(BOOL value);
 	static BOOL SetBloomEnabled(BOOL value);
+	static BOOL SetAutoExposureEnabled(BOOL value);
 	static float SetBlurIntensity(float value);
 	static float SetArea(float value);
 	static float SetBase(float value);
