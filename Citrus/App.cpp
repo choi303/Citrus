@@ -1,8 +1,11 @@
 #include "App.h"
 #pragma warning(disable : 4996)
 
-void App::Init(const std::string wndName, const std::string className, const HINSTANCE hInstance, const int width, const int height)
+void App::Init(const std::string wndName, const std::string className, const HINSTANCE hInstance, const int width, const int height,
+	double& version)
 {
+	versionStr = std::to_string(version);
+	versionStr = versionStr.erase(versionStr.find_last_not_of('0') + 1, std::string::npos);
 	this->width = width;
 	this->height = height;
 	timer.Start();
@@ -518,7 +521,7 @@ void App::FPSCounter()
 		GridMap::getColor(), &gfx, wnd.GetHWND(), this, &gfx.msaaEnabled, FSQuad::GetBlurEnabled(), 
 		FSQuad::GetBlurIntensity(), FSQuad::GetSSAOEnabled(), FSQuad::GetTotalStrength(), FSQuad::GetBase(),
 		FSQuad::GetArea(), FSQuad::GetFallOff(), FSQuad::GetRadius(), FSQuad::GetExposure(), FSQuad::GetGamma(),
-		FSQuad::GetToneMappingEnabled(), FSQuad::GetBloomIntensity(), FSQuad::GetBloomEnabled());
+		FSQuad::GetToneMappingEnabled(), FSQuad::GetBloomIntensity(), FSQuad::GetBloomEnabled(), versionStr);
 	//toolbar creation
 	UI::ToolBar(GridMap::getRender(),
 		GameObject::GetWireframeEnabled(),
@@ -527,6 +530,6 @@ void App::FPSCounter()
 		FSQuad::GetBlurEnabled(), &gfx.msaaEnabled, this, FSQuad::GetFxaaEnabled(), GameObject::GetBackCulling(),
 		GameObject::GetFrontCulling(), this, DirectionalLight::GetAlphaCEnabled(), FSQuad::GetSSAOEnabled(),
 		FSQuad::GetToneMappingEnabled(), FSQuad::GetBloomEnabled(), gfx.pGameObjects, gfx.pDevice.Get(),
-		gfx.pContext.Get(), width, height, FSQuad::GetAutoExposureEnabled());
+		gfx.pContext.Get(), width, height, FSQuad::GetAutoExposureEnabled(), versionStr);
 	UI::SetCanRendered(false);
 }

@@ -52,9 +52,9 @@ void UI::ClassicUI(GameObject* gameObject, std::string uiTitle, float
                         gameObject->Destroy();
                         isDestroyed = true;
                     }
+                    
+                    ImGui::End();
                 }
-                
-                ImGui::End();
             }
         }
     }
@@ -80,42 +80,45 @@ void UI::PointLight(Model* model, const std::string
             pos[0] = model->GetPos().x;
             pos[1] = model->GetPos().y;
             pos[2] = model->GetPos().z;
-            ImGui::Begin(uiTitle.c_str());
-            ImGui::DragFloat3("Position\nX/Y/Z", pos, 0.01f,
-                -999999999.0f, 999999999.0f);
-            model->SetPos(pos[0], pos[1], pos[2]);
-            rot[0] = model->GetRot().x;
-            rot[1] = model->GetRot().y;
-            rot[2] = model->GetRot().z;
-            ImGui::DragFloat3("Rotation\nX/Y/Z", rot, 0.01f,
-                -999999999.0f, 999999999.0f);
-            model->SetRot(rot[0], rot[1], rot[2]);
-            scale[0] = model->GetScale().x;
-            scale[1] = model->GetScale().y;
-            scale[2] = model->GetScale().z;
-            ImGui::DragFloat3("Scale\n/X/Y/Z", scale, 0.01f,
-                -999999999.0f, 999999999.0f);
-            model->SetScale(scale[0], scale[1], scale[2]);
-            ImGui::DragFloat("Light\nIntensity", Intensity, 0.01f,
-                0.0f, 10000.0f);
-            ImGui::DragFloat("Ambient\nIntensity",
-                ambientIntensity, 0.01f, 0.0f, 1000.0f);
-            ImGui::DragFloat("Specular\nIntensity",
-                specularIntensity, 0.01f, 0.0f, 1000.0f);
-            ImGui::DragFloat("Reflection\nIntensity",
-                reflectionIntensity, 0.01f, 0.0f, 1000.0f);
-            ImGui::ColorEdit3("Light Color", lightColorF);
-            if (ImGui::Button("Reset Position", ImVec2(200, 45)))
+            if (ImGui::Begin(uiTitle.c_str()))
             {
-                model->SetPos(0.0f, 0.0f, 0.0f);
-                model->SetRot(0.0f, 0.0f, 0.0f);
-                model->SetScale(1.0f, 1.0f, 1.0f);
+                ImGui::DragFloat3("Position\nX/Y/Z", pos, 0.01f,
+                    -999999999.0f, 999999999.0f);
+                model->SetPos(pos[0], pos[1], pos[2]);
+                rot[0] = model->GetRot().x;
+                rot[1] = model->GetRot().y;
+                rot[2] = model->GetRot().z;
+                ImGui::DragFloat3("Rotation\nX/Y/Z", rot, 0.01f,
+                    -999999999.0f, 999999999.0f);
+                model->SetRot(rot[0], rot[1], rot[2]);
+                scale[0] = model->GetScale().x;
+                scale[1] = model->GetScale().y;
+                scale[2] = model->GetScale().z;
+                ImGui::DragFloat3("Scale\n/X/Y/Z", scale, 0.01f,
+                    -999999999.0f, 999999999.0f);
+                model->SetScale(scale[0], scale[1], scale[2]);
+                ImGui::DragFloat("Light\nIntensity", Intensity, 0.01f,
+                    0.0f, 10000.0f);
+                ImGui::DragFloat("Ambient\nIntensity",
+                    ambientIntensity, 0.01f, 0.0f, 1000.0f);
+                ImGui::DragFloat("Specular\nIntensity",
+                    specularIntensity, 0.01f, 0.0f, 1000.0f);
+                ImGui::DragFloat("Reflection\nIntensity",
+                    reflectionIntensity, 0.01f, 0.0f, 1000.0f);
+                ImGui::ColorEdit3("Light Color", lightColorF);
+                if (ImGui::Button("Reset Position", ImVec2(200, 45)))
+                {
+                    model->SetPos(0.0f, 0.0f, 0.0f);
+                    model->SetRot(0.0f, 0.0f, 0.0f);
+                    model->SetScale(1.0f, 1.0f, 1.0f);
+                }
+                ImGui::Checkbox("Normal Mapping",
+                    reinterpret_cast<bool*>(normalMappingEnabled));
+                ImGui::Checkbox("Reflection", reinterpret_cast<bool*>
+                    (reflectionEnabled));
+
+                ImGui::End();
             }
-            ImGui::Checkbox("Normal Mapping",
-                reinterpret_cast<bool*>(normalMappingEnabled));
-            ImGui::Checkbox("Reflection", reinterpret_cast<bool*>
-                (reflectionEnabled));
-            ImGui::End();
         }
     }
 }
@@ -129,7 +132,7 @@ void UI::DeveloperUI(std::string adapter_name, const
     bool* gridMapEnabled, XMFLOAT3* gridMapColor, Graphics* gfx, HWND hwnd, App* app, bool* msaaEnabled,
     bool* blurEnabled, float* blurIntensity, BOOL* ssaoEnabled, float* totalStrength, float* base,
     float* area, float* fallOff, float* radius, float* exposure, float* gamma, BOOL* toneMappingEnabled,
-    float* bloomIntensity, BOOL* bloomEnabled)
+    float* bloomIntensity, BOOL* bloomEnabled, std::string& versionStr)
 {
     if (can_render)
     {
@@ -155,10 +158,11 @@ void UI::DeveloperUI(std::string adapter_name, const
                 "8" };
             static bool selected[sizeof(items)];
             static std::string previewValue = std::to_string(gfx->msaaQuality);
+            std::string version = "Citrus Graphics Renderer v" + versionStr;
 
             if (ImGui::Begin("Developer Menu"))
             {
-                ImGui::Text("Citrus Graphics Renderer v0.2");
+                ImGui::Text(version.c_str());
                 ImGui::Text(fps.c_str());
                 const std::string adapter = "GPU: " + adapter_name;
                 ImGui::Text(adapter.c_str());
@@ -173,6 +177,10 @@ void UI::DeveloperUI(std::string adapter_name, const
                     45)))
                 {
                     cam3d->SetRotation(0.0f, 0.0f, 0.0f);
+                }
+                if (*blurEnabled)
+                {
+                    ImGui::DragFloat("Blur\nIntensity", blurIntensity, 0.01f, 0.1f, 5.0f);
                 }
                 if (*toneMappingEnabled)
                 {
@@ -220,15 +228,15 @@ void UI::DeveloperUI(std::string adapter_name, const
                                 applyVisiblity = true;
                             }
                         }
-    
+                        ImGui::EndCombo();
                     }
-                    ImGui::EndCombo();
                     if (applyVisiblity)
                     {
                         if (ImGui::Button("Apply"))
                         {
                             app->SaveValues();
-    
+                            app->SaveValues();
+
                 #ifdef _DEBUG
                             ShellExecuteA(NULL, NULL, static_cast<LPCSTR>("..\\x64\\Debug\\Citrus.exe"), NULL, NULL, SW_SHOW);
                 #else
@@ -240,11 +248,6 @@ void UI::DeveloperUI(std::string adapter_name, const
                         }
                         ImGui::Text("");
                     }
-                }
-                if (*blurEnabled)
-                {
-                    ImGui::Text("Blur Intensity");
-                    ImGui::DragFloat("", blurIntensity, 0.01f, 0.1f, 5.0f);
                 }
                 if (*fogEnabled)
                     ImGui::DragFloat("Fog Start", fogStart, 0.01f, 0.0f,
@@ -260,7 +263,6 @@ void UI::DeveloperUI(std::string adapter_name, const
                     ImGui::ColorPicker3("Grid Map\nColor", gridmapCol);
                 
             }
-            
             ImGui::End();
         }
     }
@@ -272,7 +274,8 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
     bool* backfaceCulling, bool* frontfaceCulling,
     App* rApp, BOOL* alphaClip, BOOL* ssaoEnabled, BOOL* toneMappingEnabled,
     BOOL* bloomEnabled, std::vector<GameObject*>& pGameObjects, ID3D11Device* pDevice,
-    ID3D11DeviceContext* pContext, int width, int height, BOOL* autoExposureEnabled)
+    ID3D11DeviceContext* pContext, int width, int height, BOOL* autoExposureEnabled,
+    std::string& versionStr)
 {
     if (can_render)
     {
@@ -485,7 +488,7 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
                         {
                             *msaaEnabled = false;
                             app->SaveValues();
-
+                            app->SaveValues();
 #ifdef _DEBUG
                             ShellExecuteA(NULL, NULL, static_cast<LPCSTR>("..\\x64\\Debug\\Citrus.exe"), NULL, NULL, SW_SHOW);
 #else
@@ -580,22 +583,21 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
                             *autoExposureEnabled = true;
                         }
                     }
-
                     ImGui::EndMenu();
                 }
+                
 
                 if (ImGui::BeginMenu("About"))
                 {
                     if (ImGui::MenuItem("Info"))
                     {
-                        Error::InfoLog("Citrus Graphics Renderer v0.2\nGitHub: https://github.com/choi303/Citrus");
+                        std::string aboutText = "Citrus Graphics Renderer v" + versionStr + "\nGitHub: https://github.com/choi303/Citrus";
+                        Error::InfoLog(aboutText);
                     }
                     ImGui::EndMenu();
                 }
-
+                ImGui::EndMainMenuBar();
             }
-            
-            ImGui::EndMainMenuBar();
         }
     }
 }
@@ -650,7 +652,6 @@ void UI::ParticleUI(std::string uiTitle, float* mParticleDeviationX, float* mPar
                     
                     ImGui::End();
                 }
-
             }
         }
     }
@@ -706,7 +707,6 @@ void UI::DirectionalLigth(XMFLOAT4* diffuseColor,
                 ImGui::End();
             }
         }
-        
     }
 }
 

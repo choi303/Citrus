@@ -1,7 +1,7 @@
 #include "FSQuad.h"
 
 static bool blurEnabled;
-static float blurIntensity = 9.0f;
+static float blurIntensity = 1.0f;
 static bool fxaaEnabled;
 static BOOL ssaoEnabled;
 static float totalStrength = 1.5;

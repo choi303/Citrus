@@ -9,7 +9,10 @@ int WINAPI WinMain(HINSTANCE hInstance,    //Main windows function
     {
         //Initialize Window//
         App app; //Create a window
-        app.Init("Citrus 0.2 <DX11>", "janus", hInstance, 1600, 900);
+        double version = 0.2; //set version
+        std::string versionStr = std::to_string(version);
+        versionStr = versionStr.erase(versionStr.find_last_not_of('0') + 1, std::string::npos);
+        app.Init("Citrus " + versionStr + " <DX11>", "janus", hInstance, 1600, 900, version);
         {
             while (app.ProcessMessages(hInstance))
             {

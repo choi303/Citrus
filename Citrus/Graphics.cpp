@@ -83,7 +83,7 @@ bool Graphics::InitDxBase(HWND hwnd)
 			&pContext);
 		if (FAILED(hr))
 		{
-			Error::Log(hr, "");
+			Error::Log(hr, "Failed to create swap chain.");
 		}
 	}
 
@@ -468,6 +468,5 @@ void Graphics::RenderDockingWindow() noexcept
 	{
 		ImGui::DockSpace(dockSpaceId, ImVec2(width, height), ImGuiDockNodeFlags_PassthruCentralNode);
 	}
-
 	ImGui::End();
 }
