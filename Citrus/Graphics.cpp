@@ -433,7 +433,7 @@ void Graphics::Render()
 
 	UI::SetCanRendered(true);
 	
-	//Render full screen quad
+	//Render scene as normally
 	rt->BindAsTarget(pContext.Get(), ds->pDepthStencilView.Get());
 	ds->Clear(pContext.Get());
 	if (*GameObject::GetWireframeEnabled())
