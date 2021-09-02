@@ -64,5 +64,5 @@ private:
 	Particle mParticle;
 	std::unique_ptr<Fire> mFire;
 private:
-	void RenderDockingWindow() noexcept;
+	inline void RenderDockingWindow() noexcept;
 };

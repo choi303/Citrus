@@ -350,6 +350,7 @@ void Graphics::EndFrame() const noexcept
 
 bool Graphics::SceneGraph(Camera3D cam3D)
 {
+	//set depth stensil state
 	pContext->OMSetDepthStencilState(pDepthState.Get(), 0xFF);
 	pCPU.Frame();
 	gridMap.draw(cam3D);
@@ -391,7 +392,7 @@ void Graphics::Render()
 	//Particle(s) frame
 	mParticle.Frame(timer.GetMilisecondsElapsed());
 
-	//depth pass from light view (shadow map)
+	//Shadow map pass from light view
 	ID3D11RenderTargetView* rtv[1] = { 0 };
 	pContext->OMSetRenderTargets(1, rtv, dsShadow->pDepthStencilView.Get());
 	dsShadow->Clear(pContext.Get());
@@ -399,31 +400,31 @@ void Graphics::Render()
 	SceneGraph(pDirectLight->GetLightCamera());
 	GameObject::SetFrontCull(false);
 
-	//depth pass
+	//Depth pass
 	rtDepth->BindAsTarget(pContext.Get(), dsDepth->pDepthStencilView.Get());
 	dsDepth->Clear(pContext.Get());
 	GameObject::SetDepthBufferEnabled(TRUE);
 	SceneGraph(cam3D);
 	GameObject::SetDepthBufferEnabled(FALSE);
 
-	//random noise texture render
+	//Random noise texture render
 	rtNoise->BindAsTarget(pContext.Get(), dsNoise->pDepthStencilView.Get());
 	dsNoise->Clear(pContext.Get());
 	SceneGraph(cam3D);
 
-	//high dynamic range render
+	//High dynamic range render
 	rtHDR->BindAsTarget(pContext.Get(), dsHDR->pDepthStencilView.Get());
 	dsHDR->Clear(pContext.Get());
 	SceneGraph(cam3D);
 
-	//brightness render
+	//Brightness render
 	rtBrightness->BindAsTarget(pContext.Get(), dsBrightness->pDepthStencilView.Get());
 	dsBrightness->Clear(pContext.Get());
 	pDirectLight->SetBrightnessRenderEnabled(TRUE);
 	SceneGraph(cam3D);
 	pDirectLight->SetBrightnessRenderEnabled(FALSE);
 
-	//bloom render
+	//Bloom render
 	rtBloom->BindAsTarget(pContext.Get(), dsBloom->pDepthStencilView.Get());
 	dsBloom->Clear(pContext.Get());
 	FSQuad::SetBloomRenderEnabled(true);
@@ -431,7 +432,8 @@ void Graphics::Render()
 	FSQuad::SetBloomRenderEnabled(false);
 
 	UI::SetCanRendered(true);
-
+	
+	//Render full screen quad
 	rt->BindAsTarget(pContext.Get(), ds->pDepthStencilView.Get());
 	ds->Clear(pContext.Get());
 	if (*GameObject::GetWireframeEnabled())
@@ -451,8 +453,9 @@ DXGI_ADAPTER_DESC Graphics::GetAdapterDesc() const
 	return pAdapterDesc;
 }
 
-void Graphics::RenderDockingWindow() noexcept
+inline void Graphics::RenderDockingWindow() noexcept
 {
+	//Creating invisible dock space for docking windows
 	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoScrollbar;
 
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
