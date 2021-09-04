@@ -37,6 +37,7 @@ public:
 	bool GetHasTexture() const;
 	const std::string& GetPath() const;
 	void Destroy() const;
+	const int& GetVertexCount() const noexcept;
 	~Model() = default;
 private:
 	std::vector<Mesh> meshes;
@@ -51,6 +52,8 @@ private:
 	CBuffer<transformation>* cbVertexshader = nullptr;
 	aiMesh* pMesh;
 	const aiScene* pScene;
+	std::vector<vertex> vertices;
+	std::vector<signed int> indices;
 private:
 	XMFLOAT3 pos = XMFLOAT3{ 0,0,0 };
 	XMFLOAT3 rot = XMFLOAT3{ 0,0,0 };

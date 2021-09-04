@@ -31,6 +31,8 @@ public:
 		BOOL* toneMappingEnabled, BOOL* bloomEnabled, std::vector<GameObject*>& pGameObjects, 
 		ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height, BOOL* autoExposureEnabled,
 		std::string& versionStr);
+	
+	static void TessellationTri(float* tessAmount);
 
 	static void SetCanRendered(bool value);
 	static void SetVisiblity(bool value);

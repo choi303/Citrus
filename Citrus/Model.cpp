@@ -131,6 +131,14 @@ void Model::Destroy() const
     }
 }
 
+const int& Model::GetVertexCount() const noexcept
+{
+    const int mVertices = static_cast<int>(vertices.size());
+    if (mVertices <= 0)
+        Error::Log("Vertex count is null.");
+    return mVertices;
+}
+
 bool Model::LoadMesh(const std::string& file_path)
 {
     Assimp::Importer importer;
@@ -164,7 +172,7 @@ bool Model::LoadMeshNoMtl(const std::string& file_path)
         aiProcess_JoinIdenticalVertices |
         aiProcess_FixInfacingNormals |
         aiProcess_PreTransformVertices |
-        aiProcess_OptimizeMeshes
+        aiProcess_OptimizeMeshes 
     );   //adding some flags for optimize
 
     if (p_scene == nullptr)
@@ -251,10 +259,6 @@ void Model::LoadNodesNoMtl(aiNode* p_node, const aiScene* p_scene)
 
 Mesh Model::ProcessMeshData(aiMesh* p_mesh, const aiScene* p_scene) 
 {
-   // Data to fill
-   std::vector<vertex> vertices;
-   std::vector<signed int> indices;
-
    //Get vertices
    for (unsigned int i = 0; i < p_mesh->mNumVertices; i++)
    {
@@ -308,8 +312,8 @@ Mesh Model::ProcessMeshData(aiMesh* p_mesh, const aiScene* p_scene)
 Mesh Model::ProcessMeshDataNoMtl(aiMesh* p_mesh, const aiScene* p_scene) const
 {
     // Data to fill
-    std::vector<vertex> vertices;
-    std::vector<signed int> indices;
+    std::vector<vertex> verticesL;
+    std::vector<signed int> indicesL;
 
     //Get vertices
     for (unsigned int i = 0; i < p_mesh->mNumVertices; i++)
@@ -332,7 +336,7 @@ Mesh Model::ProcessMeshDataNoMtl(aiMesh* p_mesh, const aiScene* p_scene) const
             vertex.tex.y = static_cast<float>(p_mesh->mTextureCoords[0][i].y);
         }
 
-        vertices.push_back(vertex); //add the vertices data to vertices vector
+        verticesL.push_back(vertex); //add the vertices data to vertices vector
     }
 
     //Get indices
@@ -341,8 +345,8 @@ Mesh Model::ProcessMeshDataNoMtl(aiMesh* p_mesh, const aiScene* p_scene) const
         const aiFace face = p_mesh->mFaces[i]; //get face count from mesh
 
         for (unsigned int j = 0; j < face.mNumIndices; j++)
-            indices.push_back(face.mIndices[j]);    //add the indices data to indices vector
+            indicesL.push_back(face.mIndices[j]);    //add the indices data to indices vector
     }
 
-    return Mesh(pDevice, pContext, vertices, indices);  //bind data to index and vertex buffers
+    return Mesh(pDevice, pContext, verticesL, indicesL);  //bind data to index and vertex buffers
 }

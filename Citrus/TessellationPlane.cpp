@@ -1,5 +1,6 @@
 #include "TessellationPlane.h"
 
+static float amount = 1.0f;
 const bool TessellationPlane::Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) noexcept
 {
 	this->pDevice = pDevice;
@@ -63,16 +64,11 @@ void TessellationPlane::Draw(Camera3D cam)
 	matCBuffer->MapData();
 	matCBuffer->DSBind(pContext.Get(), 0, 1);
 
-	static float amount = 5.0f;
 	tessCBuffer->data.tessellationAmount = amount;
 	tessCBuffer->MapData();
 	tessCBuffer->HSBind(pContext.Get(), 1, 1);
 
-	if (ImGui::Begin("Tessellation Test"))
-	{
-		ImGui::DragFloat("Amount", &amount, 0.01, 0.0f, 999999.0f);
-		ImGui::End();
-	}
+	UI::TessellationTri(&amount);
 
 	pContext->Draw(mVertices.size(), 0);
 

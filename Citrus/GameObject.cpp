@@ -258,8 +258,8 @@ void GameObject::draw(Camera3D cam)
 	if (!pModel.GetHasTexture())
 	{
 		pLayout->Bind(pContext);
-		pVS.Bind(pContext);
-		pPS.Bind(pContext);
+		pVSLit.Bind(pContext);
+		pPSLit.Bind(pContext);
 	}
 	//if model not has normal texture and just set shaders
 	if (!pModel.GetHasNormal())
@@ -311,7 +311,6 @@ void GameObject::draw(Camera3D cam)
 	{
 		pFog.Draw();
 	}
-
 	//Render Model
 	pModel.Render(cam);
 	isRendered = true;

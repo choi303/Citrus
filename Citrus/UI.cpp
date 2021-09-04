@@ -602,6 +602,21 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
     }
 }
 
+void UI::TessellationTri(float* tessAmount)
+{
+    if (can_render)
+    {
+        if (uiVisiblity)
+        {
+            if (ImGui::Begin("Tessellation Tri"))
+            {
+                ImGui::SliderFloat("Tessellation\nAmount", tessAmount, 0.1f, 100.0f);
+            }
+            ImGui::End();
+        }
+    }
+}
+
 void UI::SetCanRendered(bool value)
 {
     can_render = value;

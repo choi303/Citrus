@@ -4,14 +4,14 @@
 #include "Wireframe.h"
 #include "Fog.h"
 
-struct matrices
-{
-	XMFLOAT3 camera_pos;
-	float pad;
-};
-
 class GameObject
 {
+private:
+	struct matrices
+	{
+		XMFLOAT3 camera_pos;
+		float pad;
+	};
 public:
 	GameObject() = default;
 	GameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std::string filepath, int width, int height, bool hasMaterial);
