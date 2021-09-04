@@ -131,14 +131,6 @@ void Model::Destroy() const
     }
 }
 
-const int& Model::GetVertexCount() const noexcept
-{
-    const int mVertices = static_cast<int>(vertices.size());
-    if (mVertices <= 0)
-        Error::Log("Vertex count is null.");
-    return mVertices;
-}
-
 bool Model::LoadMesh(const std::string& file_path)
 {
     Assimp::Importer importer;
@@ -259,6 +251,9 @@ void Model::LoadNodesNoMtl(aiNode* p_node, const aiScene* p_scene)
 
 Mesh Model::ProcessMeshData(aiMesh* p_mesh, const aiScene* p_scene) 
 {
+    std::vector<vertex> vertices;
+    std::vector<signed int> indices;
+
    //Get vertices
    for (unsigned int i = 0; i < p_mesh->mNumVertices; i++)
    {
