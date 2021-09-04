@@ -15,7 +15,7 @@ public:
 	{
 		//create vertex shader
 		HRESULT hr = D3DReadFileToBlob(name.c_str(), &pBlob);
-		if (FAILED(hr)) { Error::Log(hr, "Failed to read file to blob layout vertex"); return false; }
+		if (FAILED(hr)) { Error::Log(hr, "Failed to read file to blob. (Vertex Shader)"); return false; }
 		hr = pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader);
 		if (FAILED(hr)) { Error::Log(hr, "Failed to create vertex shader"); return false; }
 
@@ -46,7 +46,7 @@ public:
 	bool Init(const std::wstring& name,ID3D11Device* pDevice)
 	{
 		HRESULT hr = D3DReadFileToBlob(name.c_str(), &pBlob);
-		if (FAILED(hr)) { Error::Log(hr, "Failed to read file to blob layout pixel"); return false; }
+		if (FAILED(hr)) { Error::Log(hr, "Failed to read file to blob. (Pixel Shader)"); return false; }
 		hr = pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader);
 		if (FAILED(hr)) { Error::Log(hr, "Failed to create pixel shader"); return false; }
 
@@ -61,5 +61,75 @@ public:
 
 private:
 	wrl::ComPtr<ID3D11PixelShader> pPixelShader;
+	wrl::ComPtr<ID3DBlob> pBlob;
+};
+
+class HullShader
+{
+public:
+	HullShader() = default;
+	HullShader(HullShader& rhs) = default;
+	~HullShader() = default;
+	bool Init(const std::wstring& name, ID3D11Device* pDevice)
+	{
+		HRESULT hr = D3DReadFileToBlob(name.c_str(),
+			&pBlob);
+		if (FAILED(hr)) { Error::Log(hr, "Failed to read file to blob. (Hull Shader)"); return false; }
+		hr = pDevice->CreateHullShader
+		(pBlob->GetBufferPointer(),
+			pBlob->GetBufferSize(), nullptr,
+			&pHullShader);
+		if(FAILED(hr))
+		{
+			Error::Log(hr, "Failed to create Hull Shader");
+			return false;
+		}
+
+		return true;
+	}
+
+	void Bind(ID3D11DeviceContext* pContext)
+	{
+		pContext->HSSetShader(pHullShader.Get(),
+			nullptr, 0);
+	}
+
+private:
+	wrl::ComPtr<ID3D11HullShader> pHullShader;
+	wrl::ComPtr<ID3DBlob> pBlob;
+};
+
+class DomainShader
+{
+public:
+	DomainShader() = default;
+	DomainShader(DomainShader& rhs) = default;
+	~DomainShader() = default;
+	bool Init(const std::wstring& name, ID3D11Device* pDevice)
+	{
+		HRESULT hr = D3DReadFileToBlob(name.c_str(),
+			&pBlob);
+		if (FAILED(hr)) { Error::Log(hr, "Failed to read file to blob. (Domain Shader)"); return false; }
+		hr = pDevice->CreateDomainShader
+		(pBlob->GetBufferPointer(),
+			pBlob->GetBufferSize(), nullptr,
+			&pDomainShader);
+		if (FAILED(hr))
+		{
+			Error::Log(hr, "Failed to create Domain Shader");
+			return false;
+		}
+
+		return true;
+	}
+
+	void Bind(ID3D11DeviceContext* pContext)
+	{
+		pContext->DSSetShader(pDomainShader.Get(),
+			nullptr, 0);
+	}
+
+private:
+	wrl::ComPtr<ID3D11DomainShader> pDomainShader;
 	wrl::ComPtr<ID3DBlob> pBlob;
 };

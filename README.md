@@ -16,13 +16,13 @@
 - Environment Mapping
 - Shadow Mapping
 - Ambient Occlusion
+- Hardware Tessellation
 - Particle System
-- HDR Lighting (tone mapping, bloom)
-- Filters (blur, depth, fog, fire)
-- Anti Aliasing (msaa, fxaa)
-- GUI Support (Dear Imgui <3)
+- HDR Lighting (Tone mapping, Bloom)
+- Filters (Blur, Depth, Fog, Fire)
+- Anti Aliasing (MSAA, FXAA)
+- GUI Support (Dear ImGui <3)
 - Save System
-- Input System
 
 # Inputs
 As you can see in the [diagram](https://miro.com/app/board/o9J_lXORBkk=/), input can be found on update function of app class. You can change the inputs to whatever you want just change the char characters on update function.

@@ -313,6 +313,8 @@ bool Graphics::InitScene()
 
 	pSkyBox.Init(pDevice.Get(), pContext.Get());
 
+	tessPlane.Init(pDevice.Get(), pContext.Get());
+
 	//Particle(s) initialize
 	mParticle.Initialize(pDevice.Get(), "Images\\star.dds", pContext.Get());
 
@@ -368,6 +370,9 @@ bool Graphics::SceneGraph(Camera3D cam3D)
 	}
 	mParticle.Render(cam3D);
 	mFire->Draw(cam3D, timer.GetMilisecondsElapsed());
+	tessPlane.Draw(cam3D);
+	//set primitive topology
+	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	//full screen pass
 	if (!*GameObject::GetWireframeEnabled())

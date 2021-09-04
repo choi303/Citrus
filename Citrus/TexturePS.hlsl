@@ -1,15 +1,10 @@
 struct PS_IN
 {
     float4 pos : SV_Position;
-    float2 tc : Texcoord;
-    float3 n : Normal;
+    float4 color : Color;
 };
-
-Texture2D albedo;
-SamplerState objsampler;
 
 float4 main(PS_IN input) : SV_Target
 {
-    float4 textureColor = albedo.Sample(objsampler, input.tc);
-    return textureColor;
+    return float4(1.0,0,0,1);
 }

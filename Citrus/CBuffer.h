@@ -65,4 +65,14 @@ public:
 	{
 		pContext->PSSetConstantBuffers(slot, numBuffers, cb.GetAddressOf());
 	}
+
+	void HSBind(ID3D11DeviceContext* pContext, UINT slot, UINT numBuffers)
+	{
+		pContext->HSSetConstantBuffers(slot, numBuffers, cb.GetAddressOf());
+	}
+
+	void DSBind(ID3D11DeviceContext* pContext, UINT slot, UINT numBuffers)
+	{
+		pContext->DSSetConstantBuffers(slot, numBuffers, cb.GetAddressOf());
+	}
 };

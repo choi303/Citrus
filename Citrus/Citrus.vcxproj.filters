@@ -147,6 +147,9 @@
     <ClCompile Include="imgui\imgui_widgets.cpp">
       <Filter>Graphics\DirectX 11\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="TessellationPlane.cpp">
+      <Filter>Graphics\DirectX 11\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -290,6 +293,9 @@
     <ClInclude Include="imgui\imstb_truetype.h">
       <Filter>Graphics\DirectX 11\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="TessellationPlane.h">
+      <Filter>Graphics\DirectX 11\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ColorPixel.hlsl">
@@ -398,6 +404,12 @@
       <Filter>Graphics\DirectX 11\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="PSLit.hlsl">
+      <Filter>Graphics\DirectX 11\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="HSTessellation.hlsl">
+      <Filter>Graphics\DirectX 11\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="DSTessellation.hlsl">
       <Filter>Graphics\DirectX 11\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

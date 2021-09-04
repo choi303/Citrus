@@ -9,6 +9,7 @@
 #include "DirectionalLight.h"
 #include "Particle.h"
 #include "Fire.h"
+#include "TessellationPlane.h"
 
 class Graphics
 {
@@ -63,6 +64,8 @@ private:
 	int viewportWidth, viewportHeight;
 	Particle mParticle;
 	std::unique_ptr<Fire> mFire;
+	TessellationPlane tessPlane;
 private:
 	inline void RenderDockingWindow() noexcept;
+
 };
