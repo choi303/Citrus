@@ -150,6 +150,9 @@
     <ClCompile Include="TessellationPlane.cpp">
       <Filter>Graphics\DirectX 11\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PbrSphere.cpp">
+      <Filter>Graphics\DirectX 11\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -296,6 +299,9 @@
     <ClInclude Include="TessellationPlane.h">
       <Filter>Graphics\DirectX 11\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PbrSphere.h">
+      <Filter>Graphics\DirectX 11\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ColorPixel.hlsl">
@@ -410,6 +416,12 @@
       <Filter>Graphics\DirectX 11\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="DSTessellation.hlsl">
+      <Filter>Graphics\DirectX 11\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VS_PBR.hlsl">
+      <Filter>Graphics\DirectX 11\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PS_PBR.hlsl">
       <Filter>Graphics\DirectX 11\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

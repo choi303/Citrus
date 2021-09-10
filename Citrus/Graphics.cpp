@@ -315,6 +315,8 @@ bool Graphics::InitScene()
 
 	tessPlane.Init(pDevice.Get(), pContext.Get());
 
+	pPbrSphere = std::make_unique<PbrSphere>(pDevice.Get(), pContext.Get());
+
 	//Particle(s) initialize
 	mParticle.Initialize(pDevice.Get(), "Images\\star.dds", pContext.Get());
 
@@ -373,6 +375,8 @@ bool Graphics::SceneGraph(Camera3D cam3D)
 	tessPlane.Draw(cam3D);
 	//set primitive topology
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pDirectLight->BindCB(cam3D);
+	pPbrSphere->Draw(cam3D);
 
 	//full screen pass
 	if (!*GameObject::GetWireframeEnabled())

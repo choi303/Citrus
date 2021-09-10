@@ -15,13 +15,13 @@ void UI::ClassicUI(GameObject* gameObject, std::string uiTitle, float
 {
     if (can_render)
     {
+        pos[0] = gameObject->GetMesh()->GetPos().x;
+        pos[1] = gameObject->GetMesh()->GetPos().y;
+        pos[2] = gameObject->GetMesh()->GetPos().z;
         if (uiVisiblity)
         {
             if (!isDestroyed)
             {
-                pos[0] = gameObject->GetMesh()->GetPos().x;
-                pos[1] = gameObject->GetMesh()->GetPos().y;
-                pos[2] = gameObject->GetMesh()->GetPos().z;
                 if (ImGui::Begin(uiTitle.c_str()))
                 {
                     ImGui::DragFloat3("Position\nX/Y/Z", pos, 0.01f,
@@ -53,8 +53,8 @@ void UI::ClassicUI(GameObject* gameObject, std::string uiTitle, float
                         isDestroyed = true;
                     }
                     
-                    ImGui::End();
                 }
+                ImGui::End();
             }
         }
     }
@@ -70,16 +70,16 @@ void UI::PointLight(Model* model, const std::string
 {
     if (can_render)
     {
+        static float lightColorF[3] = { 1,1,1 };
+        lightColor->x = lightColorF[0];
+        lightColor->y = lightColorF[1];
+        lightColor->z = lightColorF[2];
+
+        pos[0] = model->GetPos().x;
+        pos[1] = model->GetPos().y;
+        pos[2] = model->GetPos().z;
         if (uiVisiblity)
         {
-            static float lightColorF[3] = { 1,1,1 };
-            lightColor->x = lightColorF[0];
-            lightColor->y = lightColorF[1];
-            lightColor->z = lightColorF[2];
-
-            pos[0] = model->GetPos().x;
-            pos[1] = model->GetPos().y;
-            pos[2] = model->GetPos().z;
             if (ImGui::Begin(uiTitle.c_str()))
             {
                 ImGui::DragFloat3("Position\nX/Y/Z", pos, 0.01f,
@@ -136,30 +136,29 @@ void UI::DeveloperUI(std::string adapter_name, const
 {
     if (can_render)
     {
+        static float wireCol[3] = { 1,1,1 };
+        wireColor->x = wireCol[0];
+        wireColor->y = wireCol[1];
+        wireColor->z = wireCol[2];
+
+        static float gridmapCol[3] = { 1,1,1 };
+        gridMapColor->x = gridmapCol[0];
+        gridMapColor->y = gridmapCol[1];
+        gridMapColor->z = gridmapCol[2];
+
+        static float fogCol[4] = { 1,1,1,1 };
+        fogColor->x = fogCol[0];
+        fogColor->y = fogCol[1];
+        fogColor->z = fogCol[2];
+        fogColor->w = fogCol[3];
+
+        static const char* items[] = { "2", "4",
+            "8" };
+        static bool selected[sizeof(items)];
+        static std::string previewValue = std::to_string(gfx->msaaQuality);
+        std::string version = "Citrus Graphics Renderer v" + versionStr;
         if (uiVisiblity)
         {
-            static float wireCol[3] = { 1,1,1 };
-            wireColor->x = wireCol[0];
-            wireColor->y = wireCol[1];
-            wireColor->z = wireCol[2];
-
-            static float gridmapCol[3] = { 1,1,1 };
-            gridMapColor->x = gridmapCol[0];
-            gridMapColor->y = gridmapCol[1];
-            gridMapColor->z = gridmapCol[2];
-
-            static float fogCol[4] = { 1,1,1,1 };
-            fogColor->x = fogCol[0];
-            fogColor->y = fogCol[1];
-            fogColor->z = fogCol[2];
-            fogColor->w = fogCol[3];
-
-            static const char* items[] = { "2", "4",
-                "8" };
-            static bool selected[sizeof(items)];
-            static std::string previewValue = std::to_string(gfx->msaaQuality);
-            std::string version = "Citrus Graphics Renderer v" + versionStr;
-
             if (ImGui::Begin("Developer Menu"))
             {
                 ImGui::Text(version.c_str());
@@ -279,10 +278,10 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
 {
     if (can_render)
     {
+        std::string title = "";
+        PWSTR pszFilePath = PWSTR("");
         if (uiVisiblity)
         {
-            std::string title = "";
-            PWSTR pszFilePath = PWSTR("");
             if (ImGui::BeginMainMenuBar())
             {
                 if (ImGui::BeginMenu("File"))
@@ -665,8 +664,8 @@ void UI::ParticleUI(std::string uiTitle, float* mParticleDeviationX, float* mPar
                     ImGui::DragFloat("Life\Time", lifeTime, 0.01f, -1000.0f, 1000.0f);
                     ImGui::Checkbox("Life\nTime\nEnabled", isLifetime);
                     
-                    ImGui::End();
                 }
+                ImGui::End();
             }
         }
     }
@@ -680,22 +679,22 @@ void UI::DirectionalLigth(XMFLOAT4* diffuseColor,
 {
     if (can_render)
     {
+        static float direction[3] = { 0.300f, -1.0f, 1.6f };
+        lightDirection->x = direction[0];
+        lightDirection->y = direction[1];
+        lightDirection->z = direction[2];
+        static float diffuseCol[4] = { 1,1,1,1 };
+        diffuseColor->x = diffuseCol[0];
+        diffuseColor->y = diffuseCol[1];
+        diffuseColor->z = diffuseCol[2];
+        diffuseColor->w = diffuseCol[3];
+        static float ambientCol[4] = { 1,1,1,1 };
+        ambientColor->x = ambientCol[0];
+        ambientColor->y = ambientCol[1];
+        ambientColor->z = ambientCol[2];
+        ambientColor->w = ambientCol[3];
         if (uiVisiblity)
         {
-            static float direction[3] = { 0.300f, -1.0f, 1.6f };
-            lightDirection->x = direction[0];
-            lightDirection->y = direction[1];
-            lightDirection->z = direction[2];
-            static float diffuseCol[4] = { 1,1,1,1 };
-            diffuseColor->x = diffuseCol[0];
-            diffuseColor->y = diffuseCol[1];
-            diffuseColor->z = diffuseCol[2];
-            diffuseColor->w = diffuseCol[3];
-            static float ambientCol[4] = { 1,1,1,1 };
-            ambientColor->x = ambientCol[0];
-            ambientColor->y = ambientCol[1];
-            ambientColor->z = ambientCol[2];
-            ambientColor->w = ambientCol[3];
             if (ImGui::Begin("Directional Light"))
             {
                 ImGui::DragFloat3("Light\nDirection",
@@ -718,9 +717,9 @@ void UI::DirectionalLigth(XMFLOAT4* diffuseColor,
                 ImGui::DragFloat("Reflection\nIntensity", reflectionIntensity, 0.01f, 0.0f, 2000.0f);
                 ImGui::DragFloat("Emessive\nIntensity", emessiveIntensity, 0.01f, 0.0f, 2000.0f);
                 ImGui::DragFloat("Shadow\nBias", bias, 0.001f, -2000.0f, 2000.0f);
-                
-                ImGui::End();
             }
+
+            ImGui::End();
         }
     }
 }
@@ -757,8 +756,31 @@ void UI::FireUI(float* posX, float* posY, float* posZ, float* sSpeedX, float* sS
                 ImGui::DragFloat("Distortion\nScale", distortionScale, 0.01f, -1000.0f, 1000.0f);
                 ImGui::DragFloat("Distortion\nBias", distortionBias, 0.01f, -1000.0f, 1000.0f);
                 
-                ImGui::End();
             }
+                ImGui::End();
+        }
+    }
+}
+
+void UI::PbrUI(XMFLOAT3* albedo, float* metallic, float* roughness, float* ao)
+{
+    static float mAlbedo[3] = { 1,0,0 };
+    albedo->x = mAlbedo[0];
+    albedo->y = mAlbedo[1];
+    albedo->z = mAlbedo[2];
+
+    if (can_render)
+    {
+        if (uiVisiblity)
+        {
+            if (ImGui::Begin("Pbr Sphere"))
+            {
+                ImGui::ColorEdit3("Albedo", mAlbedo);
+                ImGui::DragFloat("Metallic", metallic, 0.01f, 0.0f, 1.0f);
+                ImGui::DragFloat("Roughness", roughness, 0.01f, 0.0f, 1.0f);
+                ImGui::DragFloat("AO", ao, 0.01f, 0.0f, 1.0f);
+            }
+            ImGui::End();
         }
     }
 }

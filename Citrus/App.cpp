@@ -27,7 +27,6 @@ void App::Update() noexcept
 {
 	const float deltaTime = static_cast<float>(timer.GetMilisecondsElapsed());
 	timer.Restart();
-
 	//Set any key to any event
 	while (!keyboard.KeyBufferIsEmpty())
 	{
@@ -139,6 +138,7 @@ bool App::ProcessMessages(HINSTANCE hInstance) noexcept
 	{
 		if (!IsWindow(hwnd))
 		{
+			SaveValues();
 			SaveValues();
 
 			hwnd = nullptr; //Message processing loop takes care of destroying this window

@@ -7,7 +7,7 @@
 ### To Do List
 - Global Illumination
 - Volumetric Lighting
-- PBR Support
+- SSR
 
 ### Current Features
 - Blinn-Phong Lighting
@@ -15,6 +15,7 @@
 - Normal & Specular & Emessive Map support
 - Environment Mapping
 - Shadow Mapping
+- PBR Support
 - Ambient Occlusion
 - Hardware Tessellation
 - Particle System

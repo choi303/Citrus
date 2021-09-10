@@ -54,6 +54,9 @@ public:
 		float* distortion2X, float* distortion2Y, float* distortion3X, float* distortion3Y,
 		float* distortionScale, float* distortionBias, float* scaleX, float* scaleY, float* scaleZ);
 
+	static void PbrUI(XMFLOAT3* albedo, float* metallic,
+		float* roughness, float* ao);
+
 	~UI() = default;
 };
 

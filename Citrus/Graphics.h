@@ -10,6 +10,7 @@
 #include "Particle.h"
 #include "Fire.h"
 #include "TessellationPlane.h"
+#include "PbrSphere.h"
 
 class Graphics
 {
@@ -65,6 +66,7 @@ private:
 	Particle mParticle;
 	std::unique_ptr<Fire> mFire;
 	TessellationPlane tessPlane;
+	std::unique_ptr<PbrSphere> pPbrSphere;
 private:
 	inline void RenderDockingWindow() noexcept;
 

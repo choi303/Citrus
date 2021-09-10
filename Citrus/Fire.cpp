@@ -111,7 +111,7 @@ void Fire::Draw(Camera3D cam, float frameTime)
 	mDistortionBuffer->data.distortionScale = distortionScale;
 	mDistortionBuffer->data.distortionBias = distortionBias;
 	mDistortionBuffer->MapData();
-	mDistortionBuffer->PSBind(mContext.Get(), 0, 1);
+	mDistortionBuffer->PSBind(mContext.Get(), 1, 1);
 	
 	//bind blend state
 	float blendFactor[4];
