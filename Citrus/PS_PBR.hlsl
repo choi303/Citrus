@@ -1,4 +1,4 @@
-cbuffer DirectLight : register(b0)
+cbuffer DirectLight : register(b5)
 {
     float4 ambientColor;
     float4 diffuseColor;
@@ -18,7 +18,7 @@ cbuffer DirectLight : register(b0)
     bool brightnessRender;
 };
 
-cbuffer PbrBuffer : register(b3)
+cbuffer PbrBuffer : register(b9)
 {
     float3 albedo;
     float metallic;

@@ -45,7 +45,7 @@ void PbrSphere::Draw(Camera3D cam)
 	pbrCBuffer->data.roughness = roughness;
 	pbrCBuffer->data.ao = ao;
 	pbrCBuffer->MapData();
-	pbrCBuffer->PSBind(pContext.Get(), 3, 1);
+	pbrCBuffer->PSBind(pContext.Get(), 9, 1);
 
 	//bind shaders
 	pVS.Bind(pContext.Get());

@@ -90,7 +90,7 @@ DirectionalLight::DirectionalLight(ID3D11Device* pDevice, ID3D11DeviceContext* p
 	pModel.InitNoMtl("Models\\sphere_hq.obj", pDevice, pContext);
 }
 
-void DirectionalLight::BindCB(Camera3D cam)
+void DirectionalLight::BindCB(Camera3D cam, UINT slot)
 {
 	pLayout->Bind(mContext.Get());
 	pVS.Bind(mContext.Get());
@@ -121,7 +121,7 @@ void DirectionalLight::BindCB(Camera3D cam)
 	mLightBuffer->data.emessiveIntensity = emessiveIntensity;
 	mLightBuffer->data.brightnessRender = brightnessRender;
 	mLightBuffer->MapData();
-	mLightBuffer->PSBind(mContext.Get(), 0, 1);
+	mLightBuffer->PSBind(mContext.Get(), slot, 1);
 	mShadowCBuffer->data.shadowView = mLightCam.GetViewMatrix();
 	mShadowCBuffer->data.shadowProj = mLightCam.GetProjectionMatrix();
 	mShadowCBuffer->MapData();

@@ -64,7 +64,6 @@ private:
 	int height;
 	int viewportWidth, viewportHeight;
 	Particle mParticle;
-	std::unique_ptr<Fire> mFire;
 	TessellationPlane tessPlane;
 	std::unique_ptr<PbrSphere> pPbrSphere;
 private:

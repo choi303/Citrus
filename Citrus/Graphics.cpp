@@ -320,8 +320,6 @@ bool Graphics::InitScene()
 	//Particle(s) initialize
 	mParticle.Initialize(pDevice.Get(), "Images\\star.dds", pContext.Get());
 
-	mFire = std::make_unique<Fire>(pDevice.Get(), pContext.Get());
-
 	return true;
 }
 
@@ -365,17 +363,16 @@ bool Graphics::SceneGraph(Camera3D cam3D)
 
 	//Drawing Objects
 	pSkyBox.Draw(cam3D);
-	pDirectLight->BindCB(cam3D);
+	pDirectLight->BindCB(cam3D, 0);
 	for (int i = 0; i < pGameObjects.size(); i++)
 	{
 		pGameObjects[i]->draw(cam3D);
 	}
 	mParticle.Render(cam3D);
-	mFire->Draw(cam3D, timer.GetMilisecondsElapsed());
 	tessPlane.Draw(cam3D);
 	//set primitive topology
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	pDirectLight->BindCB(cam3D);
+	pDirectLight->BindCB(cam3D, 5);
 	pPbrSphere->Draw(cam3D);
 
 	//full screen pass
