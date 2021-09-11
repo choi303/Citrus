@@ -30,7 +30,7 @@ public:
 		bool* backfaceCulling, bool* frontfaceCulling, App* rApp, BOOL* alphaClip, BOOL* ssaoEnabled,
 		BOOL* toneMappingEnabled, BOOL* bloomEnabled, std::vector<GameObject*>& pGameObjects, 
 		ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height, BOOL* autoExposureEnabled,
-		std::string& versionStr);
+		std::string& versionStr, BOOL* kuwaharaEnabled);
 	
 	static void TessellationTri(float* tessAmount);
 

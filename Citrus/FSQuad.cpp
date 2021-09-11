@@ -16,6 +16,7 @@ static BOOL toneMappingEnabled;
 static BOOL autoExposureEnabled;
 static bool bloomRender;
 static BOOL bloomEnabled;
+static BOOL kuwaharaEnabled;
 
 FSQuad::FSQuad(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height)
 {
@@ -30,6 +31,8 @@ FSQuad::FSQuad(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, 
 	pPSSsao.Init(L"PS_SSAO.cso", pDevice);
 	pVSBloom.Init(L"VSBloom.cso", pDevice);
 	pPSBloom.Init(L"PSBloom.cso", pDevice);
+	pVSKuwahara.Init(L"VSKuwahara.cso", pDevice);
+	pPSKuwahara.Init(L"PSKuwahara.cso", pDevice);
 	//init and create input layout
 	const std::vector<D3D11_INPUT_ELEMENT_DESC> fs_ied
 		=
@@ -112,6 +115,12 @@ void FSQuad::draw(ID3D11DeviceContext* pContext, Camera3D cam)
 	fxaaCBuffer->data.rcpFrame = XMFLOAT4(1.0f / width, 1.0f / height, 0.0f, 0.0f);
 	fxaaCBuffer->MapData();
 	fxaaCBuffer->PSBind(pContext, 1, 1);
+	if (kuwaharaEnabled)
+	{
+		pContext->IASetInputLayout(0);
+		pVSKuwahara.Bind(pContext);
+		pPSKuwahara.Bind(pContext);
+	}
 	if (bloomRender)
 	{
 		//input layout bind
@@ -161,6 +170,11 @@ BOOL FSQuad::SetToneMappingEnabled(BOOL value)
 	return toneMappingEnabled = value;
 }
 
+BOOL FSQuad::SetKuwaharaEnabled(BOOL value)
+{
+	return kuwaharaEnabled = value;
+}
+
 BOOL FSQuad::SetBloomEnabled(BOOL value)
 {
 	return bloomEnabled = value;
@@ -199,6 +213,11 @@ BOOL* FSQuad::GetToneMappingEnabled()
 BOOL* FSQuad::GetBloomEnabled()
 {
 	return &bloomEnabled;
+}
+
+BOOL* FSQuad::GetKuwaharaEnabled()
+{
+	return &kuwaharaEnabled;
 }
 
 BOOL FSQuad::SetSSAOEnabled(BOOL value)

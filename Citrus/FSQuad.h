@@ -48,6 +48,7 @@ public:
 	static BOOL* GetSSAOEnabled();
 	static BOOL* GetToneMappingEnabled();
 	static BOOL* GetBloomEnabled();
+	static BOOL* GetKuwaharaEnabled();
 	static bool SetFxaaEnabled(bool value);
 	static float* GetBlurIntensity();
 	static float* GetFallOff();
@@ -61,6 +62,7 @@ public:
 	static bool SetBlurEnabled(bool value);
 	static bool SetBloomRenderEnabled(bool value);
 	static BOOL SetToneMappingEnabled(BOOL value);
+	static BOOL SetKuwaharaEnabled(BOOL value);
 	static BOOL SetBloomEnabled(BOOL value);
 	static BOOL SetAutoExposureEnabled(BOOL value);
 	static float SetBlurIntensity(float value);
@@ -94,6 +96,8 @@ private:
 	PixelShader pPSSsao;
 	VertexShader pVSBloom;
 	PixelShader pPSBloom;
+	VertexShader pVSKuwahara;
+	PixelShader pPSKuwahara;
 	int width;
 	int height;
 };

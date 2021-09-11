@@ -274,7 +274,7 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
     App* rApp, BOOL* alphaClip, BOOL* ssaoEnabled, BOOL* toneMappingEnabled,
     BOOL* bloomEnabled, std::vector<GameObject*>& pGameObjects, ID3D11Device* pDevice,
     ID3D11DeviceContext* pContext, int width, int height, BOOL* autoExposureEnabled,
-    std::string& versionStr)
+    std::string& versionStr, BOOL* kuwaharaEnabled)
 {
     if (can_render)
     {
@@ -582,6 +582,23 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
                             *autoExposureEnabled = true;
                         }
                     }
+
+                    if (*kuwaharaEnabled)
+                        title = "Kuwahara: On";
+                    else
+                        title = "Kuwahara: Off";
+                    if (ImGui::MenuItem(title.c_str()))
+                    {
+                        if (*kuwaharaEnabled)
+                        {
+                            *kuwaharaEnabled = false;
+                        }
+                        else
+                        {
+                            *kuwaharaEnabled = true;
+                        }
+                    }
+
                     ImGui::EndMenu();
                 }
                 
@@ -679,7 +696,7 @@ void UI::DirectionalLigth(XMFLOAT4* diffuseColor,
 {
     if (can_render)
     {
-        static float direction[3] = { 0.300f, -1.0f, 1.6f };
+        static float direction[3] = {0.300f, -1.0f, 1.6f};
         lightDirection->x = direction[0];
         lightDirection->y = direction[1];
         lightDirection->z = direction[2];

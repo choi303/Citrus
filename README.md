@@ -7,7 +7,8 @@
 ### To Do List
 - Global Illumination
 - Volumetric Lighting
-- SSR
+- Planar Reflections
+- SS Reflections
 
 ### Current Features
 - Blinn-Phong Lighting

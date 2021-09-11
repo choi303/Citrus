@@ -225,6 +225,8 @@ void App::SetSavedValues()
 		FSQuad::SetBloomEnabled(FALSE);
 	
 	FSQuad::SetBloomIntensity(std::stof(devMenuSettings.GetInfo(20).c_str()));
+	FSQuad::SetAutoExposureEnabled(std::stof(devMenuSettings.GetInfo(21).c_str()));
+	FSQuad::SetKuwaharaEnabled(std::stof(devMenuSettings.GetInfo(22).c_str()));
 
 	//close dev menu file
 	devMenuSettings.CloseFile();
@@ -397,6 +399,10 @@ void App::SaveValues()
 		*FSQuad::GetBloomEnabled()));
 	pDevMenuSavedItems.push_back("[Bloom Intensity]:" + std::to_string(
 		*FSQuad::GetBloomIntensity()));
+	pDevMenuSavedItems.push_back("[Auto Expsoure]:" + std::to_string(
+		*FSQuad::GetAutoExposureEnabled()));
+	pDevMenuSavedItems.push_back("[Kuwahara]:" + std::to_string(
+		*FSQuad::GetKuwaharaEnabled()));
 	devMenuSettings.AddInfo(pDevMenuSavedItems);
 	devMenuSettings.CloseFile();
 
@@ -530,6 +536,6 @@ void App::FPSCounter()
 		FSQuad::GetBlurEnabled(), &gfx.msaaEnabled, this, FSQuad::GetFxaaEnabled(), GameObject::GetBackCulling(),
 		GameObject::GetFrontCulling(), this, DirectionalLight::GetAlphaCEnabled(), FSQuad::GetSSAOEnabled(),
 		FSQuad::GetToneMappingEnabled(), FSQuad::GetBloomEnabled(), gfx.pGameObjects, gfx.pDevice.Get(),
-		gfx.pContext.Get(), width, height, FSQuad::GetAutoExposureEnabled(), versionStr);
+		gfx.pContext.Get(), width, height, FSQuad::GetAutoExposureEnabled(), versionStr, FSQuad::GetKuwaharaEnabled());
 	UI::SetCanRendered(false);
 }
