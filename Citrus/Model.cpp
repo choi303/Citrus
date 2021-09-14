@@ -223,6 +223,12 @@ void Model::LoadNodes(aiNode* p_node, const aiScene* p_scene, const aiMaterial* 
                     pContext, textureDirectory + textureName.C_Str(), 5));
                 hasEmessiveMap = true;
             }
+
+            if (mtl.GetTexture(aiTextureType::aiTextureType_DISPLACEMENT, 0, &textureName) == aiReturn_SUCCESS)
+            {
+                textures.push_back(Texture(pDevice, pContext,
+                    textureDirectory + textureName.C_Str(), 6));
+            }
         }
         
         meshes.push_back(ProcessMeshData(pMesh, p_scene));

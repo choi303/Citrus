@@ -28,6 +28,9 @@ struct PS_IN
     float3 binormal : Binormal;
     float3 viewDirection : ViewDirection;
     float4 lightViewPosition : LightViewPosition;
+    float3 TangentLightPos : TangentLightPos;
+    float3 TangentViewPos : TangentViewPos;
+    float3 TangentFragPos : TangentFragPos;
 };
 
 Texture2D diff : register(t0);
@@ -36,9 +39,18 @@ Texture2D normal : register(t2);
 Texture2D environment : register(t3);
 Texture2D depthMap : register(t4);
 Texture2D emessiveMap : register(t5);
+Texture2D displacementMap : register(t6);
 SamplerState object_sampler : register(s0);
 SamplerState object_sampler_clamp : register(s1);
 SamplerComparisonState CMPSampler : register(s2);
+
+const float heightScale = 5.0f;
+float2 ParallaxMapping(float2 texCoords, float3 viewDir)
+{
+    float height = displacementMap.Sample(object_sampler, texCoords).r;
+    float2 p = viewDir.xy / viewDir.z * (height * heightScale);
+    return texCoords - p;
+}
 
 float4 main(PS_IN input) : SV_Target
 {
@@ -62,8 +74,12 @@ float4 main(PS_IN input) : SV_Target
     //lighdirection set
     lightDir = -lightDirection;
     
+    //displacement mapping
+    float3 viewDir = normalize(input.TangentViewPos - input.TangentFragPos);
+    float2 texCoords = ParallaxMapping(input.tc, viewDir);
+    
     //normal map sample
-    bumpMap = normal.Sample(object_sampler, input.tc);
+    bumpMap = normal.Sample(object_sampler, texCoords);
     
     //normal map calculation
     bumpMap = (bumpMap * 2.0f) - 1.0f;
@@ -73,7 +89,7 @@ float4 main(PS_IN input) : SV_Target
     bias = biasC;
     
     //diffuse texture sample
-    textureColor = diff.Sample(object_sampler, input.tc);
+    textureColor = diff.Sample(object_sampler, texCoords);
     if (alphaClip)
     {
         if (textureColor.a < 0.5)
@@ -139,7 +155,7 @@ float4 main(PS_IN input) : SV_Target
                 float3 halfwayDir = normalize(lightDir + input.viewDirection);
                 
                 // Sample the pixel from the specular map texture.
-                specularIntensity = spec.Sample(object_sampler, input.tc);
+                specularIntensity = spec.Sample(object_sampler, texCoords);
         
                 const float specularPower = pow(1.0f, specularIntensity.a * 4.0f); //specular power based texture (a) channel
         
@@ -179,7 +195,7 @@ float4 main(PS_IN input) : SV_Target
             float3 halfwayDir = normalize(lightDir + input.viewDirection);
                 
                 // Sample the pixel from the specular map texture.
-            specularIntensity = spec.Sample(object_sampler, input.tc);
+            specularIntensity = spec.Sample(object_sampler, texCoords);
         
             const float specularPower = pow(1.0f, specularIntensity.a * 4.0f); //specular power based texture (a) channel
         

@@ -13,8 +13,8 @@
 ### Current Features
 - Blinn-Phong Lighting
 - 3D Model Loader
-- Normal & Specular & Emessive Map support
 - Environment Mapping
+- Normal & Parallax Mapping
 - Shadow Mapping
 - PBR Support
 - Ambient Occlusion
