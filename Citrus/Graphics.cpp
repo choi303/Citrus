@@ -275,6 +275,10 @@ bool Graphics::InitScene()
 		pContext.Get(), width, height, msaaQuality,
 		msaaEnabled, DepthStencil::Usage::ShadowDepth);
 
+	dsNormal = std::make_unique<DepthStencil>(pDevice.Get(),
+		pContext.Get(), width, height, msaaQuality,
+		msaaEnabled, DepthStencil::Usage::ShadowDepth);
+
 	//Render Target(s) initialize
 	rtDepth = std::make_unique<RenderTarget>(pDevice.Get(),
 		pContext.Get(), width, height, msaaQuality,
@@ -297,6 +301,10 @@ bool Graphics::InitScene()
 		msaaEnabled, RenderTarget::Usage::HDR);
 
 	rtBloom = std::make_unique<RenderTarget>(pDevice.Get(),
+		pContext.Get(), width, height, msaaQuality,
+		msaaEnabled, RenderTarget::Usage::HDR);
+
+	rtNormal = std::make_unique<RenderTarget>(pDevice.Get(),
 		pContext.Get(), width, height, msaaQuality,
 		msaaEnabled, RenderTarget::Usage::HDR);
 
@@ -385,7 +393,8 @@ bool Graphics::SceneGraph(Camera3D cam3D)
 		rtNoise->BindAsTexture(pContext.Get(), 3);
 		rtBrightness->BindAsTexture(pContext.Get(), 4);
 		rtBloom->BindAsTexture(pContext.Get(), 5);
-		quad->draw(pContext.Get(), cam3D);
+		rtNormal->BindAsTexture(pContext.Get(), 6);
+		quad->draw(pContext.Get(), cam3D, this->cam3D);
 	}
 	return true;
 }
@@ -402,9 +411,9 @@ void Graphics::Render()
 	ID3D11RenderTargetView* rtv[1] = { 0 };
 	pContext->OMSetRenderTargets(1, rtv, dsShadow->pDepthStencilView.Get());
 	dsShadow->Clear(pContext.Get());
-	GameObject::SetFrontCull(true);
+	GameObject::SetBackCull(true);
 	SceneGraph(pDirectLight->GetLightCamera());
-	GameObject::SetFrontCull(false);
+	GameObject::SetBackCull(false);
 
 	//Depth pass
 	rtDepth->BindAsTarget(pContext.Get(), dsDepth->pDepthStencilView.Get());
@@ -430,11 +439,18 @@ void Graphics::Render()
 	SceneGraph(cam3D);
 	pDirectLight->SetBrightnessRenderEnabled(FALSE);
 
+	//Normals render
+	rtNormal->BindAsTarget(pContext.Get(), dsNormal->pDepthStencilView.Get());
+	dsNormal->Clear(pContext.Get());
+	pDirectLight->SetNormalsEnabled(TRUE);
+	SceneGraph(cam3D);
+	pDirectLight->SetNormalsEnabled(FALSE);
+
 	//Bloom render
 	rtBloom->BindAsTarget(pContext.Get(), dsBloom->pDepthStencilView.Get());
 	dsBloom->Clear(pContext.Get());
 	FSQuad::SetBloomRenderEnabled(true);
-	quad->draw(pContext.Get(), cam3D);
+	quad->draw(pContext.Get(), cam3D, this->cam3D);
 	FSQuad::SetBloomRenderEnabled(false);
 
 	UI::SetCanRendered(true);

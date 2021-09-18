@@ -31,6 +31,7 @@ public:
 	static bool SetFogEnabled(bool value);
 	static bool SetWireframeEnabled(bool value);
 	static bool SetFrontCull(bool value);
+	static bool SetBackCull(bool value);
 	static float SetFogStart(float value);
 	static float SetFogEnd(float value);
 	std::string GetName() const;
@@ -45,10 +46,12 @@ private:
 	VertexShader pVS;
 	VertexShader pVSEmessive;
 	VertexShader pVSLit;
+	VertexShader pVSParallax;
 	PixelShader pPS;
 	PixelShader pPSNormal;
 	PixelShader pPSEmessive;
 	PixelShader pPSLit;
+	PixelShader pPSParallax;
 private:
 	ID3D11Device* pDevice;
 	ID3D11DeviceContext* pContext;

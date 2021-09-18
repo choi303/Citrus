@@ -118,6 +118,11 @@ bool Model::GetHasTexture() const
     return hasTexture;
 }
 
+bool Model::GetHasParallaxMap() const
+{
+    return hasParallaxMap;
+}
+
 const std::string& Model::GetPath() const
 {
     return path;
@@ -228,6 +233,7 @@ void Model::LoadNodes(aiNode* p_node, const aiScene* p_scene, const aiMaterial* 
             {
                 textures.push_back(Texture(pDevice, pContext,
                     textureDirectory + textureName.C_Str(), 6));
+                hasParallaxMap = true;
             }
         }
         

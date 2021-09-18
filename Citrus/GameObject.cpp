@@ -22,6 +22,9 @@ GameObject::GameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std
 	//emssive mapping shaders initalize
 	pVSEmessive.Init(L"VSDirectShadowsEmessive.cso", pDevice);
 	pPSEmessive.Init(L"PSDirectShadowsEmessive.cso", pDevice);
+	//emssive mapping shaders initalize
+	pVSParallax.Init(L"VSDirectShadowsParallax.cso", pDevice);
+	pPSParallax.Init(L"PSDirectShadowsParallax.cso", pDevice);
 	//gets data from normal mapping vertex shader with input layout
 	const std::vector<D3D11_INPUT_ELEMENT_DESC> ied_normal =
 	{
@@ -81,12 +84,12 @@ GameObject::GameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, std
 	if (FAILED(hr)) { Error::Log(hr, "Failed to create sampler state"); }
 
 	D3D11_SAMPLER_DESC samplerDesc = CD3D11_SAMPLER_DESC{ CD3D11_DEFAULT{} };
-	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
 	samplerDesc.MipLODBias = 0.0f;
-	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.MaxAnisotropy = 4;
 	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
 	samplerDesc.BorderColor[0] = 0;
 	samplerDesc.BorderColor[1] = 0;
@@ -216,6 +219,11 @@ bool GameObject::SetFrontCull(bool value)
 	return frontCull = value;
 }
 
+bool GameObject::SetBackCull(bool value)
+{
+	return backfaceCulling = value;
+}
+
 float GameObject::SetFogStart(float value)
 {
 	//set fog start to value
@@ -275,12 +283,17 @@ void GameObject::draw(Camera3D cam)
 		pVSNormal.Bind(pContext);
 		pPSNormal.Bind(pContext);
 	}
-
 	//if model has a emessive map and set emssive shaders
 	if (pModel.GetHasEmessive())
 	{
 		pVSEmessive.Bind(pContext);
 		pPSEmessive.Bind(pContext);
+	}
+	//if model has a parallax map and set parallax shaders
+	if (pModel.GetHasParallaxMap())
+	{
+		pVSParallax.Bind(pContext);
+		pPSParallax.Bind(pContext);
 	}
 
 	//Classic Object UI Creation
@@ -295,7 +308,7 @@ void GameObject::draw(Camera3D cam)
 	if (depthEnabled)
 	{
 		cam.SetProjectionValues(70.0f, static_cast<float>(width) / static_cast<float>(height)
-			, 1.0f, 999999.0f * 999999.0f, false);
+			, 100.0f, 999999.0f * 999999.0f, false);
 		pDepthBuffer.Draw();
 	}
 

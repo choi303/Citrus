@@ -35,9 +35,6 @@ struct VS_OUT
     float3 binormal : Binormal;
     float3 viewDirection : ViewDirection;
     float4 lightViewPosition : LightViewPosition;
-    float3 TangentLightPos : TangentLightPos;
-    float3 TangentViewPos : TangentViewPos;
-    float3 TangentFragPos : TangentFragPos;
 };
 
 VS_OUT main(VS_IN input)
@@ -65,15 +62,6 @@ VS_OUT main(VS_IN input)
     vso.lightViewPosition = mul(float4(input.pos, 1.0f), world);
     vso.lightViewPosition = mul(vso.lightViewPosition, lightViewMatrix);
     vso.lightViewPosition = mul(vso.lightViewPosition, lightProjectionMatrix);
-    
-    float3 T = normalize(mul((float3x3) world, input.tan));
-    float3 B = normalize(mul((float3x3) world, input.binormal));
-    float3 N = normalize(mul((float3x3) world, input.normal));
-    float3x3 TBN = transpose(float3x3(T, B, N));
-    
-    vso.TangentLightPos = mul(TBN, vso.lightViewPosition.xyz);
-    vso.TangentViewPos = mul(TBN, vso.viewDirection);
-    vso.TangentFragPos = mul(TBN, vso.pos.xyz);
     
     return vso;
 }

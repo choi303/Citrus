@@ -35,6 +35,7 @@ public:
 	bool GetHasNormal() const;
 	bool GetHasEmessive() const;
 	bool GetHasTexture() const;
+	bool GetHasParallaxMap() const;
 	const std::string& GetPath() const;
 	void Destroy() const;
 	~Model() = default;
@@ -62,4 +63,5 @@ private:
 	bool hasNormalmap = false;
 	bool hasEmessiveMap = false;
 	bool hasTexture = false;
+	bool hasParallaxMap = false;
 };
