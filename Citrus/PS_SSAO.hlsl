@@ -47,7 +47,7 @@ float4 main(PS_IN input) : SV_Target
     const float radius = radiusC;
   
     const int samples = 16;
-    float3 sampleSphere[samples] =
+    float3 sample_sphere[samples] =
     {
         float3(0.5381, 0.1856, -0.4319), float3(0.1379, 0.2486, 0.4430),
       float3(0.3371, 0.5679, -0.0057), float3(-0.6999, -0.0451, -0.0019),
@@ -59,26 +59,27 @@ float4 main(PS_IN input) : SV_Target
       float3(0.0352, -0.0631, 0.5460), float3(-0.4776, 0.2847, -0.0271)
     };
   
-    float3 random = normalize(noiseMap.Sample(samClamp, input.texCoord * 8.0).rgb);
+    float3 random = normalize(noiseMap.Sample(samLinear, input.texCoord * 8.0).rgb);
   
     float depth = depthMap.Sample(samClamp, input.texCoord).r;
  
     float3 position = float3(input.texCoord, depth);
     float3 normal = normalFromDepth(depth, input.texCoord);
   
-    float radiusDepth = radius / depth;
+    float radius_depth = radius / depth;
     float occlusion = 0.0;
     for (int i = 0; i < samples; i++)
     {
-        float3 ray = radiusDepth * reflect(sampleSphere[i], random);
-        float3 hemiRay = position + sign(dot(ray, normal)) * ray;
+  
+        float3 ray = radius_depth * reflect(sample_sphere[i], random);
+        float3 hemi_ray = position + sign(dot(ray, normal)) * ray;
     
-        float occDepth = depthMap.Sample(samClamp, saturate(hemiRay.xy)).r;
-        float difference = depth - occDepth;
+        float occ_depth = depthMap.Sample(samClamp, saturate(hemi_ray.xy)).r;
+        float difference = depth - occ_depth;
     
         occlusion += step(falloff, difference) * (1.0 - smoothstep(falloff, area, difference));
     }
   
     float ao = 1.0 - totalStrength * occlusion * (1.0 / samples);
-    return saturate(ao + base);
+    return float4(saturate(ao + base) * tex.Sample(samLinear, input.texCoord).rgb, 1.0f);
 }
