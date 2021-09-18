@@ -430,6 +430,18 @@
     <FxCompile Include="PSKuwahara.hlsl">
       <Filter>Graphics\DirectX 11\Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="VSDirectShadowsParallax.hlsl">
+      <Filter>Graphics\DirectX 11\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PSDirectShadowsParallax.hlsl">
+      <Filter>Graphics\DirectX 11\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VS_SSR.hlsl">
+      <Filter>Graphics\DirectX 11\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PS_SSR.hlsl">
+      <Filter>Graphics\DirectX 11\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Citrus.rc">
