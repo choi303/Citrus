@@ -697,9 +697,9 @@ void UI::DirectionalLigth(XMFLOAT4* diffuseColor,
     if (can_render)
     {
         static float direction[3] = {0.300f, -1.0f, 1.6f};
-        lightDirection->x = direction[0];
-        lightDirection->y = direction[1];
-        lightDirection->z = direction[2];
+        direction[0] = lightDirection->x;
+        direction[1] = lightDirection->y;
+        direction[2] = lightDirection->z;
         static float diffuseCol[4] = { 1,1,1,1 };
         diffuseColor->x = diffuseCol[0];
         diffuseColor->y = diffuseCol[1];
@@ -716,6 +716,9 @@ void UI::DirectionalLigth(XMFLOAT4* diffuseColor,
             {
                 ImGui::DragFloat3("Light\nDirection",
                     direction, 0.0001f, -2000.0f, 2000.0f);
+                lightDirection->x = direction[0];
+                lightDirection->y = direction[1];
+                lightDirection->z = direction[2];
                 if (ImGui::Button("Reset"))
                 {
                     direction[0] = 0.0f;
