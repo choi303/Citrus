@@ -394,7 +394,7 @@ bool Graphics::SceneGraph(Camera3D cam3D)
 		rtBrightness->BindAsTexture(pContext.Get(), 4);
 		rtBloom->BindAsTexture(pContext.Get(), 5);
 		rtNormal->BindAsTexture(pContext.Get(), 6);
-		quad->draw(pContext.Get(), cam3D, this->cam3D);
+		quad->draw(pContext.Get(), cam3D);
 	}
 	return true;
 }
@@ -450,7 +450,7 @@ void Graphics::Render()
 	rtBloom->BindAsTarget(pContext.Get(), dsBloom->pDepthStencilView.Get());
 	dsBloom->Clear(pContext.Get());
 	FSQuad::SetBloomRenderEnabled(true);
-	quad->draw(pContext.Get(), cam3D, this->cam3D);
+	quad->draw(pContext.Get(), cam3D);
 	FSQuad::SetBloomRenderEnabled(false);
 
 	UI::SetCanRendered(true);
