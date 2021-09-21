@@ -17,6 +17,7 @@
 - Normal & Parallax Mapping
 - Shadow Mapping
 - PBR Support
+- SSR
 - Ambient Occlusion
 - Hardware Tessellation
 - Particle System

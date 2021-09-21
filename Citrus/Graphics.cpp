@@ -325,6 +325,8 @@ bool Graphics::InitScene()
 
 	pPbrSphere = std::make_unique<PbrSphere>(pDevice.Get(), pContext.Get());
 
+	gameObject = std::make_unique<GameObject>(pDevice.Get(), pContext.Get(), "Models\\brick_wall\\brick_wall.obj", width, height, true);
+
 	//Particle(s) initialize
 	mParticle.Initialize(pDevice.Get(), "Images\\star.dds", pContext.Get());
 
@@ -382,6 +384,37 @@ bool Graphics::SceneGraph(Camera3D cam3D)
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	pDirectLight->BindCB(cam3D, 5);
 	pPbrSphere->Draw(cam3D);
+
+	//full screen pass
+	if (!*GameObject::GetWireframeEnabled())
+	{
+		pContext->OMSetRenderTargets(1u, pRtv.GetAddressOf(), nullptr);
+		rt->BindAsTexture(pContext.Get(), 0);
+		rtDepth->BindAsTexture(pContext.Get(), 1);
+		rtHDR->BindAsTexture(pContext.Get(), 2);
+		rtNoise->BindAsTexture(pContext.Get(), 3);
+		rtBrightness->BindAsTexture(pContext.Get(), 4);
+		rtBloom->BindAsTexture(pContext.Get(), 5);
+		rtNormal->BindAsTexture(pContext.Get(), 6);
+		quad->draw(pContext.Get(), cam3D);
+	}
+	return true;
+}
+
+bool Graphics::SceneGraphSSR(Camera3D cam3D)
+{
+	//set depth stensil state
+	pContext->OMSetDepthStencilState(pDepthState.Get(), 0xFF);
+	pCPU.Frame();
+	gridMap.draw(cam3D);
+	dsShadow->BindTexture(pContext.Get(), 4);
+
+	//set primitive topology
+	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	//Drawing Objects
+	pDirectLight->BindCB(cam3D, 0);
+	gameObject->draw(cam3D);
 
 	//full screen pass
 	if (!*GameObject::GetWireframeEnabled())

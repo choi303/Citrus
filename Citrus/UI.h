@@ -23,19 +23,19 @@ public:
 		float* fogEnd, bool* vsync, bool* gridMapEnabled, XMFLOAT3* gridMapColor, Graphics* gfx, HWND hwnd, App* app, bool* msaaEnabled,
 		bool* blurEnabled, float* blurIntensity, BOOL* ssaoEnabled, float* totalStrength, float* base,
 		float* area, float* fallOff, float* radius, float* exposure, float* gamma, BOOL* toneMappingEnabled,
-		float* bloomIntensity, BOOL* bloomEnabled, std::string& verisonStr);
+		float* bloomIntensity, BOOL* bloomEnabled, std::string& verisonStr, BOOL* ssrEnabled, float* minRaySteps);
 
 	static void ToolBar(bool* gridMapEnabled, bool* wireframeEnabled, bool* fogEnabled,
 		bool* depthBufferEnabled, bool* blurEnabled, bool* msaaEnabled, App* app, bool* fxaaEnabled,
 		bool* backfaceCulling, bool* frontfaceCulling, App* rApp, BOOL* alphaClip, BOOL* ssaoEnabled,
 		BOOL* toneMappingEnabled, BOOL* bloomEnabled, std::vector<GameObject*>& pGameObjects, 
 		ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height, BOOL* autoExposureEnabled,
-		std::string& versionStr, BOOL* kuwaharaEnabled);
+		std::string& versionStr, BOOL* kuwaharaEnabled, BOOL* ssrEnabled);
 	
 	static void TessellationTri(float* tessAmount);
 
 	static void SetCanRendered(bool value);
-	static void SetVisiblity(bool value);
+	static void SetVisiblity(bool value); 
 	static bool GetVisiblity() noexcept;
 
 	static void ParticleUI(std::string uiTitle, float* mParticleDeviationX, float* mParticleDeviationY, float* mParticleDeviationZ,

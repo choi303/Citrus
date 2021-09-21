@@ -25,6 +25,7 @@ public:
 	void BeginFrame() const noexcept;
 	void EndFrame() const noexcept;
 	bool SceneGraph(Camera3D cam3D);
+	bool SceneGraphSSR(Camera3D cam3D);
 	void Render();
 	DXGI_ADAPTER_DESC GetAdapterDesc() const;
 	Camera3D cam3D;
@@ -34,6 +35,7 @@ public:
 	CPUInfo pCPU;
 	std::unique_ptr<DirectionalLight> pDirectLight;
 	GridMap gridMap;
+	std::unique_ptr<GameObject> gameObject;
 	std::unique_ptr<DepthStencil> ds;
 	std::unique_ptr<DepthStencil> dsShadow;
 	std::unique_ptr<DepthStencil> dsDepth;

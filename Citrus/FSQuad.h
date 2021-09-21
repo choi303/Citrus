@@ -36,6 +36,15 @@ private:
 		float bloomIntensity;
 		float pad[3];
 	};
+
+	struct ssrBuffer
+	{
+		XMMATRIX view;
+		XMMATRIX proj;
+		XMMATRIX invProj;
+		XMFLOAT3 camPos;
+		float minRaySteps;
+	};
 public:
 	FSQuad(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height);
 	FSQuad(FSQuad& rhs) {}
@@ -46,6 +55,7 @@ public:
 	static BOOL* GetAutoExposureEnabled();
 	static bool* GetFxaaEnabled();
 	static BOOL* GetSSAOEnabled();
+	static BOOL* GetSSREnabled();
 	static BOOL* GetToneMappingEnabled();
 	static BOOL* GetBloomEnabled();
 	static BOOL* GetKuwaharaEnabled();
@@ -55,6 +65,7 @@ public:
 	static float* GetTotalStrength();
 	static float* GetArea();
 	static float* GetRadius();
+	static float* GetMinRaySteps();
 	static float* GetBase();
 	static float* GetExposure();
 	static float* GetGamma();
@@ -74,7 +85,9 @@ public:
 	static float SetExposure(float value);
 	static float SetGamma(float value);
 	static float SetBloomIntensity(float value);
+	static float SetMinRaySteps(float value);
 	static BOOL SetSSAOEnabled(BOOL value);
+	static BOOL SetSSREnabled(BOOL value);
 private:
 	struct vertex
 	{
@@ -88,6 +101,7 @@ private:
 	std::unique_ptr<CBuffer<fxaa>> fxaaCBuffer;
 	std::unique_ptr<CBuffer<SSAOBuffer>> ssaoCBuffer;
 	std::unique_ptr<CBuffer<bloomBuffer>> bloomCBuffer;
+	std::unique_ptr<CBuffer<ssrBuffer>> ssrCBuffer;
 	VertexShader pVSBlur;
 	PixelShader pPSBlur;
 	VertexShader pVSFxaa;
@@ -98,6 +112,8 @@ private:
 	PixelShader pPSBloom;
 	VertexShader pVSKuwahara;
 	PixelShader pPSKuwahara;
+	VertexShader pVSsr;
+	PixelShader pPSSsr;
 	int width;
 	int height;
 };

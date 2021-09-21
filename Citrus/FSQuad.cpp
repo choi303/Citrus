@@ -12,11 +12,13 @@ static float radius = 0.007;
 static float exposure = 1.690f;
 static float gamma = 0.750f;
 static float bloomIntensity = 1.0f;
+static float minRaySteps = 0.1f;
 static BOOL toneMappingEnabled;
 static BOOL autoExposureEnabled;
 static bool bloomRender;
 static BOOL bloomEnabled;
 static BOOL kuwaharaEnabled;
+static BOOL ssrEnabled;
 
 FSQuad::FSQuad(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height)
 {
@@ -33,6 +35,8 @@ FSQuad::FSQuad(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, 
 	pPSBloom.Init(L"PSBloom.cso", pDevice);
 	pVSKuwahara.Init(L"VSKuwahara.cso", pDevice);
 	pPSKuwahara.Init(L"PSKuwahara.cso", pDevice);
+	pVSsr.Init(L"VS_SSR.cso", pDevice);
+	pPSSsr.Init(L"PS_SSR.cso", pDevice);
 	//init and create input layout
 	const std::vector<D3D11_INPUT_ELEMENT_DESC> fs_ied
 		=
@@ -68,6 +72,8 @@ FSQuad::FSQuad(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, 
 	ssaoCBuffer->Init(pDevice, pContext);
 	bloomCBuffer = std::make_unique<CBuffer<bloomBuffer>>();
 	bloomCBuffer->Init(pDevice, pContext);
+	ssrCBuffer = std::make_unique<CBuffer<ssrBuffer>>();
+	ssrCBuffer->Init(pDevice, pContext);
 }
 
 void FSQuad::draw(ID3D11DeviceContext* pContext, Camera3D cam)
@@ -134,6 +140,23 @@ void FSQuad::draw(ID3D11DeviceContext* pContext, Camera3D cam)
 		bloomCBuffer->data.bloomIntensity = bloomIntensity;
 		bloomCBuffer->MapData();
 		bloomCBuffer->PSBind(pContext, 0, 1);
+	}
+	if (ssrEnabled)
+	{
+		//input layout bind
+		//pLayout->Bind(pContext);
+
+		ssrCBuffer->data.view = cam.GetViewMatrix();
+		ssrCBuffer->data.proj = cam.GetProjectionMatrix();
+		ssrCBuffer->data.invProj = XMMatrixInverse(nullptr, cam.GetProjectionMatrix());
+		ssrCBuffer->data.camPos = cam.GetPositionFloat3();
+		ssrCBuffer->data.minRaySteps = minRaySteps;
+		ssrCBuffer->MapData();
+		ssrCBuffer->PSBind(pContext, 0, 1);
+
+		//shader bind
+		pVSsr.Bind(pContext);
+		pPSSsr.Bind(pContext);
 	}
 	//draw quad
 	pContext->DrawIndexed(pIndexBuffer->BufferSize(),
@@ -205,6 +228,11 @@ BOOL* FSQuad::GetSSAOEnabled()
 	return &ssaoEnabled;
 }
 
+BOOL* FSQuad::GetSSREnabled()
+{
+	return &ssrEnabled;
+}
+
 BOOL* FSQuad::GetToneMappingEnabled()
 {
 	return &toneMappingEnabled;
@@ -225,6 +253,11 @@ BOOL FSQuad::SetSSAOEnabled(BOOL value)
 	return ssaoEnabled = value;
 }
 
+BOOL FSQuad::SetSSREnabled(BOOL value)
+{
+	return ssrEnabled = value;
+}
+
 float* FSQuad::GetFallOff()
 {
 	return &fallOff;
@@ -243,6 +276,11 @@ float* FSQuad::GetArea()
 float* FSQuad::GetRadius()
 {
 	return &radius;
+}
+
+float* FSQuad::GetMinRaySteps()
+{
+	return &minRaySteps;
 }
 
 float* FSQuad::GetBase()
@@ -303,4 +341,9 @@ float FSQuad::SetGamma(float value)
 float FSQuad::SetBloomIntensity(float value)
 {
 	return bloomIntensity = value;
+}
+
+float FSQuad::SetMinRaySteps(float value)
+{
+	return minRaySteps = value;
 }

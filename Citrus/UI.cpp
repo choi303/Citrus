@@ -132,7 +132,8 @@ void UI::DeveloperUI(std::string adapter_name, const
     bool* gridMapEnabled, XMFLOAT3* gridMapColor, Graphics* gfx, HWND hwnd, App* app, bool* msaaEnabled,
     bool* blurEnabled, float* blurIntensity, BOOL* ssaoEnabled, float* totalStrength, float* base,
     float* area, float* fallOff, float* radius, float* exposure, float* gamma, BOOL* toneMappingEnabled,
-    float* bloomIntensity, BOOL* bloomEnabled, std::string& versionStr)
+    float* bloomIntensity, BOOL* bloomEnabled, std::string& versionStr, BOOL* ssrEnabled,
+    float* minRaySteps)
 {
     if (can_render)
     {
@@ -194,6 +195,10 @@ void UI::DeveloperUI(std::string adapter_name, const
                 if (*bloomEnabled)
                 {
                     ImGui::DragFloat("Bloom\nIntensity", bloomIntensity, 0.01f, 0.0f, 1000.0f);
+                }
+                if (*ssrEnabled)
+                {
+                    ImGui::DragFloat("Min Ray Steps", minRaySteps, 0.01f, -100.0f, 100.0f);
                 }
                 if (*ssaoEnabled)
                 {
@@ -274,7 +279,7 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
     App* rApp, BOOL* alphaClip, BOOL* ssaoEnabled, BOOL* toneMappingEnabled,
     BOOL* bloomEnabled, std::vector<GameObject*>& pGameObjects, ID3D11Device* pDevice,
     ID3D11DeviceContext* pContext, int width, int height, BOOL* autoExposureEnabled,
-    std::string& versionStr, BOOL* kuwaharaEnabled)
+    std::string& versionStr, BOOL* kuwaharaEnabled, BOOL* ssrEnabled)
 {
     if (can_render)
     {
@@ -596,6 +601,22 @@ void UI::ToolBar(bool* gridMapEnabled, bool*
                         else
                         {
                             *kuwaharaEnabled = true;
+                        }
+                    }
+
+                    if (*ssrEnabled)
+                        title = "SSR: On";
+                    else
+                        title = "SSR: Off";
+                    if (ImGui::MenuItem(title.c_str()))
+                    {
+                        if (*ssrEnabled)
+                        {
+                            *ssrEnabled = false;
+                        }
+                        else
+                        {
+                            *ssrEnabled = true;
                         }
                     }
 
