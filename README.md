@@ -8,7 +8,6 @@
 - Global Illumination
 - Volumetric Lighting
 - Planar Reflections
-- SS Reflections
 
 ### Current Features
 - Blinn-Phong Lighting
