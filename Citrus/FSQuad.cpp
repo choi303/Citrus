@@ -19,6 +19,7 @@ static bool bloomRender;
 static BOOL bloomEnabled;
 static BOOL kuwaharaEnabled;
 static BOOL ssrEnabled;
+static float reflectivity;
 
 FSQuad::FSQuad(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height)
 {
@@ -151,6 +152,7 @@ void FSQuad::draw(ID3D11DeviceContext* pContext, Camera3D cam)
 		ssrCBuffer->data.invProj = XMMatrixInverse(nullptr, cam.GetProjectionMatrix());
 		ssrCBuffer->data.camPos = cam.GetPositionFloat3();
 		ssrCBuffer->data.minRaySteps = minRaySteps;
+		ssrCBuffer->data.reflectivity = reflectivity;
 		ssrCBuffer->MapData();
 		ssrCBuffer->PSBind(pContext, 0, 1);
 
@@ -263,6 +265,11 @@ float* FSQuad::GetFallOff()
 	return &fallOff;
 }
 
+float* FSQuad::GetReflectivity()
+{
+	return &reflectivity;
+}
+
 float* FSQuad::GetTotalStrength()
 {
 	return &totalStrength;
@@ -346,4 +353,9 @@ float FSQuad::SetBloomIntensity(float value)
 float FSQuad::SetMinRaySteps(float value)
 {
 	return minRaySteps = value;
+}
+
+float FSQuad::SetReflectivity(float value)
+{
+	return reflectivity = value;
 }

@@ -19,6 +19,8 @@ cbuffer ssrBuffer : register(b0)
     row_major matrix invProj;
     float3 camPos;
     float minRaySteps;
+    float reflectivity;
+    float pad[3];
 };
 
 float3 CalcViewPositionFromDepth(in float2 TexCoord)
@@ -73,5 +75,5 @@ float4 main(PS_IN input) : SV_Target
     float minRayStep = minRaySteps;
     float2 coords = RayCast(reflected * max(minRayStep, -viewPos.z), hitPos, dDepth);
     
-    return tex.SampleLevel(samLinear, coords, 0);
+    return lerp(tex.Sample(samLinear, input.texCoord), tex.SampleLevel(samLinear, coords, 0), reflectivity);
 }

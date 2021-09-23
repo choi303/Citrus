@@ -23,7 +23,8 @@ public:
 		float* fogEnd, bool* vsync, bool* gridMapEnabled, XMFLOAT3* gridMapColor, Graphics* gfx, HWND hwnd, App* app, bool* msaaEnabled,
 		bool* blurEnabled, float* blurIntensity, BOOL* ssaoEnabled, float* totalStrength, float* base,
 		float* area, float* fallOff, float* radius, float* exposure, float* gamma, BOOL* toneMappingEnabled,
-		float* bloomIntensity, BOOL* bloomEnabled, std::string& verisonStr, BOOL* ssrEnabled, float* minRaySteps);
+		float* bloomIntensity, BOOL* bloomEnabled, std::string& verisonStr, BOOL* ssrEnabled, float* minRaySteps,
+		float* reflectivity);
 
 	static void ToolBar(bool* gridMapEnabled, bool* wireframeEnabled, bool* fogEnabled,
 		bool* depthBufferEnabled, bool* blurEnabled, bool* msaaEnabled, App* app, bool* fxaaEnabled,

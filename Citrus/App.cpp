@@ -232,6 +232,7 @@ void App::SetSavedValues()
 	else
 		FSQuad::SetSSREnabled(FALSE);
 	FSQuad::SetMinRaySteps(std::stof(devMenuSettings.GetInfo(23).c_str()));
+	FSQuad::SetReflectivity(std::stof(devMenuSettings.GetInfo(24).c_str()));
 
 	//close dev menu file
 	devMenuSettings.CloseFile();
@@ -412,6 +413,8 @@ void App::SaveValues()
 		*FSQuad::GetSSREnabled()));
 	pDevMenuSavedItems.push_back("[Min Ray Steps]:" + std::to_string(
 		*FSQuad::GetMinRaySteps()));
+	pDevMenuSavedItems.push_back("[Reflectivitiy]:" + std::to_string(
+		*FSQuad::GetReflectivity()));
 	devMenuSettings.AddInfo(pDevMenuSavedItems);
 	devMenuSettings.CloseFile();
 
@@ -537,7 +540,7 @@ void App::FPSCounter()
 		FSQuad::GetBlurIntensity(), FSQuad::GetSSAOEnabled(), FSQuad::GetTotalStrength(), FSQuad::GetBase(),
 		FSQuad::GetArea(), FSQuad::GetFallOff(), FSQuad::GetRadius(), FSQuad::GetExposure(), FSQuad::GetGamma(),
 		FSQuad::GetToneMappingEnabled(), FSQuad::GetBloomIntensity(), FSQuad::GetBloomEnabled(), versionStr,
-		FSQuad::GetSSREnabled(), FSQuad::GetMinRaySteps());
+		FSQuad::GetSSREnabled(), FSQuad::GetMinRaySteps(), FSQuad::GetReflectivity());
 	//toolbar creation
 	UI::ToolBar(GridMap::getRender(),
 		GameObject::GetWireframeEnabled(),

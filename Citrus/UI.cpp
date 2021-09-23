@@ -133,7 +133,7 @@ void UI::DeveloperUI(std::string adapter_name, const
     bool* blurEnabled, float* blurIntensity, BOOL* ssaoEnabled, float* totalStrength, float* base,
     float* area, float* fallOff, float* radius, float* exposure, float* gamma, BOOL* toneMappingEnabled,
     float* bloomIntensity, BOOL* bloomEnabled, std::string& versionStr, BOOL* ssrEnabled,
-    float* minRaySteps)
+    float* minRaySteps, float* reflectivity)
 {
     if (can_render)
     {
@@ -199,6 +199,7 @@ void UI::DeveloperUI(std::string adapter_name, const
                 if (*ssrEnabled)
                 {
                     ImGui::DragFloat("Min Ray Steps", minRaySteps, 0.01f, -100.0f, 100.0f);
+                    ImGui::DragFloat("Reflectivity", reflectivity, 0.01f, 0.0f, 1.0f);
                 }
                 if (*ssaoEnabled)
                 {

@@ -44,6 +44,8 @@ private:
 		XMMATRIX invProj;
 		XMFLOAT3 camPos;
 		float minRaySteps;
+		float reflectivity;
+		float pad[3];
 	};
 public:
 	FSQuad(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, int height);
@@ -62,6 +64,7 @@ public:
 	static bool SetFxaaEnabled(bool value);
 	static float* GetBlurIntensity();
 	static float* GetFallOff();
+	static float* GetReflectivity();
 	static float* GetTotalStrength();
 	static float* GetArea();
 	static float* GetRadius();
@@ -86,6 +89,7 @@ public:
 	static float SetGamma(float value);
 	static float SetBloomIntensity(float value);
 	static float SetMinRaySteps(float value);
+	static float SetReflectivity(float value);
 	static BOOL SetSSAOEnabled(BOOL value);
 	static BOOL SetSSREnabled(BOOL value);
 private:
