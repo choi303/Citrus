@@ -25,6 +25,7 @@ public:
 	void BeginFrame() const noexcept;
 	void EndFrame() const noexcept;
 	bool SceneGraph(Camera3D cam3D);
+	bool SceneGraphSSR(Camera3D cam3D);
 	void Render();
 	DXGI_ADAPTER_DESC GetAdapterDesc() const;
 	Camera3D cam3D;

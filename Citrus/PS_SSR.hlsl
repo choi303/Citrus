@@ -75,5 +75,5 @@ float4 main(PS_IN input) : SV_Target
     float minRayStep = minRaySteps;
     float2 coords = RayCast(reflected * max(minRayStep, -viewPos.z), hitPos, dDepth);
     
-    return lerp(tex.Sample(samLinear, input.texCoord), tex.SampleLevel(samLinear, coords, 0), reflectivity);
+    return lerp(tex.SampleLevel(samLinear, input.texCoord, 0), tex.SampleLevel(samLinear, coords, 0), reflectivity);
 }
