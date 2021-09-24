@@ -130,11 +130,6 @@ float4 main(PS_IN input) : SV_Target
         
             if (lightIntensity > 0.0f)
             {
-                color += (diffuse * lightIntensity);
-                if (pcfEnabled)
-                    color *= shadow;
-                color = saturate(color);
-                
                 //blinn phong thing
                 float3 halfwayDir = normalize(lightDir + input.viewDirection);
                 
@@ -163,7 +158,9 @@ float4 main(PS_IN input) : SV_Target
                     specular *= reflectionFactor * 10.0f;
                 }
                 
-                color = saturate((color * textureColor) + specular);
+                color += (diffuse * lightIntensity) + specular;
+                if (pcfEnabled)
+                    color *= shadow;
             }
         }
     }
@@ -173,26 +170,25 @@ float4 main(PS_IN input) : SV_Target
         
         if (lightIntensity > 0.0f)
         {
-            color += (diffuse * lightIntensity);
                 
-                //blinn phong thing
+            //blinn phong thing
             float3 halfwayDir = normalize(lightDir + input.viewDirection);
                 
-                // Sample the pixel from the specular map texture.
+            // Sample the pixel from the specular map texture.
             specularIntensity = spec.Sample(object_sampler, input.tc);
         
             const float specularPower = pow(1.0f, specularIntensity.a * 4.0f); //specular power based texture (a) channel
         
-                // Calculate the reflection vector based on the light intensity, normal vector, and light direction.
+            // Calculate the reflection vector based on the light intensity, normal vector, and light direction.
             reflection = normalize(2 * lightIntensity * input.normal - lightDir);
         
-                // Determine the amount of specular light based on the reflection vector, viewing direction, and specular power.
+            // Determine the amount of specular light based on the reflection vector, viewing direction, and specular power.
             specular = specularIntensityC * pow(saturate(dot(reflection, halfwayDir)), specularPower);
         
-                // Use the specular map to determine the intensity of specular light at this pixel.
+            // Use the specular map to determine the intensity of specular light at this pixel.
             specular = (specular * specularIntensity);
                 
-                //if reflection enabled then sample enviorment color with specular color if is not then normally return color
+            //if reflection enabled then sample enviorment color with specular color if is not then normally return color
             if (reflectionEnabled)
             {
                 float3 incident = input.viewDirection;
@@ -202,8 +198,8 @@ float4 main(PS_IN input) : SV_Target
                 float4 reflectionFactor = reflectionColor * reflectionIntensity;
                 specular *= reflectionFactor * 10.0f;
             }
-                
-            color = saturate((color * textureColor) + specular);
+            
+            color += (diffuse * lightIntensity) + specular;
         }
     }
     
@@ -239,6 +235,8 @@ float4 main(PS_IN input) : SV_Target
         return color + (emessiveColor * emessiveIntensity);
     }
     
+    color *= textureColor;
+    color = saturate(color);
     //return final color
     return color;
 }

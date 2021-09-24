@@ -126,6 +126,10 @@ void DirectionalLight::BindCB(Camera3D cam, UINT slot)
 	mShadowCBuffer->data.shadowProj = mLightCam.GetProjectionMatrix();
 	mShadowCBuffer->MapData();
 	mShadowCBuffer->VSBind(mContext.Get(), 2, 1);
+}
+
+void DirectionalLight::DrawUI() noexcept
+{
 	mUI.DirectionalLigth(&diffuseColor, &lightDirection, &ambientColor, &ambientIntensity, &normalMapEnabled,
 		&specularIntensityC, &diffuseIntensityC, &reflectionEnabled, &reflectionIntensity, &bias, &pcfEnabled,
 		&emessiveEnabled, &emessiveIntensity);

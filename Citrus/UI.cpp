@@ -743,9 +743,9 @@ void UI::DirectionalLigth(XMFLOAT4* diffuseColor,
                 lightDirection->z = direction[2];
                 if (ImGui::Button("Reset"))
                 {
-                    direction[0] = 0.0f;
-                    direction[1] = 0.0f;
-                    direction[2] = 1.0f;
+                    lightDirection->x = 0.0f;
+                    lightDirection->y = 0.0f;
+                    lightDirection->z = 1.0f;
                 }
                 ImGui::Checkbox("Normal Map Enabled", reinterpret_cast<bool*>(normalMapEnabled));
                 ImGui::Checkbox("Reflection Enabled", reinterpret_cast<bool*>(reflectionEnabled));

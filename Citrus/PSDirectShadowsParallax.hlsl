@@ -144,11 +144,6 @@ float4 main(PS_IN input) : SV_Target
         
             if (lightIntensity > 0.0f)
             {
-                color += (diffuse * lightIntensity);
-                if (pcfEnabled)
-                    color *= shadow;
-                color = saturate(color);
-                
                 //blinn phong thing
                 float3 halfwayDir = normalize(lightDir + input.viewDirection);
                 
@@ -177,7 +172,9 @@ float4 main(PS_IN input) : SV_Target
                     specular *= reflectionFactor * 10.0f;
                 }
                 
-                color = saturate((color * textureColor) + specular);
+                color += (diffuse * lightIntensity) + specular;
+                if (pcfEnabled)
+                    color *= shadow;
             }
         }
     }
@@ -215,8 +212,7 @@ float4 main(PS_IN input) : SV_Target
                 specular *= reflectionFactor * 10.0f;
             }
             
-            color += (diffuse * lightIntensity);
-            color = saturate((color * textureColor) + specular);
+            color += (diffuse * lightIntensity) + specular;
         }
     }
     
@@ -244,6 +240,8 @@ float4 main(PS_IN input) : SV_Target
         return brightColor;
     }
     
+    color *= textureColor;
+    color = saturate(color);
     //return final color
     return color;
 }

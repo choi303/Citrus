@@ -371,7 +371,7 @@ bool Graphics::SceneGraph(Camera3D cam3D)
 
 	//Drawing Objects
 	pSkyBox.Draw(cam3D);
-
+	pDirectLight->DrawUI();
 	pDirectLight->BindCB(cam3D, 0);
 	for (int i = 0; i < pGameObjects.size(); i++)
 	{

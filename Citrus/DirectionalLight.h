@@ -65,6 +65,7 @@ public:
     void SetReflectionIntensity(float value);
     void SetBias(float value);
     void BindCB(Camera3D cam, UINT slot);
+    void DrawUI() noexcept;
     mutable std::vector<std::string> pDirectLightSavedItems;
     mutable SaveSystem directLightSettings;
 private:
