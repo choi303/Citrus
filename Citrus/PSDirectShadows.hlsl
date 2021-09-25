@@ -184,7 +184,7 @@ float4 main(PS_IN input) : SV_Target
         
             // Use the specular map to determine the intensity of specular light at this pixel.
             specular = (specular * specularIntensity);
-                
+            
             //if reflection enabled then sample enviorment color with specular color if is not then normally return color
             if (reflectionEnabled)
             {
