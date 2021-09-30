@@ -328,6 +328,8 @@ bool Graphics::InitScene()
 	//Particle(s) initialize
 	mParticle.Initialize(pDevice.Get(), "Images\\star.dds", pContext.Get());
 
+	noiseMap = std::make_unique<Texture>(pDevice.Get(), pContext.Get(), "Images\\noise.png", 3);
+
 	return true;
 }
 
@@ -391,6 +393,7 @@ bool Graphics::SceneGraph(Camera3D cam3D)
 		rt->BindAsTexture(pContext.Get(), 0);
 		rtDepth->BindAsTexture(pContext.Get(), 1);
 		rtHDR->BindAsTexture(pContext.Get(), 2);
+		//noiseMap->Bind(pContext.Get());
 		rtNoise->BindAsTexture(pContext.Get(), 3);
 		rtBrightness->BindAsTexture(pContext.Get(), 4);
 		rtBloom->BindAsTexture(pContext.Get(), 5);
@@ -432,6 +435,7 @@ bool Graphics::SceneGraphSSR(Camera3D cam3D)
 		rtDepth->BindAsTexture(pContext.Get(), 1);
 		rtHDR->BindAsTexture(pContext.Get(), 2);
 		rtNoise->BindAsTexture(pContext.Get(), 3);
+		//noiseMap->Bind(pContext.Get());
 		rtBrightness->BindAsTexture(pContext.Get(), 4);
 		rtBloom->BindAsTexture(pContext.Get(), 5);
 		rtNormal->BindAsTexture(pContext.Get(), 6);

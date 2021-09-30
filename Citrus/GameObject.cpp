@@ -308,7 +308,7 @@ void GameObject::draw(Camera3D cam)
 	if (depthEnabled)
 	{
 		cam.SetProjectionValues(70.0f, static_cast<float>(width) / static_cast<float>(height)
-			, 100.0f, 999999.0f * 999999.0f, false);
+			, 100.0f, 1000.0f, false);
 		pDepthBuffer.Draw();
 	}
 

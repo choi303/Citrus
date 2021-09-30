@@ -1,6 +1,7 @@
 Texture2D tex : register(t0);
 Texture2D depthMap : register(t1);
 Texture2D noiseMap : register(t3);
+Texture2D normalsMap : register(t6);
 SamplerState samLinear : register(s0);
 SamplerState samClamp : register(s1);
 
