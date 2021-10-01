@@ -69,7 +69,6 @@ private:
 	Particle mParticle;
 	TessellationPlane tessPlane;
 	std::unique_ptr<PbrSphere> pPbrSphere;
-	std::unique_ptr<Texture> noiseMap;
 private:
 	inline void RenderDockingWindow() noexcept;
 

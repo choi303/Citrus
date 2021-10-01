@@ -107,15 +107,6 @@ void FSQuad::draw(ID3D11DeviceContext* pContext, Camera3D cam)
 		ssaoCBuffer->data.radius = radius;
 		ssaoCBuffer->MapData();
 		ssaoCBuffer->PSBind(pContext, 2, 1);
-
-		ssrCBuffer->data.view = cam.GetViewMatrix();
-		ssrCBuffer->data.proj = cam.GetProjectionMatrix();
-		ssrCBuffer->data.invProj = XMMatrixInverse(nullptr, cam.GetProjectionMatrix());
-		ssrCBuffer->data.camPos = cam.GetPositionFloat3();
-		ssrCBuffer->data.minRaySteps = minRaySteps;
-		ssrCBuffer->data.reflectivity = reflectivity;
-		ssrCBuffer->MapData();
-		ssrCBuffer->PSBind(pContext, 3, 1);
 	}
 	//param cbuffer values bind
 	paramCBuffer->data.blurEnabled = blurEnabled;
