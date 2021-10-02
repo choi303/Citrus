@@ -4,6 +4,9 @@ static XMFLOAT3 albedo = XMFLOAT3(1.0, 0.0, 0.0);
 static float metallic = 0.7f;
 static float roughness = 0.3f;
 static float ao = 0.2f;
+static float pos[3] = { 0,0,0 };
+static float rot[3] = { 0,0,0 };
+static float scale[3] = { 0.1f,0.1f,0.1f };
 
 PbrSphere::PbrSphere(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
@@ -27,11 +30,18 @@ PbrSphere::PbrSphere(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 		pDevice, pbr_ied, &pVS);
 
 	//init model
-	pModel.Init("Models\\sphere_hq.obj", pDevice, pContext);
+	pModel.InitPbr("Models\\pbr_gun\\Cerberus_LP.FBX.fbx", pDevice, pContext);
 
 	//cbuffer initalize
 	pbrCBuffer = std::make_unique<CBuffer<PbrBuffer>>();
 	pbrCBuffer->Init(pDevice, pContext);
+
+	//initialize textures
+	pAlbedo = std::make_unique<Texture>(pDevice, pContext, "Models\\pbr_gun\\Cerberus_A.tga.png", 0);
+	pNormal = std::make_unique<Texture>(pDevice, pContext, "Models\\pbr_gun\\Cerberus_N.tga.png", 1);
+	pMetallic = std::make_unique<Texture>(pDevice, pContext, "Models\\pbr_gun\\Cerberus_M.tga.png", 2);
+	pRoughness = std::make_unique<Texture>(pDevice, pContext, "Models\\pbr_gun\\Cerberus_R.tga.png", 3);
+	pAO = std::make_unique<Texture>(pDevice, pContext, "Models\\pbr_gun\\Cerberus_AO.tga.png", 4);
 }
 
 void PbrSphere::Draw(Camera3D cam)
@@ -47,12 +57,19 @@ void PbrSphere::Draw(Camera3D cam)
 	pbrCBuffer->MapData();
 	pbrCBuffer->PSBind(pContext.Get(), 9, 1);
 
-	//bind shaders
+	//bind shades
 	pVS.Bind(pContext.Get());
 	pPS.Bind(pContext.Get());
 
 	//draw ui
-	UI::PbrUI(&albedo, &metallic, &roughness, &ao);
+	UI::PbrUI(&pModel, pos, rot, scale, &albedo, &metallic, &roughness, &ao);
+
+	//bind textures
+	pAlbedo->Bind(pContext.Get());
+	pNormal->Bind(pContext.Get());
+	pMetallic->Bind(pContext.Get());
+	pRoughness->Bind(pContext.Get());
+	pAO->Bind(pContext.Get());
 
 	//draw model
 	pModel.Render(cam);

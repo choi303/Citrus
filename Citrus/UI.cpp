@@ -804,7 +804,9 @@ void UI::FireUI(float* posX, float* posY, float* posZ, float* sSpeedX, float* sS
     }
 }
 
-void UI::PbrUI(XMFLOAT3* albedo, float* metallic, float* roughness, float* ao)
+void UI::PbrUI(Model* pbrModel, float
+    pos[3], float rot[3], float scale[3], XMFLOAT3* albedo, float* metallic,
+    float* roughness, float* ao)
 {
     static float mAlbedo[3] = { 1,0,0 };
     albedo->x = mAlbedo[0];
@@ -817,6 +819,21 @@ void UI::PbrUI(XMFLOAT3* albedo, float* metallic, float* roughness, float* ao)
         {
             if (ImGui::Begin("Pbr Sphere"))
             {
+                ImGui::DragFloat3("Position\nX/Y/Z", pos, 0.01f,
+                    -999999.0f, 999999.0f);
+				pbrModel->SetPos(pos[0], pos[1], pos[2]);
+                rot[0] = pbrModel->GetRot().x;
+                rot[1] = pbrModel->GetRot().y;
+                rot[2] = pbrModel->GetRot().z;
+                ImGui::DragFloat3("Rotation\nX/Y/Z", rot, 0.01f,
+                    -999999999.0f, 999999999.0f);
+                pbrModel->SetRot(rot[0], rot[1], rot[2]);
+                scale[0] = pbrModel->GetScale().x;
+                scale[1] = pbrModel->GetScale().y;
+                scale[2] = pbrModel->GetScale().z;
+                ImGui::DragFloat3("Scale\nX/Y/Z", scale, 0.01f,
+                    -999999999.0f, (999999999.0f));
+                pbrModel->SetScale(scale[0], scale[1], scale[2]);
                 ImGui::ColorEdit3("Albedo", mAlbedo);
                 ImGui::DragFloat("Metallic", metallic, 0.01f, 0.0f, 1.0f);
                 ImGui::DragFloat("Roughness", roughness, 0.01f, 0.0f, 1.0f);

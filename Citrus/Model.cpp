@@ -24,6 +24,17 @@ bool Model::InitNoMtl(const std::string& file_path, ID3D11Device* p_device, ID3D
     return true;
 }
 
+bool Model::InitPbr(const std::string& file_path, ID3D11Device* p_device, ID3D11DeviceContext* p_context)
+{
+    this->pDevice = p_device;
+    this->pContext = p_context;
+
+    if (!LoadMeshPbr(file_path))
+        Error::Log("Failed to load mesh.");
+
+    return true;
+}
+
 void Model::Render(const Camera3D cam)
 {
     //bind the constant buffer to pipeline stage
@@ -180,6 +191,27 @@ bool Model::LoadMeshNoMtl(const std::string& file_path)
     return true;
 }
 
+bool Model::LoadMeshPbr(const std::string& file_path)
+{
+    Assimp::Importer importer;
+
+    const aiScene* p_scene = importer.ReadFile(file_path, //read file from file
+        aiProcess_Triangulate |
+        aiProcess_ConvertToLeftHanded |
+        aiProcess_JoinIdenticalVertices |
+        aiProcess_FixInfacingNormals |
+        aiProcess_PreTransformVertices |
+        aiProcess_OptimizeMeshes
+    );   //adding some flags for optimize
+
+    if (p_scene == nullptr)
+        return false;
+
+    LoadNodesPbr(p_scene->mRootNode, p_scene); //load mesh
+
+    return true;
+}
+
 void Model::LoadNodes(aiNode* p_node, const aiScene* p_scene, const aiMaterial* const* p_materials)
 {
     const std::string textureDirectory = path.substr(0, path.find_last_of("\\") + 1);
@@ -261,6 +293,21 @@ void Model::LoadNodesNoMtl(aiNode* p_node, const aiScene* p_scene)
     }
 }
 
+void Model::LoadNodesPbr(aiNode* p_node, const aiScene* p_scene)
+{
+    for (size_t i = 0; i < p_node->mNumMeshes; i++)
+    {
+        //process every mesh in the vector array
+        aiMesh* mesh = p_scene->mMeshes[p_node->mMeshes[i]];
+        meshes.push_back(ProcessMeshDataPbr(mesh, p_scene));
+    }
+
+    for (size_t i = 0; i < p_node->mNumChildren; i++)
+    {
+        LoadNodesPbr(p_node->mChildren[i], p_scene);
+    }
+}
+
 Mesh Model::ProcessMeshData(aiMesh* p_mesh, const aiScene* p_scene) 
 {
     std::vector<vertex> vertices;
@@ -317,6 +364,48 @@ Mesh Model::ProcessMeshData(aiMesh* p_mesh, const aiScene* p_scene)
 }
 
 Mesh Model::ProcessMeshDataNoMtl(aiMesh* p_mesh, const aiScene* p_scene) const
+{
+    // Data to fill
+    std::vector<vertex> verticesL;
+    std::vector<signed int> indicesL;
+
+    //Get vertices
+    for (unsigned int i = 0; i < p_mesh->mNumVertices; i++)
+    {
+        vertex vertex;
+
+        vertex.pos.x = p_mesh->mVertices[i].x;
+        vertex.pos.y = p_mesh->mVertices[i].y;
+        vertex.pos.z = p_mesh->mVertices[i].z;
+
+        //also get normals from model for light calculates and another lots of things
+        vertex.n.x = p_mesh->mNormals[i].x;
+        vertex.n.y = p_mesh->mNormals[i].y;
+        vertex.n.z = p_mesh->mNormals[i].z;
+
+        //determine texture coordinates
+        if (p_mesh->mTextureCoords[0])
+        {
+            vertex.tex.x = static_cast<float>(p_mesh->mTextureCoords[0][i].x);
+            vertex.tex.y = static_cast<float>(p_mesh->mTextureCoords[0][i].y);
+        }
+
+        verticesL.push_back(vertex); //add the vertices data to vertices vector
+    }
+
+    //Get indices
+    for (unsigned int i = 0; i < p_mesh->mNumFaces; i++)
+    {
+        const aiFace face = p_mesh->mFaces[i]; //get face count from mesh
+
+        for (unsigned int j = 0; j < face.mNumIndices; j++)
+            indicesL.push_back(face.mIndices[j]);    //add the indices data to indices vector
+    }
+
+    return Mesh(pDevice, pContext, verticesL, indicesL);  //bind data to index and vertex buffers
+}
+
+Mesh Model::ProcessMeshDataPbr(aiMesh* p_mesh, const aiScene* p_scene) const
 {
     // Data to fill
     std::vector<vertex> verticesL;

@@ -39,6 +39,11 @@ struct PS_IN
     float3 cameraPos : CameraPosition;
 };
 
+Texture2D albedoTex : register(t0);
+Texture2D normalTex : register(t1);
+Texture2D metallicTex : register(t2);
+Texture2D roughnessTex : register(t3);
+Texture2D aoTex : register(t4);
 SamplerState object_sampler : register(s0);
 SamplerState object_sampler_clamp : register(s1);
 SamplerComparisonState CMPSampler : register(s2);
@@ -80,6 +85,20 @@ float3 fresnelSchlick(float3 F0, float cosTheta)
 
 float4 main(PS_IN input) : SV_Target
 {
+    float3 albedo = pow(albedoTex.Sample(object_sampler, input.tc).rgb, 2.2f);
+    float metallic = metallicTex.Sample(object_sampler, input.tc).r;
+    float roughness = roughnessTex.Sample(object_sampler, input.tc).r;
+    float ao = aoTex.Sample(object_sampler, input.tc).r;
+    
+    //normal map sample
+    float4 bumpMap = normalTex.Sample(object_sampler, input.tc);
+    
+    //normal map calculation
+    bumpMap = (bumpMap * 2.0f - 1.0f);
+    float3 bumpNormal = (bumpMap.x * input.tan) + (bumpMap.y * input.binormal) + (bumpMap.z * input.normal);
+    bumpNormal = normalize(bumpNormal);
+    input.normal = bumpNormal;
+    
     //Get calculated normal from vertex shader and normalize it
     float3 N = normalize(input.normal);
     //Get calculated view direction from vertex shader output and normalize it
