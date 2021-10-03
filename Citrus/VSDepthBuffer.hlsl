@@ -8,11 +8,13 @@ cbuffer Transformation : register(b0)
 struct VS_IN
 {
     float3 pos : Position;
+    float2 uv : Texcoord;
 };
 
 struct VS_OUT
 {
     float4 pos : SV_Position;
+    float2 uv : Texcoord;
 };
 
 VS_OUT main(VS_IN input)
