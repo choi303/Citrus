@@ -3,7 +3,8 @@
 
 Texture::Texture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const std::string& filepath, unsigned int slot)
 	:
-	slot(slot)
+	slot(slot),
+	path(filepath)
 {
 	//decide texture format
 	std::string extension = filepath.substr(filepath.find_last_of(".") + 1);
@@ -113,7 +114,6 @@ Texture::Texture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const std
 		hr = pDevice->CreateShaderResourceView(m_resource.Get(), &srvDesc, &m_view);
 		if (FAILED(hr)) { Error::Log(hr, "Failed to create shader resource view"); }
 	}
-
 	pContext->GenerateMips(m_view.Get());
 }
 
@@ -125,6 +125,16 @@ ID3D11ShaderResourceView* Texture::GetShaderResourceView() const
 ID3D11ShaderResourceView** Texture::GetShaderResourceViewAddress()
 {
 	return m_view.GetAddressOf();
+}
+
+std::string Texture::GetPath() const noexcept
+{
+	return path;
+}
+
+std::string Texture::GetDirectory() const noexcept
+{
+	return path.substr(0, path.find_last_of("\\") + 1);
 }
 
 void Texture::Bind(ID3D11DeviceContext* pContext)

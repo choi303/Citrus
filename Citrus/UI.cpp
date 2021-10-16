@@ -4,6 +4,9 @@
 #include "GameObject.h"
 #include "App.h"
 #include <shobjidl.h> 
+#include <shellapi.h>
+
+#pragma comment(lib, "shell32")
 
 static bool applyVisiblity = false;
 static bool can_render = true;
@@ -52,7 +55,6 @@ void UI::ClassicUI(GameObject* gameObject, std::string uiTitle, float
                         gameObject->Destroy();
                         isDestroyed = true;
                     }
-                    
                 }
                 ImGui::End();
             }
@@ -806,7 +808,9 @@ void UI::FireUI(float* posX, float* posY, float* posZ, float* sSpeedX, float* sS
 
 void UI::PbrUI(Model* pbrModel, float
     pos[3], float rot[3], float scale[3], XMFLOAT3* albedo, float* metallic,
-    float* roughness, float* ao)
+    float* roughness, float* ao, ID3D11DeviceContext* pContext, std::shared_ptr<Texture> tAlbedo,
+    std::shared_ptr<Texture> tNormal, std::shared_ptr<Texture> tMetallic,
+    std::shared_ptr<Texture> tRoughness, std::shared_ptr<Texture> tAO)
 {
     static float mAlbedo[3] = { 1,0,0 };
     albedo->x = mAlbedo[0];
@@ -817,7 +821,7 @@ void UI::PbrUI(Model* pbrModel, float
     {
         if (uiVisiblity)
         {
-            if (ImGui::Begin("Pbr Sphere"))
+            if (ImGui::Begin("Pbr Model"))
             {
                 ImGui::DragFloat3("Position\nX/Y/Z", pos, 0.01f,
                     -999999.0f, 999999.0f);
@@ -834,10 +838,52 @@ void UI::PbrUI(Model* pbrModel, float
                 ImGui::DragFloat3("Scale\nX/Y/Z", scale, 0.01f,
                     -999999999.0f, (999999999.0f));
                 pbrModel->SetScale(scale[0], scale[1], scale[2]);
-                ImGui::ColorEdit3("Albedo", mAlbedo);
+                /*ImGui::ColorEdit3("Albedo", mAlbedo);
                 ImGui::DragFloat("Metallic", metallic, 0.01f, 0.0f, 1.0f);
                 ImGui::DragFloat("Roughness", roughness, 0.01f, 0.0f, 1.0f);
-                ImGui::DragFloat("AO", ao, 0.01f, 0.0f, 1.0f);
+                ImGui::DragFloat("AO", ao, 0.01f, 0.0f, 1.0f);*/
+
+                std::shared_ptr<Texture> pAlbedo = tAlbedo;
+                std::shared_ptr<Texture> pNormal = tNormal;
+                std::shared_ptr<Texture> pMetallic = tMetallic;
+                std::shared_ptr<Texture> pRoughness = tRoughness;
+                std::shared_ptr<Texture> pAO = tAO;
+                ImVec2&& texSize = ImVec2(256, 256);
+                ImGui::Text("Albedo Texture");
+                ImGui::SameLine();
+                if (ImGui::Button("Open Albedo Path")) {
+                    ShellExecuteA(NULL, "open", pAlbedo->GetDirectory().c_str(), NULL, NULL, SW_SHOW);
+                    ShellExecuteA(NULL, "open", pAlbedo->GetPath().c_str(), NULL, NULL, SW_SHOW);
+                }
+                ImGui::Image(reinterpret_cast<void*>(pAlbedo->GetShaderResourceView()), texSize);
+                ImGui::Text("Normal Texture");
+                ImGui::SameLine();
+                if (ImGui::Button("Open Normal Path")) {
+                    ShellExecuteA(NULL, "open", pNormal->GetDirectory().c_str(), NULL, NULL, SW_SHOW);
+                    ShellExecuteA(NULL, "open", pNormal->GetPath().c_str(), NULL, NULL, SW_SHOW);
+                }
+                ImGui::Image(reinterpret_cast<void*>(pNormal->GetShaderResourceView()), texSize);
+                ImGui::Text("Metallic Texture");
+                ImGui::SameLine();
+                if (ImGui::Button("Open Metallic Path")) {
+                    ShellExecuteA(NULL, "open", pMetallic->GetDirectory().c_str(), NULL, NULL, SW_SHOW);
+                    ShellExecuteA(NULL, "open", pMetallic->GetPath().c_str(), NULL, NULL, SW_SHOW);
+                }
+                ImGui::Image(reinterpret_cast<void*>(pMetallic->GetShaderResourceView()), texSize);
+                ImGui::Text("Roughness Texture");
+                ImGui::SameLine();
+                if (ImGui::Button("Open Roughness Path")) {
+                    ShellExecuteA(NULL, "open", pRoughness->GetDirectory().c_str(), NULL, NULL, SW_SHOW);
+                    ShellExecuteA(NULL, "open", pRoughness->GetPath().c_str(), NULL, NULL, SW_SHOW);
+                }
+                ImGui::Image(reinterpret_cast<void*>(pRoughness->GetShaderResourceView()), texSize);
+                ImGui::Text("Ambient Occlusion Texture");
+                ImGui::SameLine();
+                if (ImGui::Button("Open AO Path")) {
+                    ShellExecuteA(NULL, "open", pAO->GetDirectory().c_str(), NULL, NULL, SW_SHOW);
+                    ShellExecuteA(NULL, "open", pAO->GetPath().c_str(), NULL, NULL, SW_SHOW);
+                }
+                ImGui::Image(reinterpret_cast<void*>(pAO->GetShaderResourceView()), texSize);
             }
             ImGui::End();
         }

@@ -57,7 +57,9 @@ public:
 
 	static void PbrUI(Model* pbrModel, float
 		pos[3], float rot[3], float scale[3], XMFLOAT3* albedo, float* metallic,
-		float* roughness, float* ao);
+		float* roughness, float* ao, ID3D11DeviceContext* pContext, std::shared_ptr<Texture> tAlbedo,
+		std::shared_ptr<Texture> tNormal, std::shared_ptr<Texture> tMetallic,
+		std::shared_ptr<Texture> tRoughness, std::shared_ptr<Texture> tAO);
 
 	~UI() = default;
 };

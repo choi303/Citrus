@@ -37,11 +37,11 @@ PbrSphere::PbrSphere(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	pbrCBuffer->Init(pDevice, pContext);
 
 	//initialize textures
-	pAlbedo = std::make_unique<Texture>(pDevice, pContext, "Models\\pbr_gun\\Cerberus_A.tga.png", 0);
-	pNormal = std::make_unique<Texture>(pDevice, pContext, "Models\\pbr_gun\\Cerberus_N.tga.png", 1);
-	pMetallic = std::make_unique<Texture>(pDevice, pContext, "Models\\pbr_gun\\Cerberus_M.tga.png", 2);
-	pRoughness = std::make_unique<Texture>(pDevice, pContext, "Models\\pbr_gun\\Cerberus_R.tga.png", 3);
-	pAO = std::make_unique<Texture>(pDevice, pContext, "Models\\pbr_gun\\Cerberus_AO.tga.png", 4);
+	pAlbedo = std::make_shared<Texture>(pDevice, pContext, "Models\\pbr_gun\\Cerberus_A.tga.png", 0);
+	pNormal = std::make_shared<Texture>(pDevice, pContext, "Models\\pbr_gun\\Cerberus_N.tga.png", 1);
+	pMetallic = std::make_shared<Texture>(pDevice, pContext, "Models\\pbr_gun\\Cerberus_M.tga.png", 2);
+	pRoughness = std::make_shared<Texture>(pDevice, pContext, "Models\\pbr_gun\\Cerberus_R.tga.png", 3);
+	pAO = std::make_shared<Texture>(pDevice, pContext, "Models\\pbr_gun\\Cerberus_AO.tga.png", 4);
 }
 
 void PbrSphere::Draw(Camera3D cam)
@@ -62,7 +62,8 @@ void PbrSphere::Draw(Camera3D cam)
 	pPS.Bind(pContext.Get());
 
 	//draw ui
-	UI::PbrUI(&pModel, pos, rot, scale, &albedo, &metallic, &roughness, &ao);
+	UI::PbrUI(&pModel, pos, rot, scale, &albedo, &metallic, &roughness, &ao, pContext.Get(),
+		pAlbedo, pNormal, pMetallic, pRoughness, pAO);
 
 	//bind textures
 	pAlbedo->Bind(pContext.Get());

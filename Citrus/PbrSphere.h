@@ -26,10 +26,10 @@ private:
 	std::unique_ptr<CBuffer<PbrBuffer>> pbrCBuffer;
 	VertexShader pVS;
 	PixelShader pPS;
-	std::unique_ptr<Texture> pAlbedo;
-	std::unique_ptr<Texture> pNormal;
-	std::unique_ptr<Texture> pMetallic;
-	std::unique_ptr<Texture> pRoughness;
-	std::unique_ptr<Texture> pAO;
+	std::shared_ptr<Texture> pAlbedo;
+	std::shared_ptr<Texture> pNormal;
+	std::shared_ptr<Texture> pMetallic;
+	std::shared_ptr<Texture> pRoughness;
+	std::shared_ptr<Texture> pAO;
 };
 

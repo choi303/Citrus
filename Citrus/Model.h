@@ -39,6 +39,7 @@ public:
 	bool GetHasParallaxMap() const;
 	const std::string& GetPath() const;
 	void Destroy() const;
+	std::vector<Texture> textures;
 	~Model() = default;
 private:
 	std::vector<Mesh> meshes;
@@ -61,7 +62,6 @@ private:
 	XMFLOAT3 rot = XMFLOAT3{ 0,0,0 };
 	XMFLOAT3 scale = XMFLOAT3{ 1,1,1 };
 	std::unique_ptr<CBuffer<transformation>> cb;
-	std::vector<Texture> textures;
 	aiString textureName;
 	std::string path;
 	bool hasNormalmap = false;
