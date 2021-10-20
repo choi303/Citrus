@@ -200,7 +200,7 @@ void UI::DeveloperUI(std::string adapter_name, const
                 }
                 if (*ssrEnabled)
                 {
-                    ImGui::DragFloat("Min Ray Steps", minRaySteps, 0.01f, -100.0f, 100.0f);
+                    ImGui::DragFloat("Min Ray Steps", minRaySteps, 0.01f, -100.0f, 999999.0f);
                     ImGui::DragFloat("Reflectivity", reflectivity, 0.01f, 0.0f, 1.0f);
                 }
                 if (*ssaoEnabled)

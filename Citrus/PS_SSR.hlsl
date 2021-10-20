@@ -42,7 +42,7 @@ float2 RayCast(float3 dir, inout float3 hitCoord, out float dDepth)
 {
     dir *= 0.25f;
 
-    for (int i = 0; i < 20; ++i)
+    for (int i = 0; i < 10; ++i)
     {
         hitCoord += dir;
 
@@ -50,7 +50,7 @@ float2 RayCast(float3 dir, inout float3 hitCoord, out float dDepth)
         projectedCoord.xy /= projectedCoord.w;
         projectedCoord.xy = projectedCoord.xy * 0.5 + 0.5;
 
-        float depth = depthMap.Sample(samClamp, projectedCoord.xy).r;
+        float depth = CalcViewPositionFromDepth(projectedCoord.xy).z;
         dDepth = hitCoord.z - depth;
 
         if (dDepth < 0.0)
@@ -63,12 +63,12 @@ float2 RayCast(float3 dir, inout float3 hitCoord, out float dDepth)
 float4 main(PS_IN input) : SV_Target
 {
     float3 viewNormal = normalsMap.Sample(samLinear, input.texCoord).xyz;
-    float viewDepth = depthMap.Sample(samClamp, input.texCoord).r;
+    float viewDepth = CalcViewPositionFromDepth(input.texCoord);
     float3 screenPos = 2.0f * float3(input.texCoord, viewDepth) - 1.0f;
     float4 viewPos = mul(invProj, float4(screenPos, 1.0f));
     viewPos /= viewPos.w;
 
-    float3 reflected = normalize(reflect(normalize(-viewPos.xyz), normalize(viewNormal)));
+    float3 reflected = normalize(reflect(normalize(viewPos.xyz), normalize(viewNormal)));
 
     float3 hitPos = viewPos.xyz;
     float dDepth;
