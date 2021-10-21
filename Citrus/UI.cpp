@@ -135,7 +135,7 @@ void UI::DeveloperUI(std::string adapter_name, const
     bool* blurEnabled, float* blurIntensity, BOOL* ssaoEnabled, float* totalStrength, float* base,
     float* area, float* fallOff, float* radius, float* exposure, float* gamma, BOOL* toneMappingEnabled,
     float* bloomIntensity, BOOL* bloomEnabled, std::string& versionStr, BOOL* ssrEnabled,
-    float* minRaySteps, float* reflectivity)
+    float* minRaySteps, float* reflectivity, D3D_DRIVER_TYPE& pDriverType)
 {
     if (can_render)
     {
@@ -159,13 +159,61 @@ void UI::DeveloperUI(std::string adapter_name, const
             "8" };
         static bool selected[sizeof(items)];
         static std::string previewValue = std::to_string(gfx->msaaQuality);
+        static std::string rendererPreviewValue = "";
+        if (pDriverType == D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_HARDWARE)
+            rendererPreviewValue = "GPU";
+        else
+            rendererPreviewValue = "CPU";
         std::string version = "Citrus Graphics Renderer v" + versionStr;
+
+        static const char* rendererItems[] = { "CPU", "GPU" };
+        static bool rendererSelected[sizeof(rendererItems)];
+
         if (uiVisiblity)
         {
             if (ImGui::Begin("Developer Menu"))
             {
                 ImGui::Text(version.c_str());
                 ImGui::Text(fps.c_str());
+                ImGui::Text("Render\nDevice");
+                ImGui::SameLine();
+                if (ImGui::BeginCombo("\n", rendererPreviewValue.c_str()))
+                {
+                    for (size_t i = 0; i < IM_ARRAYSIZE(rendererItems);
+                        i++)
+                    {
+                        ImGui::Selectable(rendererItems[i], &rendererSelected[i]);
+                        if (rendererSelected[i])
+                        {
+                            rendererPreviewValue = rendererItems[i];
+                            if (rendererPreviewValue == "CPU")
+                            {
+                                if(pDriverType != D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_REFERENCE)
+                                if (MessageBoxA(NULL, "This selection will change your rendering device and restart the application, are you sure you wanna change this?", "Warning", MB_YESNO | MB_ICONWARNING) == IDYES)
+                                {
+                                    pDriverType = D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_REFERENCE;
+                                    app->SaveValues();
+                                    app->SaveValues();
+                                    ShellExecuteA(NULL, NULL, static_cast<LPCSTR>("..\\x64\\Debug\\Citrus.exe"), NULL, NULL, SW_SHOW);
+                                    exit(0);
+                                }
+                            }
+                            else if (rendererPreviewValue == "GPU")
+                            {
+                                if (pDriverType != D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_HARDWARE)
+                                if (MessageBoxA(NULL, "This selection will change your rendering device and restart the application, are you sure you wanna change this?", "Warning", MB_YESNO | MB_ICONWARNING) == IDYES)
+                                {
+                                    pDriverType = D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_HARDWARE;
+                                    app->SaveValues();
+                                    app->SaveValues();
+                                    ShellExecuteA(NULL, NULL, static_cast<LPCSTR>("..\\x64\\Debug\\Citrus.exe"), NULL, NULL, SW_SHOW);
+                                    exit(0);
+                                }
+                            }
+                        }
+                    }
+                    ImGui::EndCombo();
+                }
                 const std::string adapter = "GPU: " + adapter_name;
                 ImGui::Text(adapter.c_str());
                 ImGui::Text(cpu_usage.c_str());

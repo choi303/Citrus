@@ -15,12 +15,14 @@ void App::Init(const std::string wndName, const std::string className, const HIN
 		Error::Log("Something happened when initialize the window (overload)");
 	}
 
+	//set saved values
+	SetSavedValues();
 	if (!gfx.InitializeGraphics(wnd.GetHWND(), width, height))
 	{
 		Error::Log("Failed to initialize graphics");
 	}
 	//set saved values
-	SetSavedValues();
+	SetSavedValues2();
 }
 
 void App::Update() noexcept
@@ -234,6 +236,11 @@ void App::SetSavedValues()
 	FSQuad::SetMinRaySteps(std::stof(devMenuSettings.GetInfo(23).c_str()));
 	FSQuad::SetReflectivity(std::stof(devMenuSettings.GetInfo(24).c_str()));
 
+	if (devMenuSettings.GetInfo(25) == "1")
+		gfx.pDriverType = D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_HARDWARE;
+	else
+		gfx.pDriverType = D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_REFERENCE;
+
 	//close dev menu file
 	devMenuSettings.CloseFile();
 
@@ -280,6 +287,17 @@ void App::SetSavedValues()
 	Fire::SetDistortionScale(std::stof(fireMenuSettings.GetInfo(18)));
 	Fire::SetDistortionBias(std::stof(fireMenuSettings.GetInfo(19)));
 	fireMenuSettings.CloseFile();
+}
+
+void App::SetSavedValues2()
+{
+	//set camera saved values
+	cameraSetting.OpenFileRead("camera_settings.cfg");
+	gfx.cam3D.SetPosition(std::stof(cameraSetting.GetInfo(0).c_str()), std::stof(cameraSetting.GetInfo(1).c_str()),
+		std::stof(cameraSetting.GetInfo(2).c_str()));
+	gfx.cam3D.SetRotation(std::stof(cameraSetting.GetInfo(3).c_str()), std::stof(cameraSetting.GetInfo(4).c_str()),
+		std::stof(cameraSetting.GetInfo(3).c_str()));
+	cameraSetting.CloseFile();
 
 	//set path saved values
 	paths.OpenFileRead("paths.cfg");
@@ -415,6 +433,8 @@ void App::SaveValues()
 		*FSQuad::GetMinRaySteps()));
 	pDevMenuSavedItems.push_back("[Reflectivitiy]:" + std::to_string(
 		*FSQuad::GetReflectivity()));
+	pDevMenuSavedItems.push_back("[Driver Type]:" + std::to_string(
+		gfx.GetDriverType()));
 	devMenuSettings.AddInfo(pDevMenuSavedItems);
 	devMenuSettings.CloseFile();
 
@@ -540,7 +560,7 @@ void App::FPSCounter()
 		FSQuad::GetBlurIntensity(), FSQuad::GetSSAOEnabled(), FSQuad::GetTotalStrength(), FSQuad::GetBase(),
 		FSQuad::GetArea(), FSQuad::GetFallOff(), FSQuad::GetRadius(), FSQuad::GetExposure(), FSQuad::GetGamma(),
 		FSQuad::GetToneMappingEnabled(), FSQuad::GetBloomIntensity(), FSQuad::GetBloomEnabled(), versionStr,
-		FSQuad::GetSSREnabled(), FSQuad::GetMinRaySteps(), FSQuad::GetReflectivity());
+		FSQuad::GetSSREnabled(), FSQuad::GetMinRaySteps(), FSQuad::GetReflectivity(), gfx.pDriverType);
 	//toolbar creation
 	UI::ToolBar(GridMap::getRender(),
 		GameObject::GetWireframeEnabled(),

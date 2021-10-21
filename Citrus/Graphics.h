@@ -28,6 +28,7 @@ public:
 	bool SceneGraphSSR(Camera3D cam3D);
 	void Render();
 	DXGI_ADAPTER_DESC GetAdapterDesc() const;
+	D3D_DRIVER_TYPE GetDriverType() const;
 	Camera3D cam3D;
 	Timer timer;
 	std::vector<GameObject*> pGameObjects;
@@ -53,6 +54,7 @@ public:
 	std::unique_ptr<FSQuad> quad;
 	bool vsync = true;
 	UINT msaaQuality = 1;
+	D3D_DRIVER_TYPE pDriverType = D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_HARDWARE;
 	bool msaaEnabled;
 public:
 	wrl::ComPtr<ID3D11Device> pDevice;

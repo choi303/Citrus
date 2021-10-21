@@ -17,6 +17,7 @@ public:
 	void RenderFrame();
 	bool ProcessMessages(HINSTANCE hInstance) noexcept;
 	void SetSavedValues();
+	void SetSavedValues2();
 	void SaveValues();
 private:
 	void FPSCounter();

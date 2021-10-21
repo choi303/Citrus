@@ -24,7 +24,7 @@ public:
 		bool* blurEnabled, float* blurIntensity, BOOL* ssaoEnabled, float* totalStrength, float* base,
 		float* area, float* fallOff, float* radius, float* exposure, float* gamma, BOOL* toneMappingEnabled,
 		float* bloomIntensity, BOOL* bloomEnabled, std::string& verisonStr, BOOL* ssrEnabled, float* minRaySteps,
-		float* reflectivity);
+		float* reflectivity, D3D_DRIVER_TYPE& pDriverType);
 
 	static void ToolBar(bool* gridMapEnabled, bool* wireframeEnabled, bool* fogEnabled,
 		bool* depthBufferEnabled, bool* blurEnabled, bool* msaaEnabled, App* app, bool* fxaaEnabled,

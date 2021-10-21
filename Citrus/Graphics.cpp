@@ -54,7 +54,7 @@ bool Graphics::InitDxBase(HWND hwnd)
 	HRESULT hr;
 	hr = D3D11CreateDeviceAndSwapChain(
 		nullptr,
-		D3D_DRIVER_TYPE_HARDWARE,
+		pDriverType,
 		nullptr,
 		debug_flag,
 		nullptr,
@@ -68,9 +68,10 @@ bool Graphics::InitDxBase(HWND hwnd)
 	);
 	if (FAILED(hr))
 	{
+		pDriverType = D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_REFERENCE;
 		hr = D3D11CreateDeviceAndSwapChain(
 			nullptr,
-			D3D_DRIVER_TYPE_REFERENCE,
+			pDriverType,
 			nullptr,
 			debug_flag,
 			nullptr,
@@ -520,6 +521,11 @@ DXGI_ADAPTER_DESC Graphics::GetAdapterDesc() const
 {
 	//return adapter description
 	return pAdapterDesc;
+}
+
+D3D_DRIVER_TYPE Graphics::GetDriverType() const
+{
+	return pDriverType;
 }
 
 inline void Graphics::RenderDockingWindow() noexcept
