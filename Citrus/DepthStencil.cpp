@@ -85,6 +85,8 @@ DXGI_FORMAT DepthStencil::MapUsageTypeless(DepthStencil::Usage usage)
 		return DXGI_FORMAT::DXGI_FORMAT_R24G8_TYPELESS;
 	case DepthStencil::Usage::ShadowDepth:
 		return DXGI_FORMAT::DXGI_FORMAT_R32_TYPELESS;
+	default:
+		return DXGI_FORMAT::DXGI_FORMAT_R24G8_TYPELESS;
 	}
 	Error::Log("Depth stencil usage format is null or wrong.");
 }
@@ -96,6 +98,8 @@ DXGI_FORMAT DepthStencil::MapUsageTyped(DepthStencil::Usage usage)
 	case DepthStencil::Usage::DepthStencil:
 		return DXGI_FORMAT::DXGI_FORMAT_D24_UNORM_S8_UINT;
 	case DepthStencil::Usage::ShadowDepth:
+		return DXGI_FORMAT::DXGI_FORMAT_D32_FLOAT;
+	default:
 		return DXGI_FORMAT::DXGI_FORMAT_D32_FLOAT;
 	}
 	Error::Log("Depth stencil usage format is null or wrong.");
@@ -109,6 +113,8 @@ DXGI_FORMAT DepthStencil::MapUsageColored(DepthStencil::Usage usage)
 		return DXGI_FORMAT::DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
 	case DepthStencil::Usage::ShadowDepth:
 		return DXGI_FORMAT::DXGI_FORMAT_R32_FLOAT;
+	default:
+		return DXGI_FORMAT::DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
 	}
 	Error::Log("Depth stencil usage format is null or wrong.");
 }

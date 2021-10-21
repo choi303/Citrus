@@ -54,7 +54,7 @@ bool GridMap::init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	pLayout = std::make_unique<InputLayout>(pDevice, grid_ied, &pVS);
 	//create vertex buffer
 	pVertexBuffer = std::make_unique<VertexBuffer<vertex>>();
-	pVertexBuffer->Init(pDevice, vertices.data(), vertices.size());
+	pVertexBuffer->Init(pDevice, vertices.data(), static_cast<UINT>(vertices.size()));
 	
 	//create color and transform cbuffers
 	colorBuffer = std::make_unique<CBuffer<color>>();
@@ -91,7 +91,7 @@ void GridMap::draw(Camera3D cam)
 		colorBuffer->MapData();
 		colorBuffer->PSBind(pContext.Get(), 0u, 1u);
 		//draw grid map (vertices)
-		pContext->Draw(vertices.size(), 0);
+		pContext->Draw(static_cast<UINT>(vertices.size()), 0);
 	}
 }
 

@@ -447,7 +447,7 @@ void Graphics::Render()
 	RenderDockingWindow();
 
 	//Particle(s) frame
-	mParticle.Frame(timer.GetMilisecondsElapsed());
+	mParticle.Frame(static_cast<float>(timer.GetMilisecondsElapsed()));
 
 	//Shadow map pass from light view
 	ID3D11RenderTargetView* rtv[1] = { 0 };
@@ -544,7 +544,7 @@ inline void Graphics::RenderDockingWindow() noexcept
 	ImGuiID dockSpaceId = ImGui::GetID("InvisibleWindowDockSpace");
 	if (ImGui::Begin("DockSpaceWindow", nullptr, windowFlags))
 	{
-		ImGui::DockSpace(dockSpaceId, ImVec2(width, height), ImGuiDockNodeFlags_PassthruCentralNode);
+		ImGui::DockSpace(dockSpaceId, ImVec2(static_cast<float>(width), static_cast<float>(height)), ImGuiDockNodeFlags_PassthruCentralNode);
 	}
 	ImGui::End();
 }

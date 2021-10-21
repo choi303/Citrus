@@ -227,14 +227,14 @@ void App::SetSavedValues()
 		FSQuad::SetBloomEnabled(FALSE);
 	
 	FSQuad::SetBloomIntensity(std::stof(devMenuSettings.GetInfo(20).c_str()));
-	FSQuad::SetAutoExposureEnabled(std::stof(devMenuSettings.GetInfo(21).c_str()));
-	FSQuad::SetKuwaharaEnabled(std::stof(devMenuSettings.GetInfo(22).c_str()));
+	FSQuad::SetAutoExposureEnabled(static_cast<BOOL>(std::stof(devMenuSettings.GetInfo(21).c_str())));
+	FSQuad::SetKuwaharaEnabled(static_cast<BOOL>(std::stof(devMenuSettings.GetInfo(22).c_str())));
 	if (devMenuSettings.GetInfo(23) == "1")
 		FSQuad::SetSSREnabled(TRUE);
 	else
 		FSQuad::SetSSREnabled(FALSE);
-	FSQuad::SetMinRaySteps(std::stof(devMenuSettings.GetInfo(23).c_str()));
-	FSQuad::SetReflectivity(std::stof(devMenuSettings.GetInfo(24).c_str()));
+	FSQuad::SetMinRaySteps(std::stof(devMenuSettings.GetInfo(24).c_str()));
+	FSQuad::SetReflectivity(std::stof(devMenuSettings.GetInfo(25).c_str()));
 
 	if (devMenuSettings.GetInfo(25) == "1")
 		gfx.pDriverType = D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_HARDWARE;

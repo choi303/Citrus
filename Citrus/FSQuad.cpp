@@ -5,10 +5,10 @@ static float blurIntensity = 1.0f;
 static bool fxaaEnabled;
 static BOOL ssaoEnabled;
 static float totalStrength = 1.5;
-static float base = 0.223;
-static float area = 0.0000000000001;
-static float fallOff = 0.000000001;
-static float radius = 0.007;
+static float base = 0.223f;
+static float area = 0.0000000000001f;
+static float fallOff = 0.000000001f;
+static float radius = 0.007f;
 static float exposure = 1.690f;
 static float gamma = 0.750f;
 static float bloomIntensity = 1.0f;
@@ -50,19 +50,19 @@ FSQuad::FSQuad(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, int width, 
 		);
 
 	//vertices
-	vertices.push_back(vertex(XMFLOAT2(-1, 1)));
-	vertices.push_back(vertex(XMFLOAT2(1, 1)));
-	vertices.push_back(vertex(XMFLOAT2(-1, -1)));
-	vertices.push_back(vertex(XMFLOAT2(1, -1)));
+	vertices.push_back(vertex{XMFLOAT2(-1, 1)});
+	vertices.push_back(vertex{XMFLOAT2(1, 1)});
+	vertices.push_back(vertex{XMFLOAT2(-1, -1)});
+	vertices.push_back(vertex{XMFLOAT2(1, -1)});
 
 	//create vertex buffer
 	pVertexBuffer = std::make_unique<VertexBuffer<vertex>>();
-	pVertexBuffer->Init(pDevice, vertices.data(), vertices.size());
+	pVertexBuffer->Init(pDevice, vertices.data(), static_cast<UINT>(vertices.size()));
 
 	//create index buffer
 	std::vector<signed int> indices = { 0,1,2,1,3,2 };
 	pIndexBuffer = std::make_unique<IndexBuffer>();
-	pIndexBuffer->Init(pDevice, indices, indices.size());
+	pIndexBuffer->Init(pDevice, indices, static_cast<UINT>(indices.size()));
 
 	//constant buffer initialize
 	paramCBuffer = std::make_unique<CBuffer<param>>();

@@ -750,7 +750,7 @@ void UI::ParticleUI(std::string uiTitle, float* mParticleDeviationX, float* mPar
                     ImGui::DragFloat("Variation\nVelocity", mParticleVelocityVariation, 0.001f, -100.0f, 100.0f);
                     ImGui::DragFloat("Size", mParticleSize, 0.001f, -1000.0f, 1000.0f);
                     if(*isLifetime)
-                    ImGui::DragFloat("Life\Time", lifeTime, 0.01f, -1000.0f, 1000.0f);
+                    ImGui::DragFloat("Life\nTime", lifeTime, 0.01f, -1000.0f, 1000.0f);
                     ImGui::Checkbox("Life\nTime\nEnabled", isLifetime);
                     
                 }

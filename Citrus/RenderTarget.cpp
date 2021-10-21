@@ -139,6 +139,8 @@ DXGI_FORMAT RenderTarget::MapUsageTyped(RenderTarget::Usage usage)
 		return DXGI_FORMAT::DXGI_FORMAT_R16G16B16A16_FLOAT;
 	case RenderTarget::Usage::HDR:
 		return DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT;
+	default:
+		return DXGI_FORMAT_B8G8R8A8_UNORM;
 	}
 	Error::Log("Depth stencil usage format is null or wrong.");
 }

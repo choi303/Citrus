@@ -42,12 +42,12 @@ Fire::Fire(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	mAlpha = std::make_unique<Texture>(mDevice.Get(), mContext.Get(), "Images\\alpha01.dds", 2);
 
 	//vertex buffer initalize
-	mVertices.push_back(vertex(XMFLOAT3(-1.0, 1.0, 0.0), XMFLOAT2(0.0, 0.0)));
-	mVertices.push_back(vertex(XMFLOAT3(1.0, 1.0, 0.0), XMFLOAT2(1.0, 0.0)));
-	mVertices.push_back(vertex(XMFLOAT3(-1.0, -1.0, 0.0), XMFLOAT2(0.0, 1.0)));
-	mVertices.push_back(vertex(XMFLOAT3(-1.0, -1.0, 0.0), XMFLOAT2(0.0, 1.0)));
-	mVertices.push_back(vertex(XMFLOAT3(1.0, 1.0, 0.0), XMFLOAT2(1.0, 0.0)));
-	mVertices.push_back(vertex(XMFLOAT3(1.0, -1.0, 0.0), XMFLOAT2(1.0, 1.0)));
+	mVertices.push_back(vertex{XMFLOAT3(-1.0, 1.0, 0.0), XMFLOAT2(0.0, 0.0)});
+	mVertices.push_back(vertex{XMFLOAT3(1.0, 1.0, 0.0), XMFLOAT2(1.0, 0.0)});
+	mVertices.push_back(vertex{XMFLOAT3(-1.0, -1.0, 0.0), XMFLOAT2(0.0, 1.0)});
+	mVertices.push_back(vertex{XMFLOAT3(-1.0, -1.0, 0.0), XMFLOAT2(0.0, 1.0)});
+	mVertices.push_back(vertex{XMFLOAT3(1.0, 1.0, 0.0), XMFLOAT2(1.0, 0.0)});
+	mVertices.push_back(vertex{XMFLOAT3(1.0, -1.0, 0.0), XMFLOAT2(1.0, 1.0)});
 	mVertexBuffer = std::make_unique<VertexBuffer<vertex>>();
 	mVertexBuffer->Init(mDevice.Get(), mVertices.data(), 6);
 

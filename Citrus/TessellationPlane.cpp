@@ -70,7 +70,7 @@ void TessellationPlane::Draw(Camera3D cam)
 
 	UI::TessellationTri(&amount);
 
-	pContext->Draw(mVertices.size(), 0);
+	pContext->Draw(static_cast<UINT>(mVertices.size()), 0);
 
 	pContext->HSSetShader(nullptr, nullptr, 0);
 	pContext->DSSetShader(nullptr, nullptr, 0);
