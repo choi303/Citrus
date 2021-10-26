@@ -29,9 +29,9 @@ const bool TessellationPlane::Init(ID3D11Device* pDevice, ID3D11DeviceContext* p
 	matCBuffer->Init(pDevice, pContext);
 
 	//Vertex Buffer Initialize
-	mVertices.push_back(vertex(XMFLOAT3(-1.0, -1.0, 0.0), XMFLOAT2(0.0, 0.0)));
-	mVertices.push_back(vertex(XMFLOAT3(0.0, 1.0, 0.0), XMFLOAT2(1.0, 0.0)));
-	mVertices.push_back(vertex(XMFLOAT3(1.0, -1.0, 0.0), XMFLOAT2(0.0, 1.0)));
+	mVertices.push_back(vertex{XMFLOAT3(-1.0, -1.0, 0.0), XMFLOAT2(0.0, 0.0)});
+	mVertices.push_back(vertex{XMFLOAT3(0.0, 1.0, 0.0), XMFLOAT2(1.0, 0.0)});
+	mVertices.push_back(vertex{XMFLOAT3(1.0, -1.0, 0.0), XMFLOAT2(0.0, 1.0)});
 	mVertexBuffer = std::make_unique<VertexBuffer<vertex>>();
 	mVertexBuffer->Init(pDevice, mVertices.data(), 6);
 

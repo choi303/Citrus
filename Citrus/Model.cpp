@@ -28,6 +28,7 @@ bool Model::InitPbr(const std::string& file_path, ID3D11Device* p_device, ID3D11
 {
     this->pDevice = p_device;
     this->pContext = p_context;
+    this->path = file_path;
 
     if (!LoadMeshPbr(file_path))
         Error::Log("Failed to load mesh.");
@@ -207,7 +208,7 @@ bool Model::LoadMeshPbr(const std::string& file_path)
     if (p_scene == nullptr)
         return false;
 
-    LoadNodesPbr(p_scene->mRootNode, p_scene); //load mesh
+    LoadNodesPbr(p_scene->mRootNode, p_scene, p_scene->mMaterials); //load mesh
 
     return true;
 }
@@ -293,18 +294,36 @@ void Model::LoadNodesNoMtl(aiNode* p_node, const aiScene* p_scene)
     }
 }
 
-void Model::LoadNodesPbr(aiNode* p_node, const aiScene* p_scene)
+void Model::LoadNodesPbr(aiNode* p_node, const aiScene* p_scene, const aiMaterial* const* p_materials)
 {
+    const std::string textureDirectory = path.substr(0, path.find_last_of("\\") + 1);
+    std::string textureName_L = "";
+    std::string texturePath = "";
+
     for (size_t i = 0; i < p_node->mNumMeshes; i++)
     {
         //process every mesh in the vector array
-        aiMesh* mesh = p_scene->mMeshes[p_node->mMeshes[i]];
-        meshes.push_back(ProcessMeshDataPbr(mesh, p_scene));
+        pMesh = p_scene->mMeshes[p_node->mMeshes[i]];
+        const aiMaterial& mtl = *p_materials[pMesh->mMaterialIndex];
+
+        if (pMesh->mMaterialIndex >= 0) //if model has a material file load model's materials
+        {
+            //get textures from the model
+            //init that textures
+            if (mtl.Get(AI_MATKEY_TEXTURE(aiTextureType::aiTextureType_DIFFUSE, 0), textureName) == aiReturn_SUCCESS)
+            {
+                textureName_L = textureName.C_Str();
+                textures.push_back(Texture(pDevice, pContext, textureDirectory + textureName_L, 0));
+                hasTexture = true;
+            }
+
+            meshes.push_back(ProcessMeshDataPbr(pMesh, p_scene));
+        }
     }
 
     for (size_t i = 0; i < p_node->mNumChildren; i++)
     {
-        LoadNodesPbr(p_node->mChildren[i], p_scene);
+        LoadNodesPbr(p_node->mChildren[i], p_scene, p_scene->mMaterials);
     }
 }
 
@@ -431,6 +450,14 @@ Mesh Model::ProcessMeshDataPbr(aiMesh* p_mesh, const aiScene* p_scene) const
             vertex.tex.x = static_cast<float>(p_mesh->mTextureCoords[0][i].x);
             vertex.tex.y = static_cast<float>(p_mesh->mTextureCoords[0][i].y);
         }
+
+        vertex.tangent.x = p_mesh->mTangents[i].x;
+        vertex.tangent.y = p_mesh->mTangents[i].y;
+        vertex.tangent.z = p_mesh->mTangents[i].z;
+
+        vertex.binormal.x = p_mesh->mBitangents[i].x;
+        vertex.binormal.y = p_mesh->mBitangents[i].y;
+        vertex.binormal.z = p_mesh->mBitangents[i].z;
 
         verticesL.push_back(vertex); //add the vertices data to vertices vector
     }

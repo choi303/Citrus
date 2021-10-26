@@ -5,6 +5,7 @@
 #include <assimp\Importer.hpp>
 #include <assimp\scene.h>
 #include <assimp\postprocess.h>
+#include <assimp\pbrmaterial.h>
 #include "imgui\imgui.h"
 
 using namespace DirectX;
@@ -48,7 +49,7 @@ private:
 	bool LoadMeshPbr(const std::string& file_path);
 	void LoadNodes(aiNode* p_node, const aiScene* p_scene, const aiMaterial* const* p_materials);
 	void LoadNodesNoMtl(aiNode* p_node, const aiScene* p_scene);
-	void LoadNodesPbr(aiNode* p_node, const aiScene* p_scene);
+	void LoadNodesPbr(aiNode* p_node, const aiScene* p_scene, const aiMaterial* const* p_materials);
 	Mesh ProcessMeshData(aiMesh* p_mesh, const aiScene* p_scene);
 	Mesh ProcessMeshDataNoMtl(aiMesh* p_mesh, const aiScene* p_scene) const;
 	Mesh ProcessMeshDataPbr(aiMesh* p_mesh, const aiScene* p_scene) const;

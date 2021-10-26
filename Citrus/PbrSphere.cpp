@@ -30,7 +30,7 @@ PbrSphere::PbrSphere(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 		pDevice, pbr_ied, &pVS);
 
 	//init model
-	pModel.InitPbr("Models\\pbr_gun\\Cerberus_LP.FBX.fbx", pDevice, pContext);
+	pModel.InitPbr("Models\\pbrGun\\Cerberus_LP.FBX.fbx", pDevice, pContext);
 
 	//cbuffer initalize
 	pbrCBuffer = std::make_unique<CBuffer<PbrBuffer>>();

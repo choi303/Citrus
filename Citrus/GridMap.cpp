@@ -20,34 +20,34 @@ bool GridMap::init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	float b = 1.0f;
 	for (int i = 0; i < 250; i++)
 	{
-		vertices.push_back(vertex(XMFLOAT3(0.0f, 0.0f, b)));
-		vertices.push_back(vertex(XMFLOAT3(12451.0f, 0.0f, b)));
+		vertices.push_back(vertex{XMFLOAT3(0.0f, 0.0f, b)});
+		vertices.push_back(vertex{XMFLOAT3(12451.0f, 0.0f, b)});
 
-		vertices.push_back(vertex(XMFLOAT3(-12451.0f, 0.0f, b)));
-		vertices.push_back(vertex(XMFLOAT3(0, 0.0f, b)));
+		vertices.push_back(vertex{XMFLOAT3(-12451.0f, 0.0f, b)});
+		vertices.push_back(vertex{XMFLOAT3(0, 0.0f, b)});
 
-		vertices.push_back(vertex(XMFLOAT3(b, 0.0f, 0.0f)));
-		vertices.push_back(vertex(XMFLOAT3(b, 0.0f, 12451.0f)));
+		vertices.push_back(vertex{XMFLOAT3(b, 0.0f, 0.0f)});
+		vertices.push_back(vertex{XMFLOAT3(b, 0.0f, 12451.0f)});
 
-		vertices.push_back(vertex(XMFLOAT3(b, 0.0f, -12451.0f)));
-		vertices.push_back(vertex(XMFLOAT3(b, 0.0f, 0)));
+		vertices.push_back(vertex{XMFLOAT3(b, 0.0f, -12451.0f)});
+		vertices.push_back(vertex{XMFLOAT3(b, 0.0f, 0)});
 
 		b += 50;
 	}
 	b = 1.0f;
 	for (int i = 0; i < 250; i++)
 	{
-		vertices.push_back(vertex(XMFLOAT3(-12451.0f, 0.0f, b)));
-		vertices.push_back(vertex(XMFLOAT3(0, 0.0f, b)));
+		vertices.push_back(vertex{XMFLOAT3(-12451.0f, 0.0f, b)});
+		vertices.push_back(vertex{XMFLOAT3(0, 0.0f, b)});
 
-		vertices.push_back(vertex(XMFLOAT3(0.0f, 0.0f, b)));
-		vertices.push_back(vertex(XMFLOAT3(12451.0f, 0.0f, b)));
+		vertices.push_back(vertex{XMFLOAT3(0.0f, 0.0f, b)});
+		vertices.push_back(vertex{XMFLOAT3(12451.0f, 0.0f, b)});
 
-		vertices.push_back(vertex(XMFLOAT3(b, 0.0f, -12451.0f)));
-		vertices.push_back(vertex(XMFLOAT3(b, 0.0f, 0)));
+		vertices.push_back(vertex{XMFLOAT3(b, 0.0f, -12451.0f)});
+		vertices.push_back(vertex{XMFLOAT3(b, 0.0f, 0)});
 
-		vertices.push_back(vertex(XMFLOAT3(b, 0.0f, 0.0f)));
-		vertices.push_back(vertex(XMFLOAT3(b, 0.0f, 12451.0f)));
+		vertices.push_back(vertex{XMFLOAT3(b, 0.0f, 0.0f)});
+		vertices.push_back(vertex{XMFLOAT3(b, 0.0f, 12451.0f)});
 
 		b -= 50;
 	}
