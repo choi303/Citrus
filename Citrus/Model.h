@@ -49,7 +49,7 @@ private:
 	bool LoadMeshPbr(const std::string& file_path);
 	void LoadNodes(aiNode* p_node, const aiScene* p_scene, const aiMaterial* const* p_materials);
 	void LoadNodesNoMtl(aiNode* p_node, const aiScene* p_scene);
-	void LoadNodesPbr(aiNode* p_node, const aiScene* p_scene, const aiMaterial* const* p_materials);
+	void LoadNodesPbr(aiNode* p_node, const aiScene* p_scene);
 	Mesh ProcessMeshData(aiMesh* p_mesh, const aiScene* p_scene);
 	Mesh ProcessMeshDataNoMtl(aiMesh* p_mesh, const aiScene* p_scene) const;
 	Mesh ProcessMeshDataPbr(aiMesh* p_mesh, const aiScene* p_scene) const;
